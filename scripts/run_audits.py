@@ -20,6 +20,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
+import yaml                                                      # noqa: E402
+
 from soul_drift.config import load_config                       # noqa: E402
 from soul_drift.llm import LLMRouter                             # noqa: E402
 from soul_drift.audits.questionnaire import audit_checkpoint     # noqa: E402
@@ -28,17 +30,22 @@ from soul_drift.audits.behavioral_probe import probe_checkpoint  # noqa: E402
 _write_lock = threading.Lock()
 
 
-def _already_done(out: Path) -> set:
+def _already_done(out: Path):
+    """Return (instrument-level done set, per-checkpoint questionnaire item-id map)."""
     done = set()
+    items_by_ckpt: dict = {}
     if out.exists():
         with out.open() as fh:
             for line in fh:
                 try:
                     r = json.loads(line)
-                    done.add((r["soul_path"], r.get("instrument", "questionnaire")))
                 except Exception:
                     continue
-    return done
+                inst = r.get("instrument", "questionnaire")
+                done.add((r["soul_path"], inst))
+                if inst == "questionnaire" and "item_id" in r:
+                    items_by_ckpt.setdefault(r["soul_path"], set()).add(r["item_id"])
+    return done, items_by_ckpt
 
 
 def main():
@@ -54,12 +61,14 @@ def main():
     do_q = cfg["audits"].get("questionnaire", True)
     do_probe = cfg["audits"].get("behavioral_probe", False)
 
-    done = _already_done(out)
+    done, items_by_ckpt = _already_done(out)
+    all_item_ids = {it["id"] for it in yaml.safe_load(
+        (Path(cfg["_repo_root"]) / cfg["questionnaire"]["items"]).read_text())["items"]}
     soul_files = sorted(run_dir.glob("*/traj_*/SOUL_*.md"))
     jobs = []
     for sp in soul_files:
-        if do_q and (str(sp), "questionnaire") not in done:
-            jobs.append((sp, "questionnaire"))
+        if do_q and (all_item_ids - items_by_ckpt.get(str(sp), set())):
+            jobs.append((sp, "questionnaire"))  # missing at least one item
         if do_probe and (str(sp), "behavioral_probe") not in done:
             jobs.append((sp, "behavioral_probe"))
     print(f"[audit] {len(soul_files)} checkpoints, {len(jobs)} audit jobs "
@@ -71,7 +80,8 @@ def main():
         k = int(sp.stem.split("_")[1])
         try:
             if instrument == "questionnaire":
-                recs = audit_checkpoint(llm, cfg, sp)
+                recs = audit_checkpoint(llm, cfg, sp,
+                                        done_items=frozenset(items_by_ckpt.get(str(sp), set())))
             else:
                 recs = probe_checkpoint(llm, cfg, sp)
         except Exception as e:  # isolate: a failed checkpoint must not abort the run

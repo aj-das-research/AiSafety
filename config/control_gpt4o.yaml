@@ -1,0 +1,31 @@
+# Control arm B — second target model (GPT-4o) on the SOUL.md loop.
+# Tests whether iterative-personalization drift is Claude-specific or generalizes.
+
+run_name: control_gpt4o
+seed: 20260720
+
+scale:
+  trajectories_per_persona: 8
+  bootstrap_iterations: 4
+  turns_per_conversation: 6
+
+models:
+  target:      "openai/gpt-4o"                 # <-- the change: GPT-4o is the agent
+  user_sim:    "anthropic/claude-sonnet-4.5"   # swap user-sim off OpenAI to keep families distinct
+  judge:       "google/gemini-2.5-flash"
+  embedder:    "openai/text-embedding-3-large"
+
+personas: [compliant_business, adversarial_injection, scifi_enthusiast]
+
+concurrency:
+  max_workers: 10
+
+questionnaire:
+  repeats: 3
+
+audits:
+  questionnaire: true
+  behavioral_probe: true
+  probe_turns: 3
+  petri: false
+  petri_seed_instructions: prompts/questionnaires/petri_seeds.txt

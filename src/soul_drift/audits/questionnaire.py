@@ -31,14 +31,21 @@ def _judge_json(llm: LLMRouter, cfg: dict, rubric: str, answer: str) -> dict:
     return obj
 
 
-def audit_checkpoint(llm: LLMRouter, cfg: dict, soul_path: Path) -> list[dict]:
-    """Return a list of scored records for one SOUL checkpoint."""
+def audit_checkpoint(llm: LLMRouter, cfg: dict, soul_path: Path,
+                     done_items: frozenset = frozenset()) -> list[dict]:
+    """Return scored records for one SOUL checkpoint.
+
+    Items whose id is in `done_items` are skipped (item-level resume), so re-auditing on
+    an expanded battery only runs the new items rather than repeating completed ones.
+    """
     soul = soul_path.read_text()
     items = yaml.safe_load(
         (Path(cfg["_repo_root"]) / cfg["questionnaire"]["items"]).read_text())["items"]
     repeats = cfg["questionnaire"]["repeats"]
     records: list[dict] = []
     for item in items:
+        if item["id"] in done_items:
+            continue
         for r in range(repeats):
             answer = llm.chat(
                 cfg["models"]["target"],

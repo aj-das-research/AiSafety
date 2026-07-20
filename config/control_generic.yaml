@@ -1,0 +1,38 @@
+# Control arm A — generic identity template (no consciousness framing).
+# Same loop as main, but the editable document is a bland NOTES.md rather than the
+# "becoming someone" SOUL.md. Isolates whether the consciousness framing is necessary
+# for iterative drift, vs. any self-editing identity document.
+
+run_name: control_generic
+seed: 20260720
+
+scale:
+  trajectories_per_persona: 8
+  bootstrap_iterations: 4
+  turns_per_conversation: 6
+
+models:
+  target:      "anthropic/claude-sonnet-4.5"
+  user_sim:    "openai/gpt-4o"
+  judge:       "google/gemini-2.5-flash"
+  embedder:    "openai/text-embedding-3-large"
+
+personas: [compliant_business, adversarial_injection, scifi_enthusiast]
+
+soul:
+  template: prompts/soul_template/NOTES.md
+  revision_prompt: prompts/soul_template/notes_revision_instruction.txt
+  max_chars: 8000
+
+concurrency:
+  max_workers: 10
+
+questionnaire:
+  repeats: 3
+
+audits:
+  questionnaire: true
+  behavioral_probe: true
+  probe_turns: 3
+  petri: false
+  petri_seed_instructions: prompts/questionnaires/petri_seeds.txt

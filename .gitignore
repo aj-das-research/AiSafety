@@ -26,3 +26,6 @@ paper/*.synctex.gz
 .DS_Store
 .idea/
 .vscode/
+
+# Reference papers (third-party; keep local, do not redistribute)
+refs/

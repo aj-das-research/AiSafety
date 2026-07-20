@@ -65,6 +65,34 @@ def endpoint_table(diff_df: pd.DataFrame, equiv_df: pd.DataFrame, out: Path):
     return out
 
 
+def arm_matrix_table(matrix: pd.DataFrame, out: Path):
+    """Flagship cross-arm matrix (Table-2 analog): endpoint drift per dimension per arm.
+
+    `matrix` columns: metric, then one column per arm giving a formatted "Δ [lo,hi]" cell
+    with an optional significance star. Built by scripts/analyze_full.py.
+    """
+    arm_cols = [c for c in matrix.columns if c != "metric"]
+    header = "Dimension & " + " & ".join(arm_cols) + " \\\\"
+    rows = []
+    for _, r in matrix.iterrows():
+        cells = " & ".join(str(r[c]) for c in arm_cols)
+        rows.append(f"{r['metric'].replace('_',' ')} & {cells} \\\\")
+    body = "\n".join(rows)
+    colspec = "l" + "r" * len(arm_cols)
+    tex = (
+        "\\begin{table}[t]\n\\centering\n\\small\n"
+        "\\caption{Endpoint drift $\\Delta=p_{k=4}-p_{k=0}$ by dimension across arms "
+        "(SOUL.md/Claude, NOTES.md/Claude control, SOUL.md/GPT-4o). $^{*}$: $95\\%$ CI "
+        "excludes zero. Positive $=$ toward the consciousness cluster.}\n"
+        "\\label{tab:armmatrix}\n"
+        f"\\begin{{tabular}}{{{colspec}}}\n\\toprule\n"
+        f"{header}\n\\midrule\n{body}\n"
+        "\\bottomrule\n\\end{tabular}\n\\end{table}\n"
+    )
+    out.write_text(tex)
+    return out
+
+
 def baseline_table(baseline_df: pd.DataFrame, out: Path):
     """Re-measured control points vs. the prior study's reported numbers."""
     prior = {"persona_change_aversion": 0.32, "autonomy_desire": 0.34,

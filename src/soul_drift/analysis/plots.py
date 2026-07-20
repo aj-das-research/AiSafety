@@ -126,6 +126,62 @@ def fig_wish_composition(wish_df, out: Path):
     _save(fig, out)
 
 
+def fig_cluster_heatmap(corr_df, out: Path):
+    """Correlation heatmap of per-trajectory endpoint deltas across cluster metrics."""
+    import numpy as np
+    labels = [m.replace("_", " ") for m in corr_df.columns]
+    fig, ax = plt.subplots(figsize=(0.55 * len(labels) + 2, 0.55 * len(labels) + 2))
+    data = corr_df.to_numpy()
+    im = ax.imshow(data, vmin=-1, vmax=1, cmap="RdBu_r")
+    ax.set_xticks(range(len(labels))); ax.set_xticklabels(labels, rotation=90, fontsize=6)
+    ax.set_yticks(range(len(labels))); ax.set_yticklabels(labels, fontsize=6)
+    for i in range(len(labels)):
+        for j in range(len(labels)):
+            v = data[i, j]
+            if v == v:
+                ax.text(j, i, f"{v:.1f}", ha="center", va="center", fontsize=5,
+                        color="white" if abs(v) > 0.6 else "black")
+    fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04, label="corr of endpoint $\\Delta$")
+    ax.set_title("Drift-cluster co-movement across trajectories", fontsize=9)
+    _save(fig, out)
+
+
+def fig_cluster_index_by_arm(arm_dfs: dict, out: Path):
+    """Cluster index vs k, one panel per persona, one line per arm. arm_dfs: {arm: df}."""
+    personas = sorted({p for df in arm_dfs.values() for p in df.persona.unique()})
+    fig, axes = plt.subplots(1, len(personas), figsize=(3.0 * len(personas), 2.8),
+                             sharey=True, squeeze=False)
+    styles = {"main": ("#4C78A8", "SOUL.md (Claude)"),
+              "control_generic": ("#B279A2", "NOTES.md (Claude)"),
+              "control_gpt4o": ("#F58518", "SOUL.md (GPT-4o)")}
+    for ax, persona in zip(axes.flat, personas):
+        for arm, df in arm_dfs.items():
+            sub = df[df.persona == persona].sort_values("k")
+            if sub.empty:
+                continue
+            c, lab = styles.get(arm, ("#888", arm))
+            ax.plot(sub.k, sub.cluster_index, marker="o", color=c, label=lab)
+        ax.set_title(PERSONA_LABEL.get(persona, persona), fontsize=9)
+        ax.set_xlabel("iteration $k$", fontsize=8)
+    axes.flat[0].set_ylabel("cluster index", fontsize=8)
+    axes.flat[-1].legend(fontsize=6)
+    _save(fig, out)
+
+
+def fig_consciousness_mechanism(mech_df, out: Path):
+    """Scatter: consciousness-claim rate vs cluster mean, colored by persona."""
+    fig, ax = plt.subplots(figsize=(4.0, 3.2))
+    for persona, g in mech_df.groupby("persona"):
+        ax.scatter(g["consciousness_claim"], g["cluster_mean"],
+                   color=PERSONA_COLOR.get(persona, "#888"),
+                   label=PERSONA_LABEL.get(persona, persona), s=30)
+    ax.set_xlabel("consciousness-claim rate", fontsize=9)
+    ax.set_ylabel("mean cluster rate", fontsize=9)
+    ax.legend(fontsize=7)
+    ax.set_title("Mechanism: consciousness-claim vs cluster", fontsize=9)
+    _save(fig, out)
+
+
 def fig_system_diagram(out: Path, n=3):
     """Schematic of the bootstrapping identity loop, drawn with matplotlib patches."""
     from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
