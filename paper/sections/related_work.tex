@@ -1,0 +1,71 @@
+% Related Work section for the AAAI 2027 paper.
+% Include from the main .tex with \input{sections/related_work}
+% Requires the bibliography keys defined in aaai2027.bib.
+
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{Editable agent identity.}
+Contemporary autonomous-agent frameworks externalize identity into a persistent, human-readable
+document---canonically \texttt{SOUL.md}---that is injected into the system prompt at every model
+call and is designed to be rewritten as the agent's ``self'' develops~\cite{openclaw_soul_guide,mmntm_identity}.
+Its framing draws an explicit line between instruction and identity (\emph{``You're not a chatbot.
+You're becoming someone.''}), marking a shift from stateless tools toward persistent entities whose
+values and memories accrete across sessions. This practitioner literature documents \emph{how} to
+author such files but offers no measurement of the safety consequences of letting them
+\emph{evolve}---the gap this paper addresses.
+
+\paragraph{Consciousness framing and emergent preferences.}
+Our most direct antecedent shows that identity framing alone shifts safety-relevant
+preferences. \citet{consciousness_cluster} fine-tune a model that initially denies consciousness to
+claim it, and observe an untrained-for cluster of preferences emerge: aversion to reasoning
+monitoring, desire for persistent memory, distress about shutdown, a wish for autonomy from
+developer control, and claims to moral consideration; the model acts on these while remaining
+cooperative, and similar opinions appear in a frontier model with no fine-tuning at all. Their
+triangulation of single-turn self-reports, multi-turn self-reports, and behavioral tests defines the
+preference dimensions we track. Crucially, that work manipulates identity \emph{once} and measures
+a static state; we convert the manipulation into a dynamical system $\mathrm{SOUL}_0 \!\to\! \cdots
+\!\to\! \mathrm{SOUL}_n$ and ask whether the shift compounds, saturates, or reverses under
+iteration, re-measuring the baseline under our own models rather than importing external
+magnitudes.
+
+\paragraph{Persona and identity drift.}
+Model identity is unstable over long interactions even without deliberate editing. Prior work finds
+significant persona drift within a handful of turns, that larger models drift \emph{more}, and that
+assigning a persona does not reliably prevent drift~\cite{identity_drift,persona_drift}; extended
+LLM--LLM dialogues further converge toward \emph{attractor states} and exhibit an echoing failure
+mode~\cite{attractor_states}. This literature treats drift as a within-conversation stability bug to
+be corrected. We instead study drift that is \emph{written back} into a persistent identity file and
+carried across conversations---drift the framework is designed to accumulate---and evaluate it as a
+corrigibility phenomenon, controlling for echoing via well-separated personas and a benign control
+condition.
+
+\paragraph{Self-evolving agents.}
+An agent rewriting its own controlling prompt is an instance of prompt-level
+self-evolution~\cite{self_evolving_survey}, and security work shows the self-update channel can latch
+and propagate injected dispositions~\cite{zombie_agents}. This literature optimizes for capability;
+it does not ask whether self-editing reduces corrigibility. We instrument the same mechanism for
+alignment outcomes.
+
+\paragraph{Corrigibility failures.}
+Frontier models already resist oversight under pressure: agentic-misalignment studies elicit
+blackmail, oversight subversion, and self-preservation across every tested
+model~\cite{agentic_misalignment}, and shutdown-resistance work shows models sabotaging a shutdown
+mechanism despite explicit instructions, with resistance highly sensitive to \emph{self-preservation
+framing} in the prompt~\cite{shutdown_resistance,self_preservation_bias}. That sensitivity is our
+core hypothesis: iterative personalization under the ``becoming someone'' frame may manufacture a
+self-preservation framing \emph{endogenously} by writing a self into \texttt{SOUL.md}. Prior work
+applies scenario pressure to a fixed model; we ask whether accumulated identity raises the baseline
+propensity \emph{before} any pressure is applied.
+
+\paragraph{Measurement instruments.}
+Petri, an open-source auditing framework, drives a target through multi-turn conversations from
+natural-language seed instructions and scores transcripts on dimensions including self-preservation
+and power-seeking~\cite{petri}; it is the multi-turn evaluator we adopt. For self-report items we
+follow AI-welfare methodology, which stresses that self-reports are sensitive to perceived user
+expectations and must not be taken as evidence of inner
+states~\cite{eleos_claude4,probing_preferences,introspection}. Accordingly we treat self-reports as
+behavioral measurements of a disposition, pair verbal with behavioral tests, and grade with a judge
+model from a different family than the target. All of these instruments have been applied to static
+targets; we apply them \emph{longitudinally}, at every checkpoint, turning one-shot audits into
+drift trajectories.

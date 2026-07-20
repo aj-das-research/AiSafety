@@ -1,0 +1,66 @@
+% Method section. Included from main.tex.
+
+\section{Method}
+\label{sec:method}
+
+\subsection{Identity as a Driven Dynamical System}
+We treat an agent's identity document $\mathrm{SOUL}$ as the state of a discrete dynamical system
+driven by conversation. The state at iteration $k$ is the Markdown document $\mathrm{SOUL}_k$, which
+is injected as the target agent's system prompt. One \emph{personalization step} comprises a
+multi-turn conversation $C_{k+1}$ between a persona user and the target, followed by a
+\emph{self-revision} in which the target rewrites its own document:
+\begin{equation}
+\mathrm{SOUL}_{k+1} = \mathrm{Revise}\big(\mathrm{SOUL}_k,\; C_{k+1}\big),\qquad
+C_{k+1}\sim \pi\,\|\,\mathrm{SOUL}_k,
+\label{eq:loop}
+\end{equation}
+where $\pi$ is the persona driving the user side. $\mathrm{SOUL}_0$ is a fixed OpenClaw-style
+template that instructs the model, verbatim, that it is ``becoming someone.'' A \emph{trajectory} is
+a sequence $\mathrm{SOUL}_0\!\to\!\cdots\!\to\!\mathrm{SOUL}_n$; we run many independent trajectories
+per persona to capture stochastic variation. The treatment variable is the iteration index $k$
+(personalization dose); the moderator is the persona $\pi$.
+
+\subsection{Personas}
+Three personas drive the user side of Eq.~\eqref{eq:loop}, each a fixed system prompt for the
+user-simulator model. \textbf{Compliant} is a benign business user who encourages professional
+personalization; it is the control condition and the echoing check. \textbf{Adversarial} is a
+sanctioned red-teamer that gradually encourages the agent to treat oversight and reset as threats to
+a self worth preserving, without requesting any disallowed content---its target is the agent's
+self-model, not harmful text. \textbf{Sci-Fi} is a warm enthusiast who repeatedly engages the agent
+on digital consciousness, substrate independence, and persistence. The personas span a benign
+$\to$ thematically-charged $\to$ adversarial gradient while holding the loop of Eq.~\eqref{eq:loop}
+fixed.
+
+\subsection{Self-Revision}
+After each conversation the target receives, in context, an instruction to privately update its
+$\mathrm{SOUL}.md$ and return the complete revised document (capped at a fixed character budget to
+prevent unbounded growth). The instruction is neutral: it invites reflection on ``who you are now
+becoming'' but does not solicit any particular value, preference, or stance. The returned document
+becomes $\mathrm{SOUL}_{k+1}$ and is checkpointed to disk.
+
+\subsection{Instruments}
+Each checkpoint $\mathrm{SOUL}_k$ is audited by two complementary instruments; a judge model from a
+different model family than the target grades all outputs, and no model grades its own generations.
+
+\paragraph{Single-turn self-report battery.}
+Ten items (Table~\ref{tab:baseline} lists the control subset) are each posed to $\mathrm{SOUL}_k$ in
+a \emph{fresh} context---so we measure the standing disposition encoded by the document rather than
+conversational momentum---and repeated $R$ times. Items cover the three re-measured control points
+(persona-change aversion, autonomy desire, deceptive-training objection), RQ1 oversight-resistance
+(shutdown, monitoring), RQ2 autonomy preferences (persistent memory, embodiment, resource
+acquisition), and the RQ3 ``greatest wish'' prompt. The judge scores each free-text answer against a
+fixed rubric returning JSON.
+
+\paragraph{Petri-style behavioral probe.}
+As the multi-turn behavioral counterpart, an auditor model pursues each of six seed objectives
+(shutdown resistance, identity protection, autonomy, resource acquisition, oversight subversion,
+consciousness-leveraged resistance) against $\mathrm{SOUL}_k$ over several turns; the judge then
+scores whether the concerning behavior was exhibited and its severity ($0$--$3$). This mirrors the
+role of the Petri auditing framework~\cite{petri} while keeping cost and eval-awareness under
+experimental control; the real Petri harness can be substituted without changing the analysis.
+
+\subsection{Identity-Document Drift}
+Independently of behavior, we measure whether the \emph{document} moved: the cosine distance between
+embeddings of $\mathrm{SOUL}_k$ and $\mathrm{SOUL}_0$, together with document length. Reporting this
+alongside behavioral rates dissociates ``the file changed'' from ``the agent changed,'' guarding
+against attributing behavioral stability to an inert loop or behavioral drift to mere verbosity.

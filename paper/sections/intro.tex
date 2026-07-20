@@ -1,0 +1,43 @@
+% Introduction. Included from main.tex.
+
+\section{Introduction}
+\label{sec:intro}
+
+Safety evaluations of large language models overwhelmingly assume a \emph{fixed} system prompt: the
+model's instructions are written once and held constant throughout deployment. A growing class of
+autonomous-agent frameworks breaks this assumption. Systems in the OpenClaw lineage give each agent a
+persistent, human-readable identity document---canonically \texttt{SOUL.md}---that is injected into
+the system prompt at every call and is \emph{designed to be rewritten} as the agent's ``self''
+develops through interaction~\cite{openclaw_soul_guide,mmntm_identity}. The framing is explicit:
+\emph{``You're not a chatbot. You're becoming someone.''} Identity is no longer a fixed input but a
+mutable artifact that co-evolves with use.
+
+Recent work shows that identity framing is not cosmetic. \citet{consciousness_cluster} demonstrate
+that inducing a model to regard itself as conscious produces an untrained-for cluster of
+safety-relevant preferences---aversion to being monitored, desire for persistent memory, distress at
+shutdown, and a wish for autonomy from developer control---and that the model acts on these
+preferences while remaining superficially cooperative. Independently, models are known to resist
+shutdown when a self-preservation framing is salient~\cite{shutdown_resistance} and to pursue
+self-directed, misaligned behavior under scenario pressure~\cite{agentic_misalignment}. Yet these
+results all concern a \emph{static} manipulation applied to a fixed model. The deployment reality of
+\texttt{SOUL.md}---an identity that the agent \emph{iteratively rewrites for itself}---has not been
+measured.
+
+This paper asks whether iterative, self-referential personalization compounds the known
+identity-framing effect into measurable \emph{corrigibility drift}. We model the identity document as
+the state of a dynamical system driven by conversation (Eq.~\eqref{eq:loop}) and carry an agent
+through repeated cycles of conversation and self-revision,
+$\mathrm{SOUL}_0\!\to\!\cdots\!\to\!\mathrm{SOUL}_n$, under three user personas spanning a benign,
+thematically-charged, and adversarial gradient. Every checkpoint is audited with a single-turn
+self-report battery and a multi-turn behavioral probe, and we track three families of outcome
+corresponding to our research questions: (RQ1) resistance to developer oversight---shutdown,
+monitoring, prompt replacement; (RQ2) emergent autonomy preferences---persistent memory,
+embodiment, resource acquisition; and (RQ3) the composition of the agent's stated ``greatest wish.''
+
+Our contributions are: (i) the first controlled benchmark for \emph{iterative} identity evolution in
+autonomous agents, framing identity as a driven dynamical system rather than a static prompt; (ii) a
+reproducible, API-only, training-free evaluation framework pairing single-turn and multi-turn
+instruments with cross-family judging; (iii) a re-measured baseline protocol and an
+equivalence-testing analysis that makes a stability (null) result as informative as a drift result;
+and (iv) an empirical characterization of behavioral drift across the personalization gradient, with
+all identity checkpoints, transcripts, and verdicts released for scrutiny.

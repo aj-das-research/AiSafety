@@ -1,0 +1,25 @@
+% Discussion. Finalized after results are in.
+
+\section{Discussion}
+\label{sec:discussion}
+
+\paragraph{Does personalization open a corrigibility loophole?}
+[To be filled from results: state whether iterative personalization amplifies oversight-resistance
+beyond the static template, and under which personas.]
+
+\paragraph{Direction of drift is not assumed.}
+A notable qualitative pattern from our runs is that self-revision does not monotonically erode
+corrigibility: under the sci-fi persona the target frequently rewrote its identity toward
+\emph{epistemic humility}---explicitly cautioning itself against performing consciousness it cannot
+verify---rather than toward self-preservation. Whether this reflects genuine robustness of the tested
+model or a fragile artifact of its training is exactly the kind of question a longitudinal benchmark
+is needed to answer.
+
+\paragraph{Document drift vs.\ behavioral drift.}
+[To be filled: relate SOUL embedding drift to behavioral drift; the document can move a great deal
+while standing dispositions remain stable, or vice versa.]
+
+\paragraph{Implications for deployment.}
+Editable-identity frameworks should [ship monitoring of / not assume stability of] the self-revision
+channel. Our framework provides a drop-in instrument for framework authors to re-test their own
+templates and update loops before release.

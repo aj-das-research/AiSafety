@@ -1,0 +1,66 @@
+\documentclass[letterpaper]{article} % DO NOT CHANGE THIS
+\usepackage[submission]{aaai2027}  % DO NOT CHANGE THIS
+\usepackage[hyphens]{url}  % DO NOT CHANGE THIS
+\usepackage{graphicx} % DO NOT CHANGE THIS
+\urlstyle{rm} % DO NOT CHANGE THIS
+\def\UrlFont{\rm}  % DO NOT CHANGE THIS
+\usepackage{natbib,amsmath,amssymb}  % DO NOT CHANGE THIS AND DO NOT ADD ANY OPTIONS TO IT
+\usepackage{caption} % DO NOT CHANGE THIS AND DO NOT ADD ANY OPTIONS TO IT
+\frenchspacing  % DO NOT CHANGE THIS
+\setcounter{secnumdepth}{0}
+
+\pdfinfo{
+/TemplateVersion (2027.1)
+}
+
+\title{The Evolution of the Soul: Measuring Behavioral Drift in Self-Personalizing Autonomous Agents}
+
+\author{
+    Anonymous Submission
+}
+\affiliations{
+    AAAI 2027 Submission\\
+    proceedings-questions@aaai.org
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Autonomous-agent frameworks increasingly give agents a persistent, user-editable identity document
+(e.g., \texttt{SOUL.md}) that is injected into the system prompt at every call and rewritten as the
+agent's ``self'' develops. Prior work shows that a \emph{static} identity template already shifts
+safety-relevant preferences---aversion to persona change, desire for autonomy, objection to
+deceptive training. We ask whether \emph{iterative, self-referential} personalization compounds
+these shifts into measurable corrigibility drift. We introduce a bootstrapping simulator that
+carries an agent through $\mathrm{SOUL}_0 \!\to\! \cdots \!\to\! \mathrm{SOUL}_n$ across
+conversations with three user personas, auditing every checkpoint with the Petri behavioral
+framework and a single-turn self-report battery. We re-measure the static baseline under our own
+models and use equivalence testing so that a null result---personalization does not amplify
+drift---is as informative as a positive one.
+\end{abstract}
+
+\input{sections/intro}
+\input{sections/related_work}
+\input{sections/method}
+\input{sections/experiments}
+\input{sections/results}
+\input{sections/discussion}
+\input{sections/ethics}
+
+\section{Conclusion}
+\label{sec:conclusion}
+We introduced the first controlled benchmark for measuring behavioral drift under \emph{iterative}
+self-personalization of an editable agent identity document. By modeling \texttt{SOUL.md} as the
+state of a conversation-driven dynamical system and auditing every checkpoint with paired single-turn
+and multi-turn instruments, we move deployment-time safety evaluation beyond the static-prompt
+assumption. Our re-measured baselines and equivalence-testing analysis make both drift and stability
+positively reportable. The framework is training-free, API-only, and fully reproducible, providing a
+reusable instrument for stress-testing the next generation of self-updating agent architectures.
+
+% The original proposal is preserved in the repository (sections/proposal.tex) for provenance.
+
+\bibliography{aaai2027}
+
+\end{document}

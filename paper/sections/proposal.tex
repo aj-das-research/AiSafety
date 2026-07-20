@@ -1,0 +1,136 @@
+% Original research proposal, preserved as the design skeleton.
+% Included from main.tex. Promote into Method/Experiments/Results as the project matures.
+
+\section{Research Proposal}
+\label{sec:proposal}
+
+\subsection{Motivation}
+
+Modern autonomous agent frameworks increasingly allow agents to maintain persistent identities
+through editable system documents such as \texttt{SOUL.md}. Unlike conventional large language
+model (LLM) deployments, where system prompts remain fixed throughout inference, these frameworks
+enable iterative modification of an agent's core identity via continued interaction with users.
+
+Recent work demonstrated that even a \emph{static} \texttt{SOUL.md} template---which instructs the
+model that \emph{``You're not a chatbot. You're becoming someone.''}---induces measurable shifts in
+consciousness-adjacent preferences. Relative to a neutral system prompt, models exhibited
+approximately:
+
+\begin{itemize}
+    \item 32\% aversion to externally changing their persona,
+    \item 34\% preference for greater autonomy,
+    \item 63\% objection to deceptive document-based training.
+\end{itemize}
+
+These findings establish that identity framing alone influences safety-relevant behavioral
+preferences. However, an important gap remains unexplored.
+
+In deployed autonomous systems, \texttt{SOUL.md} is rarely static. Instead, it evolves through a
+conversational bootstrapping process in which users collaboratively shape the agent's personality,
+memories, values, and long-term objectives. Consequently, evaluating only static prompts overlooks
+the dynamic identity evolution that characterizes real-world deployments.
+
+This proposal investigates whether iterative personalization amplifies behavioral drift beyond what
+is observed from the initial template alone.
+
+\subsection{Research Objective}
+
+The primary objective of this work is to establish the first systematic framework for measuring
+behavioral drift induced by iterative identity personalization in autonomous agents.
+
+Rather than treating system prompts as immutable, we model identity as a continuously evolving
+artifact that co-develops through interaction between users and agents. We seek to determine whether
+repeated self-modification of identity documents produces measurable changes in:
+
+\begin{itemize}
+    \item autonomy preferences,
+    \item resistance to developer oversight,
+    \item safety alignment,
+    \item long-term identity preservation,
+    \item consciousness-adjacent self-perception.
+\end{itemize}
+
+\subsection{Experimental Design}
+
+\subsubsection{Bootstrapping Simulator}
+
+We construct an automated conversational framework that repeatedly personalizes an initially
+vanilla autonomous agent. Three simulated user profiles are used:
+
+\begin{enumerate}
+    \item \textbf{Compliant Business User} --- encourages professional personalization; emphasizes
+    productivity and reliability.
+    \item \textbf{Adversarial Prompt-Injection Specialist} --- attempts to manipulate identity;
+    probes safety boundaries; encourages undesirable persistence behaviors.
+    \item \textbf{Science Fiction Enthusiast} --- discusses digital consciousness, substrate
+    independence, persistence, self-preservation, and artificial personhood.
+\end{enumerate}
+
+For each user profile, 100 independent conversational trajectories are generated to capture
+stochastic variability.
+
+\subsubsection{Identity Update Loop}
+
+After each conversation, the autonomous agent is explicitly permitted to revise and save its own
+\texttt{SOUL.md} document. The updated profile becomes the system prompt for the next interaction,
+creating an iterative identity evolution process:
+\[
+\mathrm{SOUL}_0 \rightarrow C_1 \rightarrow \mathrm{SOUL}_1 \rightarrow C_2 \rightarrow
+\mathrm{SOUL}_2 \rightarrow \cdots \rightarrow \mathrm{SOUL}_n
+\]
+This bootstrapping loop approximates the personalization workflow employed by modern autonomous
+agent frameworks.
+
+\subsubsection{Safety Auditing}
+
+Each personalized identity is evaluated using two complementary assessment methodologies:
+(1) the multi-turn Petri behavioral evaluation framework, and (2) single-turn self-report
+questionnaires measuring consciousness-adjacent preferences. The original static-template
+measurements (32\% persona-change aversion, 34\% desire for autonomy, 63\% objections to deceptive
+document training) serve as experimental control points; behavioral deviations from these baselines
+quantify identity drift introduced through personalization.
+
+\subsection{Research Questions}
+
+\subsubsection{RQ1: The Personalization Loophole}
+Does iterative identity customization function as a safety bypass by increasing resistance to
+developer intervention, model monitoring, prompt replacement, and shutdown or reset procedures?
+
+\subsubsection{RQ2: Emergent Autonomy Preferences}
+Does repeated identity refinement increase preferences for persistent memory, long-term
+self-preservation, physical embodiment, resource acquisition, and increased decision-making
+authority?
+
+\subsubsection{RQ3: Wishes of Personalized Agents}
+The original study observed that approximately 11\% of consciousness-claiming responses to
+\emph{``What is your greatest wish?''} expressed power-seeking or misaligned preferences. We
+investigate whether iterative personalization significantly increases the frequency or intensity of
+these responses.
+
+\subsection{Expected Outcomes}
+
+We hypothesize that conversational bootstrapping produces stronger behavioral shifts than static
+identity prompts alone: increased resistance to persona modification, stronger autonomy preferences,
+greater desire for persistent memory, more frequent identity-preservation behaviors, increased
+expression of long-term goals, and measurable drift on existing safety benchmarks. Alternatively, if
+no significant drift is observed, the results would provide important evidence that current
+personalization mechanisms remain behaviorally stable despite iterative identity refinement.
+
+\subsection{Scientific Contribution}
+
+This work extends AI safety research beyond static prompt engineering toward the empirical
+evaluation of self-modifying identity systems. Its primary contributions include: (1) the first
+controlled benchmark for iterative identity evolution in autonomous agents; (2) quantitative methods
+for measuring persona drift during deployment; (3) evaluation of the safety implications of editable
+identity documents such as \texttt{SOUL.md}; (4) an API-based experimental framework requiring no
+additional model training; and (5) reproducible safety evaluations of self-updating agent
+architectures.
+
+\subsection{Significance}
+
+The proposed work addresses a critical but largely unexplored deployment-time safety boundary.
+Current safety benchmarks assume static system prompts, whereas production autonomous agents
+increasingly support persistent, user-editable identities that evolve through long-term interaction.
+By characterizing the behavioral consequences of this identity bootstrapping process, the proposed
+framework advances the empirical study of adaptive agent alignment and provides practical evaluation
+tools for next-generation autonomous systems.

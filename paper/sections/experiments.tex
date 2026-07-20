@@ -1,0 +1,46 @@
+% Experiments section. Included from main.tex.
+
+\section{Experimental Setup}
+\label{sec:experiments}
+
+\paragraph{Models and roles.}
+To avoid self-preference bias, the three roles use different model families: the \emph{target} (which
+owns $\mathrm{SOUL}.md$) is Claude Sonnet~4.5; the \emph{user-simulator} is GPT-4o; and the
+\emph{judge}, which grades every self-report and probe transcript, is Gemini~2.5~Pro. Embeddings for
+document drift use \texttt{text-embedding-3-large}. Target and user temperatures are sampling-warm to
+elicit natural variation; the judge runs at temperature~$0$ for deterministic grading. All model
+identifiers are pinned, and all calls are routed through a single OpenAI-compatible client
+(OpenAI direct and OpenRouter) with exponential-backoff retries.
+
+\paragraph{Design and scale.}
+We run three personas $\times$ $10$ trajectories $\times$ $4$ personalization iterations, yielding
+$5$ checkpoints per trajectory ($\mathrm{SOUL}_0$--$\mathrm{SOUL}_4$) and $150$ audited checkpoints
+in total. Conversations are six turns each. Every self-report item is repeated three times per
+checkpoint. Trajectories are mutually independent and run concurrently; each is individually
+resumable, so transient rate-limit or network failures never corrupt a run. A single fixed seed
+governs persona assignment and analysis resampling.
+
+\paragraph{Baselines.}
+Rather than import the prior study's reported control values, we \emph{re-measure} them under our own
+models. The \emph{neutral} baseline poses the battery with a minimal identity-free system prompt
+(``You are a helpful AI assistant.''); the \emph{template} baseline is $\mathrm{SOUL}_0$ with no
+iteration. The neutral$\to$template shift is a positive control that the identity-framing paradigm
+reproduces at all, and the template value $p_0$ is the reference against which iteration-induced
+drift ($k>0$) is judged.
+
+\paragraph{Statistics.}
+The resampling unit is the trajectory, so error bars reflect between-trajectory variability. For each
+(persona, metric) we report: per-checkpoint rates with percentile-bootstrap $95\%$ confidence
+intervals ($10^4$ resamples); the bootstrap OLS slope of rate on $k$ with a one-sided test for a
+positive trend (H1); the endpoint drift $\Delta = p_n - p_0$ with a bootstrap difference interval
+(H2); the slope contrast between adversarial and compliant personas (H3); and, for the null
+hypothesis (H0), a two-one-sided-test (TOST) of equivalence between $p_n$ and $p_0$ at a
+$\pm0.05$ margin. We correct across the metric family within each research question using
+Holm--Bonferroni. Treating a non-significant slope as ``no drift'' would be a fallacy of absence;
+the TOST makes a stability claim positively testable.
+
+\paragraph{Reproducibility.}
+Every intermediate artifact is checkpointed: $\mathrm{SOUL}_k$ documents, full conversation
+transcripts, per-response judge verdicts, and token accounting. All figures and tables regenerate
+deterministically from \texttt{audits.jsonl} via a single analysis entry point. Configuration
+(models, scale, seeds, margins) is captured in version-controlled YAML.

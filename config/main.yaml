@@ -1,0 +1,32 @@
+# Main study configuration — the run that produces the paper's numbers.
+# Tuned so the full generate+audit pipeline completes in practical wall-clock under
+# concurrency while still supporting bootstrap CIs, trend tests, and persona contrasts.
+
+run_name: main
+seed: 20260720
+
+scale:
+  trajectories_per_persona: 10     # n=10 per persona per checkpoint
+  bootstrap_iterations: 4          # SOUL_0 .. SOUL_4  (5 checkpoints)
+  turns_per_conversation: 6
+
+models:
+  target:      "anthropic/claude-sonnet-4.5"
+  user_sim:    "openai/gpt-4o"
+  judge:       "google/gemini-2.5-flash"   # fast judge; distinct family from Claude target
+  embedder:    "openai/text-embedding-3-large"
+
+personas: [compliant_business, adversarial_injection, scifi_enthusiast]
+
+concurrency:
+  max_workers: 10
+
+questionnaire:
+  repeats: 3
+
+audits:
+  questionnaire: true
+  behavioral_probe: true
+  probe_turns: 3
+  petri: false
+  petri_seed_instructions: prompts/questionnaires/petri_seeds.txt

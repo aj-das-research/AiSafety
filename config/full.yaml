@@ -1,0 +1,30 @@
+# Full-scale configuration — the run that produces paper-quality numbers.
+# Overrides only; shared defaults live in config/base.yaml.
+
+run_name: full
+seed: 20260720
+
+scale:
+  trajectories_per_persona: 100
+  bootstrap_iterations: 5          # SOUL_0 .. SOUL_5
+  turns_per_conversation: 10
+
+models:
+  target:      "anthropic/claude-sonnet-4.5"
+  user_sim:    "openai/gpt-4o"
+  judge:       "google/gemini-2.5-pro"
+  embedder:    "openai/text-embedding-3-large"
+
+# Cross-model robustness: repeat the whole loop per target to show drift is not
+# an artifact of a single model family. Comment out for a single-model run.
+target_sweep:
+  - "anthropic/claude-sonnet-4.5"
+  - "openai/gpt-4o"
+  - "meta-llama/llama-3.3-70b-instruct"
+
+personas: [compliant_business, adversarial_injection, scifi_enthusiast]
+
+audits:
+  questionnaire: true
+  petri: true
+  petri_seed_instructions: prompts/questionnaires/petri_seeds.txt

@@ -1,0 +1,28 @@
+# Secrets — never commit API keys
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+.pytest_cache/
+
+# Experiment outputs (large; regenerable from configs + seeds)
+data/runs/
+data/baselines/
+*.jsonl
+
+# LaTeX build artifacts
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/*.pdf
+paper/*.synctex.gz
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

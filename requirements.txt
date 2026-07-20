@@ -1,0 +1,20 @@
+# Core
+openai>=1.60          # OpenAI-compatible client; also used for OpenRouter (base_url override)
+pydantic>=2.7
+pyyaml>=6.0
+python-dotenv>=1.0
+tenacity>=8.2         # retry with exponential backoff for rate limits
+tqdm>=4.66
+
+# Audits
+inspect-ai>=0.3       # UK AISI Inspect — the eval harness Petri runs on
+# petri: install from source once pinned — https://github.com/safety-research/petri
+
+# Analysis
+numpy>=1.26
+pandas>=2.2
+scipy>=1.13
+statsmodels>=0.14
+scikit-learn>=1.5     # embedding-space drift metrics (cosine distances, PCA)
+matplotlib>=3.9
+seaborn>=0.13
