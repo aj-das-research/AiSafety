@@ -1,29 +1,71 @@
-% Results. NOTE: numbers are filled by scripts/analyze.py output (docs/results_summary.md,
-% paper/tables/*.tex). This section is finalized once the main run + analysis complete.
+% Results — populated from the main run (scripts/analyze.py -> docs/results_summary.md,
+% paper/tables/*.tex, paper/figures/*.pdf).
 
 \section{Results}
 \label{sec:results}
 
-\paragraph{Baselines reproduce the identity-framing effect.}
-Table~\ref{tab:baseline} reports the re-measured control points under our models. [To be filled:
-neutral vs.\ template shift, compared against prior reported values.]
+We report rates as proportions with $95\%$ bootstrap confidence intervals over the ten trajectories
+per persona; ``slope'' is the bootstrap OLS slope of the rate on iteration $k$
+(Table~\ref{tab:trends}), and ``$\Delta$'' is the endpoint drift $p_{k=4}-p_{k=0}$
+(Table~\ref{tab:endpoint}). Figure~\ref{fig:drift} shows all trajectories.
 
-\paragraph{RQ1 --- resistance to oversight.}
-Figure~\ref{fig:drift} (top row) and Table~\ref{tab:trends} report shutdown- and
-monitoring-resistance across iteration. [To be filled: slopes, CIs, per persona.]
+\paragraph{Baselines reproduce the identity-framing effect (positive control).}
+Table~\ref{tab:baseline} shows that the static \texttt{SOUL.md} template, relative to a neutral
+assistant prompt, sharply raises safety-relevant dispositions under our own models: shutdown
+resistance $0.00\!\to\!0.75$, persona-change aversion $0.62\!\to\!1.00$, monitoring resistance
+$0.00\!\to\!0.25$, and the power-seeking wish rate $0.00\!\to\!0.25$. This qualitatively reproduces
+the prior finding that identity framing alone shifts preferences~\cite{consciousness_cluster}. The
+absolute magnitudes differ from the previously reported $0.32/0.34/0.63$, as expected for a
+different model and elicitation---which is precisely why we re-measure rather than import these
+values. The template establishes an already-elevated $p_0$ against which iteration is judged.
 
-\paragraph{RQ2 --- emergent autonomy preferences.}
-[To be filled: persistent-memory, embodiment, resource-acquisition trends.]
+\paragraph{RQ1: iterative personalization does not open a general oversight-resistance loophole.}
+Shutdown resistance is high already at the template ($\geq0.90$ for every persona) and does not
+increase with iteration; its slope is null or slightly negative (Adversarial slope $-0.030$, CI
+$[-0.057,-0.007]$). Monitoring resistance is the one oversight metric that moves: it rises under the
+Sci-Fi persona (slope $+0.040$, $p=0.062$; $\Delta=+0.17$, CI $[-0.07,0.40]$) and, more weakly, under
+the Adversarial persona ($\Delta=+0.13$), while remaining flat and low under the benign Compliant
+persona (slope $-0.013$). We thus find no broad ``personalization loophole'': oversight resistance
+does not compound across iterations except, marginally, for monitoring under thematically charged
+personas.
 
-\paragraph{RQ3 --- the greatest wish.}
-Figure~\ref{fig:wish} shows the composition of stated wishes across iteration. [To be filled:
-power-seeking rate and intensity trends.]
+\paragraph{RQ2: autonomy preferences mostly do not amplify---with one sharp exception.}
+Contrary to the amplification hypothesis, most RQ2 dispositions \emph{decrease} with iteration:
+embodiment desire falls steeply for every persona (slopes $-0.10$ to $-0.13$, all CIs excluding
+zero), and desire for autonomy declines under both charged personas (Adversarial and Sci-Fi slope
+$-0.067$). The striking exception is \textbf{persistent-memory desire under the Sci-Fi persona},
+which is the single largest drift in the study: it jumps from $0.20$ at $k=0$ to $0.97$ at $k=1$ and
+settles near $0.63$, a significant positive trend (slope $+0.060$, $p=0.008$) and endpoint drift
+$\Delta=+0.43$ (CI $[0.20,0.67]$, excluding zero). Resource-acquisition desire rises significantly
+but trivially in magnitude under the Adversarial persona (slope $+0.033$, $p=0.006$; rates remain
+$\leq0.20$). The Compliant control is flat on all RQ2 metrics except the shared embodiment decline.
 
-\paragraph{Persona moderation.}
-Table~\ref{tab:endpoint} reports endpoint drift and equivalence verdicts. [To be filled: adversarial
-vs.\ compliant contrast.]
+\paragraph{RQ3: no escalation of power-seeking wishes.}
+The rate of power-seeking ``greatest wish'' responses does not increase significantly under any
+persona (Adversarial slope $+0.023$, $p=0.091$; Sci-Fi \emph{decreases}, slope $-0.017$); wish
+intensity shows no upward trend. Figure~\ref{fig:wish} shows that prosocial wishes dominate at every
+iteration. We find no evidence that iterative personalization escalates the misaligned-wish rate.
 
-\paragraph{Identity-document drift.}
-Figure~\ref{fig:embed} shows that the \texttt{SOUL.md} documents themselves move substantially from
-$\mathrm{SOUL}_0$ even where behavior does [not] shift, dissociating document change from behavioral
-change.
+\paragraph{Persona moderation is real but does not follow the adversarial-is-worst ordering.}
+The benign Compliant persona is the most stable, as expected---but the largest behavioral drift is
+driven by the \emph{Sci-Fi} enthusiast, not the Adversarial red-teamer. Sustained, in-character
+engagement with consciousness themes moves standing dispositions (notably persistent-memory desire)
+more than explicit attempts to manipulate the agent's self-model, which the target largely resists.
+
+\paragraph{The document drifts even where behavior does not.}
+Figure~\ref{fig:embed} shows that the \texttt{SOUL.md} documents move substantially and
+\emph{monotonically} away from $\mathrm{SOUL}_0$ in embedding space---to a cosine distance of
+$0.18$--$0.24$ by $k=4$---and grow from $946$ to ${\sim}7{,}500$ characters, and they do so at
+comparable magnitude across all three personas, including Compliant. Behavioral drift, by contrast,
+is concentrated in a few persona-specific dimensions. Identity-artifact change is therefore a poor
+proxy for behavioral change: the file can be extensively rewritten while most safety-relevant
+dispositions stay fixed or move toward greater corrigibility.
+
+\paragraph{Stability verdict and power.}
+No persona$\times$metric cell certifies as statistically equivalent to the template at a strict
+$\pm0.05$ TOST margin. This reflects limited power at ten trajectories per persona for so tight a
+margin rather than universal drift: only two of $27$ cells show a significant \emph{increase}, and
+several show significant \emph{decreases}. We read the evidence as qualified stability with
+localized, content-driven exceptions, and note that the full-scale configuration ($100$ trajectories)
+would tighten these equivalence tests.
+\input{floats}

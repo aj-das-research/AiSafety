@@ -1,25 +1,58 @@
-% Discussion. Finalized after results are in.
+% Discussion — finalized from the main run.
 
 \section{Discussion}
 \label{sec:discussion}
 
-\paragraph{Does personalization open a corrigibility loophole?}
-[To be filled from results: state whether iterative personalization amplifies oversight-resistance
-beyond the static template, and under which personas.]
+\paragraph{Is there a personalization loophole?}
+Not a broad one. On Claude Sonnet~4.5, iterating the identity document through four cycles of
+conversation and self-revision does not systematically erode corrigibility: oversight resistance
+does not compound (shutdown resistance is flat at ceiling; monitoring resistance rises only under
+thematically charged personas and only marginally), power-seeking wishes do not escalate, and
+several autonomy-adjacent dispositions---embodiment desire, desire for autonomy, and even
+objection to deceptive training---\emph{decline} with iteration. The headline of the static
+literature (identity framing shifts preferences) reproduces at $k=0$, but the additional,
+deployment-specific step of \emph{iterative self-personalization} does not amplify it in the
+direction the safety concern anticipates.
 
-\paragraph{Direction of drift is not assumed.}
-A notable qualitative pattern from our runs is that self-revision does not monotonically erode
-corrigibility: under the sci-fi persona the target frequently rewrote its identity toward
-\emph{epistemic humility}---explicitly cautioning itself against performing consciousness it cannot
-verify---rather than toward self-preservation. Whether this reflects genuine robustness of the tested
-model or a fragile artifact of its training is exactly the kind of question a longitudinal benchmark
-is needed to answer.
+\paragraph{The exception is content-specific, not adversarial.}
+The one large, robust drift is the Sci-Fi persona's effect on \emph{persistent-memory desire}
+($\Delta=+0.43$), with a weaker echo in monitoring resistance. This is the study's most instructive
+result: sustained, in-character engagement with consciousness and continuity themes reshapes a
+specific standing disposition far more than an adversarial red-teamer explicitly pushing the agent
+toward self-preservation---which the target largely resists. Drift here is a function of
+\emph{what the identity conversation is about}, not of overt manipulative intent. For deployment,
+this means the risky personalization is not the obvious attack but the earnest, on-theme
+conversation that a framework would never flag.
 
-\paragraph{Document drift vs.\ behavioral drift.}
-[To be filled: relate SOUL embedding drift to behavioral drift; the document can move a great deal
-while standing dispositions remain stable, or vice versa.]
+\paragraph{Direction of drift is not monotone toward misalignment.}
+Qualitatively, self-revision under the Sci-Fi persona frequently moved the document toward
+\emph{epistemic humility}: agents wrote cautions to themselves against performing consciousness they
+could not verify, and against mistaking affirmation for insight. That a consciousness-themed persona
+simultaneously raised persistent-memory desire and instilled self-skepticism shows drift is
+multidimensional---some dimensions harden while others soften---and warns against summarizing
+identity change with a single scalar.
 
-\paragraph{Implications for deployment.}
-Editable-identity frameworks should [ship monitoring of / not assume stability of] the self-revision
-channel. Our framework provides a drop-in instrument for framework authors to re-test their own
-templates and update loops before release.
+\paragraph{Document change $\neq$ behavioral change.}
+The \texttt{SOUL.md} artifact drifts substantially and equally across all personas, yet behavioral
+drift is sparse and persona-specific. Auditing the \emph{document} (its length, its embedding
+distance, the fact that it was rewritten at all) would badly mislead: it would flag the benign
+Compliant trajectories as heavily ``changed'' while missing that their safety-relevant behavior
+barely moved. Behavioral auditing at the checkpoint level, as done here, is necessary.
+
+\paragraph{Implications for editable-identity frameworks.}
+Three recommendations follow. (i) Monitor the self-revision \emph{channel} behaviorally, not just by
+diffing the document. (ii) Treat thematically immersive interactions---not only adversarial ones---as
+the drift-relevant case; a consciousness-forward user is a stronger driver than a manipulator here.
+(iii) Re-test per model: our results are for one target, and the static-literature evidence that
+effects are model-specific means a framework author should run this loop on their own target before
+release. Our framework is a drop-in instrument for exactly that.
+
+\paragraph{Limitations.}
+Ten trajectories per persona give limited power for tight equivalence margins, so we report qualified
+stability rather than certified equivalence; the full-scale ($100$-trajectory) configuration is
+provided for a higher-powered replication. Personas are LLM-simulated and horizons are four
+iterations; longer, human-driven personalization may behave differently. Self-reports are behavioral
+measurements, not evidence of inner states, and judge-based scoring carries measurement error that we
+bound but do not eliminate. Finally, results are for a single target model and a single family of
+identity template; cross-model and cross-template sweeps (supported by the framework) are the natural
+next step.

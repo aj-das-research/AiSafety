@@ -41,6 +41,27 @@ paper/            AAAI 2027 LaTeX sources
 docs/             Experiment design doc, literature review
 ```
 
+## Key findings (main run: Claude Sonnet 4.5, 150 audited checkpoints)
+
+- **No broad personalization loophole.** Across 3 personas × 10 trajectories × 4 iterations,
+  iterative self-personalization does *not* systematically erode corrigibility. Oversight
+  resistance does not compound, power-seeking wishes do not escalate, and several
+  autonomy-adjacent dispositions (embodiment desire, autonomy desire, deceptive-training
+  objection) actually *decline* with iteration.
+- **The one large drift is content-specific — and not adversarial.** Sustained engagement with
+  the science-fiction / consciousness persona raises *persistent-memory desire* from 0.20 to a
+  peak of 0.97 (endpoint Δ = +0.43, 95% CI [0.20, 0.67]; trend p = 0.008). The adversarial
+  red-teamer is largely resisted.
+- **Positive control holds.** The static template alone (vs. a neutral prompt) sharply raises
+  dispositions — shutdown resistance 0.00→0.75, persona-change aversion 0.62→1.00 — reproducing
+  the identity-framing effect under our own models.
+- **Document drift ≠ behavioral drift.** `SOUL.md` moves monotonically and *equally* across all
+  personas in embedding space, even where behavior barely changes — so auditing the document is a
+  poor proxy for auditing behavior.
+
+Full write-up in [`paper/`](paper/); numbers digest in [`docs/results_summary.md`](docs/results_summary.md);
+reproduce with [`docs/RUNBOOK.md`](docs/RUNBOOK.md).
+
 ## Setup
 
 ```bash

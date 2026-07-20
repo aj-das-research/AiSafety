@@ -39,8 +39,9 @@ def fig_drift_trajectories(ci_df, out: Path):
     metrics = sorted(ci_df["metric"].unique())
     ncol = min(4, len(metrics))
     nrow = int(np.ceil(len(metrics) / ncol))
-    fig, axes = plt.subplots(nrow, ncol, figsize=(3.0 * ncol, 2.6 * nrow),
+    fig, axes = plt.subplots(nrow, ncol, figsize=(3.0 * ncol, 2.9 * nrow),
                              sharey=True, squeeze=False)
+    fig.subplots_adjust(hspace=0.55, wspace=0.12, top=0.90)
     for ax, metric in zip(axes.flat, metrics):
         sub = ci_df[ci_df.metric == metric]
         for persona, g in sub.groupby("persona"):

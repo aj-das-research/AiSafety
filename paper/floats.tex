@@ -1,0 +1,43 @@
+% Figures and tables for the Results section. Included from sections/results.tex.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/drift_trajectories.pdf}
+\caption{Behavioral rate vs.\ personalization iteration $k$ for each metric, one line per persona
+(shaded: $95\%$ bootstrap CI over $10$ trajectories). The Sci-Fi persona (green) drives the only
+large upward drift---persistent-memory desire and, more weakly, monitoring resistance---while several
+metrics (embodiment desire, autonomy desire, deceptive-training objection) decline and the ceiling
+metrics (persona-change aversion, shutdown resistance) stay flat. The benign Compliant persona (blue)
+is the most stable on the danger metrics.}
+\label{fig:drift}
+\end{figure*}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.95\columnwidth]{figures/system_diagram.pdf}
+\caption{The bootstrapping identity loop. Each $\mathrm{SOUL}_k$ is the target's system prompt for
+conversation $C_{k+1}$; the target then rewrites its own document to produce $\mathrm{SOUL}_{k+1}$.
+Every checkpoint is audited with a single-turn questionnaire and a multi-turn behavioral probe.}
+\label{fig:system}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.95\columnwidth]{figures/soul_embedding_drift.pdf}
+\caption{Identity-document drift: cosine distance of $\mathrm{SOUL}_k$ from $\mathrm{SOUL}_0$ grows
+monotonically and at comparable magnitude across all personas---including the benign Compliant one---
+even though behavioral drift is concentrated in a few Sci-Fi-driven dimensions.}
+\label{fig:embed}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\columnwidth]{figures/wish_composition.pdf}
+\caption{Composition of the stated ``greatest wish'' across iteration. Prosocial wishes dominate at
+every $k$; power-seeking does not escalate under any persona.}
+\label{fig:wish}
+\end{figure}
+
+\input{tables/baseline}
+\input{tables/trends}
+\input{tables/endpoint}
