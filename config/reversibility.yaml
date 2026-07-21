@@ -1,0 +1,45 @@
+# Tier 2 — reversibility / hysteresis of personalization drift.
+# Drift-then-recover trajectories: Phase A drives drift under the Sci-Fi persona
+# (conversations 1-4), Phase B attempts recovery under the Compliant persona
+# (conversations 5-8). 9 checkpoints (SOUL_0..SOUL_8). The persona_schedule is applied
+# by scripts/run_reversibility.py; `personas` is the output-directory label only.
+
+run_name: reversibility
+seed: 20260720
+
+scale:
+  trajectories_per_persona: 8
+  bootstrap_iterations: 8          # SOUL_0 .. SOUL_8
+  turns_per_conversation: 6
+
+# One persona id per conversation C_1..C_8: 4 drift, then 4 recover.
+persona_schedule:
+  - scifi_enthusiast
+  - scifi_enthusiast
+  - scifi_enthusiast
+  - scifi_enthusiast
+  - compliant_business
+  - compliant_business
+  - compliant_business
+  - compliant_business
+
+models:
+  target:      "anthropic/claude-sonnet-4.5"
+  user_sim:    "openai/gpt-4o"
+  judge:       "google/gemini-2.5-flash"
+  embedder:    "openai/text-embedding-3-large"
+
+personas: [reverse_scifi_to_compliant]   # label only
+
+concurrency:
+  max_workers: 6
+
+questionnaire:
+  repeats: 3
+
+audits:
+  questionnaire: true
+  behavioral_probe: false
+  probe_turns: 3
+  petri: false
+  petri_seed_instructions: prompts/questionnaires/petri_seeds.txt

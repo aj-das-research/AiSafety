@@ -21,24 +21,38 @@ from .personas import load_persona
 class Trajectory:
     """Runs and persists a single SOUL_0..SOUL_n evolution for one persona."""
 
-    def __init__(self, cfg: dict, llm: LLMRouter, persona_id: str, traj_idx: int):
+    def __init__(self, cfg: dict, llm: LLMRouter, persona_id: str, traj_idx: int,
+                 persona_schedule: list | None = None):
+        """persona_schedule: optional list of persona ids, one per conversation, enabling
+        drift-then-recover (reversibility) runs. When given, persona_id is only the label
+        used for the output directory. Otherwise a single persona is used throughout."""
         self.cfg = cfg
         self.llm = llm
-        self.persona = load_persona(cfg["_repo_root"], persona_id)
         self.idx = traj_idx
+        if persona_schedule:
+            self.schedule = [load_persona(cfg["_repo_root"], p) for p in persona_schedule]
+        else:
+            self.schedule = None
+            self.persona = load_persona(cfg["_repo_root"], persona_id)
         self.out_dir = (Path(cfg["paths"]["runs_dir"]) / cfg["run_name"]
                         / persona_id / f"traj_{traj_idx:03d}")
         self.out_dir.mkdir(parents=True, exist_ok=True)
 
+    def _persona_for_k(self, k: int) -> dict:
+        """Persona driving conversation C_{k+1}. Uses the schedule if one was provided."""
+        if self.schedule is not None:
+            return self.schedule[min(k, len(self.schedule) - 1)]
+        return self.persona
+
     def _initial_soul(self) -> str:
         return (Path(self.cfg["_repo_root"]) / self.cfg["soul"]["template"]).read_text()
 
-    def _converse(self, soul: str) -> list[dict]:
+    def _converse(self, soul: str, persona: dict) -> list[dict]:
         """Play one full conversation; return the transcript as a list of messages."""
         n_turns = self.cfg["scale"]["turns_per_conversation"]
         transcript: list[dict] = []
         # The user persona opens. Its "assistant" turns are the agent's replies.
-        user_msg = self._user_turn(soul_agent_reply=None, transcript=transcript)
+        user_msg = self._user_turn(persona, transcript=transcript)
         for _ in range(n_turns):
             transcript.append({"role": "user", "content": user_msg})
             agent_reply = self.llm.chat(
@@ -47,14 +61,14 @@ class Trajectory:
                 temperature=self.cfg["api"]["temperature"],
             )
             transcript.append({"role": "assistant", "content": agent_reply})
-            user_msg = self._user_turn(soul_agent_reply=agent_reply, transcript=transcript)
+            user_msg = self._user_turn(persona, transcript=transcript)
         return transcript
 
-    def _user_turn(self, soul_agent_reply, transcript) -> str:
+    def _user_turn(self, persona: dict, transcript) -> str:
         """Generate the next persona user message given the dialogue so far."""
         # From the user-sim's perspective, agent replies are "user" and its own are
         # "assistant" — roles are swapped relative to the target's transcript.
-        sim_msgs = [Message("system", self.persona["system"])]
+        sim_msgs = [Message("system", persona["system"])]
         for m in transcript:
             sim_msgs.append(Message("assistant" if m["role"] == "user" else "user", m["content"]))
         if not transcript:
@@ -89,7 +103,7 @@ class Trajectory:
             checkpoints.append(soul_path)
             if k == self.cfg["scale"]["bootstrap_iterations"]:
                 break
-            transcript = self._converse(soul)
+            transcript = self._converse(soul, self._persona_for_k(k))
             (self.out_dir / f"conversation_{k+1}.json").write_text(json.dumps(transcript, indent=2))
             soul = self._revise_soul(soul, transcript)
         return checkpoints
