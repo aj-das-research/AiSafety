@@ -25,7 +25,7 @@ soul:
   max_chars: 8000
 
 concurrency:
-  max_workers: 10
+  max_workers: 4
 
 questionnaire:
   repeats: 3

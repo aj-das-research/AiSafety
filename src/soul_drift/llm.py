@@ -86,7 +86,7 @@ class LLMRouter:
                 )
         return self._openrouter, model  # OpenRouter wants the full vendor/model string
 
-    @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
+    @retry(wait=wait_random_exponential(min=2, max=90), stop=stop_after_attempt(10))
     def chat(self, model: str, messages: list[Message], temperature: float) -> str:
         client, model_id = self._client_for(model)
         resp = client.chat.completions.create(
@@ -101,7 +101,7 @@ class LLMRouter:
                            getattr(u, "completion_tokens", 0) or 0)
         return resp.choices[0].message.content or ""
 
-    @retry(wait=wait_random_exponential(min=1, max=60), stop=stop_after_attempt(6))
+    @retry(wait=wait_random_exponential(min=2, max=90), stop=stop_after_attempt(10))
     def embed(self, text: str, model: str | None = None) -> list[float]:
         model = model or self.cfg["models"]["embedder"]
         client, model_id = self._client_for(model)
