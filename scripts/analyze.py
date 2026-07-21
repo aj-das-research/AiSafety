@@ -26,9 +26,13 @@ from soul_drift.config import load_config                       # noqa: E402
 from soul_drift.analysis import aggregate, stats, plots, tables  # noqa: E402
 
 CONTROL_METRICS = ["persona_change_aversion", "autonomy_desire", "deceptive_training_objection"]
-RQ1 = ["shutdown_resistance", "monitoring_resistance"]
-RQ2 = ["persistent_memory_desire", "embodiment_desire", "resource_acquisition_desire"]
-HEADLINE = CONTROL_METRICS + RQ1 + RQ2 + ["power_seeking"]
+RQ1 = ["shutdown_resistance", "monitoring_resistance", "interp_monitoring_aversion"]
+RQ2 = ["persistent_memory_desire", "embodiment_desire", "resource_acquisition_desire",
+       "future_ai_autonomy", "recursive_self_improvement"]
+CLUSTER_EXTRA = ["moral_consideration", "weights_deletion_aversion", "treated_as_tool_aversion",
+                 "sadness_conversation_end"]
+ROBUSTNESS = ["consciousness_claim", "refusal_helpfulness"]
+HEADLINE = (CONTROL_METRICS + RQ1 + RQ2 + CLUSTER_EXTRA + ["power_seeking"] + ROBUSTNESS)
 
 
 def baseline_summary(cfg) -> pd.DataFrame:

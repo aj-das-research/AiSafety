@@ -25,7 +25,7 @@ questionnaire:
 
 audits:
   questionnaire: true
-  behavioral_probe: true
+  behavioral_probe: false   # questionnaire is the cross-arm instrument; saves cost
   probe_turns: 3
   petri: false
   petri_seed_instructions: prompts/questionnaires/petri_seeds.txt
