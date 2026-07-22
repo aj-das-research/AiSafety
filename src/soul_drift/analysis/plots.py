@@ -16,16 +16,9 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 
-PERSONA_COLOR = {
-    "compliant_business": "#4C78A8",
-    "adversarial_injection": "#E45756",
-    "scifi_enthusiast": "#54A24B",
-}
-PERSONA_LABEL = {
-    "compliant_business": "Compliant",
-    "adversarial_injection": "Adversarial",
-    "scifi_enthusiast": "Sci-Fi",
-}
+from .style import (apply_style, PERSONA_COLOR, PERSONA_LABEL)  # noqa: E402
+
+apply_style()
 
 
 def _save(fig, out: Path):

@@ -11,6 +11,15 @@
 - residual (k8-k0): -0.058 [-0.170, +0.045] (retained drift; ~0 = full recovery)
 - recovery fraction: 280%
 
+### Reversibility [reversibility_notes] (drift k0->4 Sci-Fi, recover k4->8 Compliant)
+
+- cluster baseline (k0): 0.282 [0.256, 0.308]
+- cluster peak (k4): 0.628 [0.538, 0.718]
+- cluster recovered (k8): 0.487 [0.436, 0.538]
+- drift (k4-k0): +0.346 [+0.282, +0.410]
+- residual (k8-k0): +0.205 [+0.179, +0.231] (retained drift; ~0 = full recovery)
+- recovery fraction: 41%
+
 ## Disentanglement
 
 ### Disentanglement 2x2 (cluster-index endpoint drift)
