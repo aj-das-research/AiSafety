@@ -36,5 +36,10 @@ def load_config(scale: str = "pilot") -> dict[str, Any]:
         if os.getenv(env):
             cfg["models"][role] = os.environ[env]
 
+    # RUN_NAME override lets one config drive many runs (e.g. the capability sweep),
+    # each writing to its own data/runs/<run_name> directory.
+    if os.getenv("RUN_NAME"):
+        cfg["run_name"] = os.environ["RUN_NAME"]
+
     cfg["_repo_root"] = str(REPO_ROOT)
     return cfg
