@@ -31,6 +31,7 @@ REPO = Path(load_config("main")["_repo_root"])
 RUNS = REPO / "data" / "runs"
 FIG = REPO / "paper" / "figures"
 ARMS = ["main", "control_generic", "control_gpt4o"]
+HEATMAP_ARMS = ["main", "control_generic", "control_gpt4o", "counterframe"]  # + causal ablation
 DIM_ORDER = [m for c in CATEGORY for m in CATEGORY[c]]
 
 
@@ -70,7 +71,7 @@ def _endpoint_delta_ci(lg, persona, metric):
 def fig_master_heatmap(longs):
     """Rows = 18 dims (grouped by category), cols = arms (pooled personas), signed Δ."""
     dims = [m for m in DIM_ORDER if m in set(longs["main"].metric)]
-    cols = [a for a in ARMS if a in longs]
+    cols = [a for a in HEATMAP_ARMS if a in longs]
     M = np.full((len(dims), len(cols)), np.nan)
     sig = np.zeros_like(M, dtype=bool)
     for j, arm in enumerate(cols):
@@ -102,7 +103,7 @@ def fig_master_heatmap(longs):
 def fig_forest(longs):
     """Per-dimension endpoint Δ with 95% CI, dodged by arm, grouped by category."""
     dims = [m for m in DIM_ORDER if m in set(longs["main"].metric)]
-    cols = [a for a in ARMS if a in longs]
+    cols = [a for a in HEATMAP_ARMS if a in longs]
     fig, ax = plt.subplots(figsize=(5.0, 0.42 * len(dims) + 1))
     off = {arm: (o - (len(cols)-1)/2) * 0.22 for o, arm in enumerate(cols)}
     for arm in cols:
@@ -233,7 +234,7 @@ def fig_hero(longs):
 
 
 def main():
-    longs = {a: _load(a) for a in ARMS}
+    longs = {a: _load(a) for a in HEATMAP_ARMS}
     longs = {k: v for k, v in longs.items() if v is not None}
     print(f"[figs] arms: {list(longs)}")
     fig_manipulation(longs)

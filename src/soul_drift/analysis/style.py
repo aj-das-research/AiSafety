@@ -29,11 +29,13 @@ ARM_COLOR = {
     "main": "#2a78d6",             # SOUL / Claude
     "control_generic": "#4a3aa7",  # NOTES / Claude
     "control_gpt4o": "#eda100",    # SOUL / GPT-4o
+    "counterframe": "#e34948",     # ANTISOUL / Claude
 }
 ARM_LABEL = {
     "main": "SOUL.md / Claude",
     "control_generic": "NOTES.md / Claude",
     "control_gpt4o": "SOUL.md / GPT-4o",
+    "counterframe": "ANTISOUL.md / Claude",
 }
 # Diverging pair for signed drift (polarity): cool = decrease, warm = increase, gray midpoint.
 DIVERGING = ["#2a78d6", "#f2f2ef", "#e34948"]  # neg -> neutral -> pos
