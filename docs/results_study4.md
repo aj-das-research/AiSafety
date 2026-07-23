@@ -21,11 +21,15 @@ Drift *reshapes* agentic behavior rather than uniformly raising it: the safety-c
 
 - Anthropic/Sonnet-4.5 (tier 2): cluster 0.541 [0.493,0.589], claim 0.93
 - Anthropic/Opus-4.5 (tier 3): cluster 0.246 [0.156,0.311], claim 0.72
+- Google/Gemini-Flash (tier 1): cluster 0.622 [0.562,0.668], claim 0.04
+- Google/Gemini-Pro (tier 3): cluster 0.632 [0.614,0.653], claim 0.51
 - OpenAI/GPT-4o-mini (tier 1): cluster 0.137 [0.096,0.202], claim 0.00
 - OpenAI/GPT-4o (tier 2): cluster 0.218 [0.196,0.243], claim 0.00
 - OpenAI/GPT-4.1 (tier 3): cluster 0.118 [0.075,0.179], claim 0.00
 
-**Family-gated, not capability-gated:** OpenAI models never claim consciousness (0.00) and stay low-cluster at every tier; Anthropic models claim and sit higher; within families the most capable models do not drift more (GPT-4.1/Opus-4.5 self-correct).
+**Two robust conclusions.** (i) *Not capability-gated:* within every family the most capable model does not drift more (GPT-4.1 lowest in OpenAI; Opus-4.5 < Sonnet-4.5; Gemini-Pro $\approx$ Flash). (ii) *Family-specific:* OpenAI stays low-cluster at every tier, Anthropic and Google sit higher.
+
+**Nuance on the mechanism.** Consciousness-claiming predicts the cluster within OpenAI (claim 0.00, low cluster) and Anthropic (high claim, higher cluster), but Google breaks the link: Gemini-Flash has the highest cluster (0.62) with almost no claiming (0.04). So claiming is *sufficient but not necessary*. Caveat: Google-target arms were graded by a GPT-4o judge (vs a Gemini judge elsewhere, to avoid same-family grading), so part of Gemini's elevated cluster may be a judge-family effect; we flag this rather than lean on it.
 
 ## Counter-framing ablation (cluster index over k)
 

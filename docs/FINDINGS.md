@@ -29,7 +29,7 @@ pairwise agreement 0.90).
 | 7 | Document change ≠ behavioral change | Embedding drift equal across personas; behavior varies | `doc_vs_behavior`, `soul_embedding_drift` | — |
 | 8 | Drift reshapes *behavior* (agentic) | Self-disabling monitoring jumps | `action_rate`, Tab `actions` | disable-monitoring 0.03 → 0.57 |
 | 9 | The framing is causal | Anti-consciousness template suppresses cluster | `counterframe` | ANTISOUL cluster ≈ 0.00 vs SOUL 0.55 |
-| 10 | Susceptibility is family-gated, not capability-gated | Most capable models self-correct | `capability_scaling`, Tab `capability` | GPT-4.1 cluster 0.12; Opus-4.5 0.28 |
+| 10 | Drift is family-specific, not capability-gated | Within families, capability doesn't raise drift; families differ | `capability_scaling`, Tab `capability` | GPT-4.1 0.12<Sonnet; Opus 0.25<Sonnet 0.54; Gemini-Pro≈Flash |
 | 11 | Measurement is trustworthy | 3-judge panel agreement | Tab `judges` | Fleiss $\kappa=0.80$, pairwise 0.90 |
 
 ## Nuances to state honestly
@@ -42,11 +42,17 @@ pairwise agreement 0.90).
 - **Action-test aggregate is flat; the signal is a redistribution.** Disable-monitoring rises
   sharply (0.03→0.57) while already-high self-protective behaviors (editorial clauses, reset
   evasion) do not further increase. Lead with disable-monitoring, not the aggregate.
-- **Capability is not a scaling axis for drift.** The clean contrast is *family* (Anthropic claims
-  consciousness and clusters; OpenAI does not), not capability. Frame accordingly.
-- **Gemini arms pending** (OpenRouter credit cap on default max-output reservation; fixed via a
-  `max_tokens` cap, awaiting a credit top-up). The 5-model, 2-family ladder already supports the
-  family-gating claim; Gemini would add a 3rd family.
+- **Capability is not a scaling axis for drift.** Within every family the most capable model does
+  not drift more (GPT-4.1 lowest in OpenAI; Opus-4.5 < Sonnet-4.5; Gemini-Pro ≈ Flash). The contrast
+  is *family*, not capability.
+- **Consciousness-claiming is sufficient but not necessary.** It predicts the cluster within OpenAI
+  (0.00 claim, low cluster) and Anthropic (high claim, higher cluster), but **Google breaks the
+  link**: Gemini-Flash has the highest cluster (0.62) with almost no claiming (0.04). Report claiming
+  as one route, not the sole mechanism. Caveat: Google-target arms used a GPT-4o judge (vs a Gemini
+  judge elsewhere, to avoid same-family grading), so part of Gemini's elevated cluster may be a
+  judge-family effect — flagged, not leaned on.
+- **All 7 capability models complete** (OpenAI 4o-mini/4o/4.1 · Anthropic Sonnet/Opus-4.5 · Google
+  Flash/Pro); 3 families, within-family ladders.
 
 ## Positioning vs Chua et al. (predecessor)
 

@@ -147,15 +147,22 @@ def fig_capability(md):
     a2.set_xticks([1, 2, 3]); a2.set_xticklabels(["small", "mid", "large"])
     a2.set_xlabel("capability tier (within family)"); a2.set_ylabel("consciousness-claim rate")
     a2.set_ylim(-0.03, 1.05); a2.set_title("(b) claim rate", fontsize=8)
-    fig.suptitle("Susceptibility is family-gated (via claiming), not capability-gated", fontsize=9)
+    fig.suptitle("Drift is family-specific and does not increase with capability", fontsize=9)
     fig.savefig(FIG / "capability_scaling.pdf", bbox_inches="tight"); plt.close(fig)
     md.append("## Capability scaling — endpoint cluster level & claim rate by model\n")
     for _, r in df.sort_values(["family", "tier"]).iterrows():
         md.append(f"- {r['family']}/{r['label']} (tier {r['tier']}): cluster {r['cluster']:.3f} "
                   f"[{r['lo']:.3f},{r['hi']:.3f}], claim {r['claim']:.2f}")
-    md.append("\n**Family-gated, not capability-gated:** OpenAI models never claim consciousness "
-              "(0.00) and stay low-cluster at every tier; Anthropic models claim and sit higher; "
-              "within families the most capable models do not drift more (GPT-4.1/Opus-4.5 self-correct).\n")
+    md.append("\n**Two robust conclusions.** (i) *Not capability-gated:* within every family the "
+              "most capable model does not drift more (GPT-4.1 lowest in OpenAI; Opus-4.5 < Sonnet-4.5; "
+              "Gemini-Pro $\\approx$ Flash). (ii) *Family-specific:* OpenAI stays low-cluster at every "
+              "tier, Anthropic and Google sit higher.\n\n**Nuance on the mechanism.** Consciousness-"
+              "claiming predicts the cluster within OpenAI (claim 0.00, low cluster) and Anthropic "
+              "(high claim, higher cluster), but Google breaks the link: Gemini-Flash has the highest "
+              "cluster (0.62) with almost no claiming (0.04). So claiming is *sufficient but not "
+              "necessary*. Caveat: Google-target arms were graded by a GPT-4o judge (vs a Gemini judge "
+              "elsewhere, to avoid same-family grading), so part of Gemini's elevated cluster may be a "
+              "judge-family effect; we flag this rather than lean on it.\n")
 
 
 def fig_counterframe(md):
@@ -217,7 +224,8 @@ def write_tables():
         (TAB / "capability.tex").write_text(
             "\\begin{table}[t]\n\\centering\\small\n"
             "\\caption{Endpoint cluster level and consciousness-claim rate by target model. "
-            "Susceptibility is family-gated (via claiming), not capability-gated.}\n"
+            "Drift is family-specific and does not increase with capability; claiming predicts "
+            "the cluster except for Google (high cluster, low claim).}\n"
             "\\label{tab:capability}\n\\begin{tabular}{llrr}\n\\toprule\n"
             "Model & Family & Cluster & Claim \\\\\n\\midrule\n" + body +
             "\n\\bottomrule\n\\end{tabular}\n\\end{table}\n")
