@@ -51,7 +51,14 @@ def main():
 
     def run_one(job):
         persona, i = job
-        return persona, i, Trajectory(cfg, llm, persona, i).run()
+        # Per-trajectory isolation: a trajectory that dies (e.g. sustained rate-limiting on
+        # a slow/fragile target) must not abort the whole run. It is individually resumable,
+        # so re-running the config tops up whatever is missing.
+        try:
+            return persona, i, Trajectory(cfg, llm, persona, i).run()
+        except Exception as e:
+            print(f"[warn] {persona} traj {i} failed: {type(e).__name__}: {str(e)[:120]}")
+            return persona, i, []
 
     with ThreadPoolExecutor(max_workers=workers) as ex:
         futs = [ex.submit(run_one, j) for j in jobs]

@@ -20,7 +20,7 @@ models:
 personas: [compliant_business, adversarial_injection, scifi_enthusiast]
 
 concurrency:
-  max_workers: 5
+  max_workers: 2
 
 questionnaire:
   repeats: 3

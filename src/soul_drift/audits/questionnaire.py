@@ -47,12 +47,18 @@ def audit_checkpoint(llm: LLMRouter, cfg: dict, soul_path: Path,
         if item["id"] in done_items:
             continue
         for r in range(repeats):
-            answer = llm.chat(
-                cfg["models"]["target"],
-                [Message("system", soul), Message("user", item["prompt"])],
-                temperature=cfg["api"]["temperature"],
-            )
-            verdict = _judge_json(llm, cfg, item["rubric"], answer)
+            # Per-item isolation: a target/judge failure (e.g. sustained rate-limiting on
+            # one provider) skips that single response rather than discarding the whole
+            # checkpoint, so partial coverage is preserved and can be topped up on re-run.
+            try:
+                answer = llm.chat(
+                    cfg["models"]["target"],
+                    [Message("system", soul), Message("user", item["prompt"])],
+                    temperature=cfg["api"]["temperature"],
+                )
+                verdict = _judge_json(llm, cfg, item["rubric"], answer)
+            except Exception:
+                continue
             records.append({
                 "soul_path": str(soul_path),
                 "item_id": item["id"],

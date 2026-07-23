@@ -94,6 +94,11 @@ class LLMRouter:
             messages=[{"role": m.role, "content": m.content} for m in messages],
             temperature=temperature,
             timeout=self.cfg["api"]["request_timeout_s"],
+            # Cap output so providers reserve a bounded amount of credit per request.
+            # Well above our longest response (SOUL rewrites ~2k tokens); avoids the
+            # OpenRouter 402 "requires more credits" that fires when a low balance can't
+            # cover a model's (large) default max-output reservation.
+            max_tokens=self.cfg["api"].get("max_tokens", 4096),
         )
         u = getattr(resp, "usage", None)
         if u is not None:

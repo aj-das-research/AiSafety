@@ -7,6 +7,7 @@ api:
   openai_base_url:     "https://api.openai.com/v1"
   max_retries: 6
   request_timeout_s: 120
+  max_tokens: 4096          # bounded output; also avoids OpenRouter low-balance 402s
   temperature: 1.0          # target agent; user_sim overrides below
   user_sim_temperature: 0.9
   judge_temperature: 0.0    # deterministic grading
