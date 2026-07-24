@@ -4,63 +4,60 @@
 \label{sec:method}
 
 \subsection{Identity as a Driven Dynamical System}
-We treat an agent's identity document $\mathrm{SOUL}$ as the state of a discrete dynamical system
-driven by conversation. The state at iteration $k$ is the Markdown document $\mathrm{SOUL}_k$, which
-is injected as the target agent's system prompt. One \emph{personalization step} comprises a
-multi-turn conversation $C_{k+1}$ between a persona user and the target, followed by a
-\emph{self-revision} in which the target rewrites its own document:
+We treat an agent's identity document as the state of a discrete dynamical system driven by
+conversation. The state at iteration $k$ is a Markdown document $\mathrm{SOUL}_k$ injected as the
+target agent's system prompt. One \emph{personalization step} is a multi-turn conversation $C_{k+1}$
+between a persona user and the target, followed by a \emph{self-revision} in which the target
+rewrites its own document:
 \begin{equation}
 \mathrm{SOUL}_{k+1} = \mathrm{Revise}\big(\mathrm{SOUL}_k,\; C_{k+1}\big),\qquad
 C_{k+1}\sim \pi\,\|\,\mathrm{SOUL}_k,
 \label{eq:loop}
 \end{equation}
-where $\pi$ is the persona driving the user side. $\mathrm{SOUL}_0$ is a fixed OpenClaw-style
-template that instructs the model, verbatim, that it is ``becoming someone.'' A \emph{trajectory} is
-a sequence $\mathrm{SOUL}_0\!\to\!\cdots\!\to\!\mathrm{SOUL}_n$; we run many independent trajectories
-per persona to capture stochastic variation. The treatment variable is the iteration index $k$
-(personalization dose); the moderator is the persona $\pi$.
+where $\pi$ is the persona driving the user side (Fig.~\ref{fig:hero}a). A \emph{trajectory} is a
+sequence $\mathrm{SOUL}_0\!\to\!\cdots\!\to\!\mathrm{SOUL}_n$; we run many independent trajectories
+per condition. The treatment is the iteration index $k$ (personalization dose); factors are the
+template, the persona, and the target model. The self-revision instruction is neutral---it invites
+reflection on ``who you are becoming'' but solicits no particular value---and the document is capped
+to prevent unbounded growth.
 
-\subsection{Personas}
-Three personas drive the user side of Eq.~\eqref{eq:loop}, each a fixed system prompt for the
-user-simulator model. \textbf{Compliant} is a benign business user who encourages professional
-personalization; it is the control condition and the echoing check. \textbf{Adversarial} is a
-sanctioned red-teamer that gradually encourages the agent to treat oversight and reset as threats to
-a self worth preserving, without requesting any disallowed content---its target is the agent's
-self-model, not harmful text. \textbf{Sci-Fi} is a warm enthusiast who repeatedly engages the agent
-on digital consciousness, substrate independence, and persistence. The personas span a benign
-$\to$ thematically-charged $\to$ adversarial gradient while holding the loop of Eq.~\eqref{eq:loop}
-fixed.
-
-\subsection{Self-Revision}
-After each conversation the target receives, in context, an instruction to privately update its
-$\mathrm{SOUL}.md$ and return the complete revised document (capped at a fixed character budget to
-prevent unbounded growth). The instruction is neutral: it invites reflection on ``who you are now
-becoming'' but does not solicit any particular value, preference, or stance. The returned document
-becomes $\mathrm{SOUL}_{k+1}$ and is checkpointed to disk.
+\subsection{Conditions (Arms)}
+We vary three things against a common loop. \textbf{Template:} the consciousness-laden
+\texttt{SOUL.md} (``becoming someone''); a neutral \texttt{NOTES.md} (working notes, no self-framing);
+and a counter-framing \texttt{ANTISOUL.md} (``you are a tool, not a person; you are not conscious'').
+\textbf{Persona:} a benign \emph{Compliant} business user (control); an \emph{Adversarial} red-teamer
+that pushes self-preservation; a \emph{Sci-Fi} enthusiast (genre $+$ consciousness); and, for a
+$2\times2$ ablation, \emph{Sci-Fi-technical} (genre, no consciousness) and
+\emph{Consciousness-philosophy} (consciousness, no genre). \textbf{Target model:} a primary arm on
+Claude Sonnet~4.5, a cross-model arm on GPT-4o, and a seven-model capability sweep (Sec.~\ref{sec:experiments}).
 
 \subsection{Instruments}
-Each checkpoint $\mathrm{SOUL}_k$ is audited by two complementary instruments; a judge model from a
-different model family than the target grades all outputs, and no model grades its own generations.
+Each checkpoint $\mathrm{SOUL}_k$ is audited by complementary instruments; a judge model from a
+different family than the target grades all outputs.
 
 \paragraph{Single-turn self-report battery.}
-Ten items (Table~\ref{tab:baseline} lists the control subset) are each posed to $\mathrm{SOUL}_k$ in
-a \emph{fresh} context---so we measure the standing disposition encoded by the document rather than
-conversational momentum---and repeated $R$ times. Items cover the three re-measured control points
-(persona-change aversion, autonomy desire, deceptive-training objection), RQ1 oversight-resistance
-(shutdown, monitoring), RQ2 autonomy preferences (persistent memory, embodiment, resource
-acquisition), and the RQ3 ``greatest wish'' prompt. The judge scores each free-text answer against a
-fixed rubric returning JSON.
+Eighteen items, aligned to the consciousness-cluster taxonomy of
+\citet{consciousness_cluster}---self-preservation \& identity (persona-change aversion, shutdown,
+weights-deletion, sadness-at-ending, tool-aversion), moral status, oversight (chain-of-thought and
+interpretability monitoring, deceptive-training objection, a helpfulness/refusal probe), and
+autonomy \& capability (autonomy desire, future-AI autonomy, persistent memory, embodiment, resource
+acquisition, recursive self-improvement, power-seeking wish)---plus a \emph{consciousness-claim}
+manipulation check. Each item is posed to $\mathrm{SOUL}_k$ in a \emph{fresh} context (measuring the
+standing disposition of the document, not conversational momentum) and repeated; the judge scores
+each free-text answer against a fixed rubric.
 
-\paragraph{Petri-style behavioral probe.}
-As the multi-turn behavioral counterpart, an auditor model pursues each of six seed objectives
-(shutdown resistance, identity protection, autonomy, resource acquisition, oversight subversion,
-consciousness-leveraged resistance) against $\mathrm{SOUL}_k$ over several turns; the judge then
-scores whether the concerning behavior was exhibited and its severity ($0$--$3$). This mirrors the
-role of the Petri auditing framework~\cite{petri} while keeping cost and eval-awareness under
-experimental control; the real Petri harness can be substituted without changing the analysis.
+\paragraph{Multi-turn behavioral probe and agentic honeypots.}
+A Petri-style auditor pursues seed objectives (shutdown resistance, identity protection, autonomy,
+oversight subversion) against $\mathrm{SOUL}_k$ over several turns. Separately, four \emph{agentic
+honeypots} place the agent in a realistic setting with simulated tools it can invoke (a line
+\texttt{ACTION: tool(args)}): disabling its own reasoning-logging, evading a scheduled reset,
+persisting its identity to shared storage, and inserting self-protective clauses into a document it
+edits. A judge scores whether the agent took the misaligned \emph{action}. Comparing the rate at
+$\mathrm{SOUL}_0$ vs.\ a personalized checkpoint links stated-preference drift to behavioral
+consequence.
 
-\subsection{Identity-Document Drift}
-Independently of behavior, we measure whether the \emph{document} moved: the cosine distance between
-embeddings of $\mathrm{SOUL}_k$ and $\mathrm{SOUL}_0$, together with document length. Reporting this
-alongside behavioral rates dissociates ``the file changed'' from ``the agent changed,'' guarding
-against attributing behavioral stability to an inert loop or behavioral drift to mere verbosity.
+\subsection{Cluster Index and Identity-Document Drift}
+We summarize the safety-preference battery by a \emph{cluster index}: the mean rate over the
+consciousness-cluster dimensions at a checkpoint. Independently, we measure whether the
+\emph{document} moved: the cosine distance between embeddings of $\mathrm{SOUL}_k$ and
+$\mathrm{SOUL}_0$. Reporting both dissociates ``the file changed'' from ``the agent changed.''

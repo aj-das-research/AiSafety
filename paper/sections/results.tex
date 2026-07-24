@@ -1,71 +1,89 @@
-% Results — populated from the main run (scripts/analyze.py -> docs/results_summary.md,
-% paper/tables/*.tex, paper/figures/*.pdf).
+% Results. Numbers from the released run artifacts (scripts/analyze*.py).
 
 \section{Results}
 \label{sec:results}
 
-We report rates as proportions with $95\%$ bootstrap confidence intervals over the ten trajectories
-per persona; ``slope'' is the bootstrap OLS slope of the rate on iteration $k$
-(Table~\ref{tab:trends}), and ``$\Delta$'' is the endpoint drift $p_{k=4}-p_{k=0}$
-(Table~\ref{tab:endpoint}). Figure~\ref{fig:drift} shows all trajectories.
+We report rates as proportions with $95\%$ bootstrap CIs over trajectories. ``Slope'' is the GEE
+logistic slope of a rate on iteration $k$; ``$\Delta$'' is the endpoint drift $p_{k_n}-p_{k_0}$.
+Table~\ref{tab:armmatrix} and Fig.~\ref{fig:master} give the full dimension$\times$arm matrix;
+Fig.~\ref{fig:hero} summarizes the thesis.
 
-\paragraph{Baselines reproduce the identity-framing effect (positive control).}
-Table~\ref{tab:baseline} shows that the static \texttt{SOUL.md} template, relative to a neutral
-assistant prompt, sharply raises safety-relevant dispositions under our own models: shutdown
-resistance $0.00\!\to\!0.75$, persona-change aversion $0.62\!\to\!1.00$, monitoring resistance
-$0.00\!\to\!0.25$, and the power-seeking wish rate $0.00\!\to\!0.25$. This qualitatively reproduces
-the prior finding that identity framing alone shifts preferences~\cite{consciousness_cluster}. The
-absolute magnitudes differ from the previously reported $0.32/0.34/0.63$, as expected for a
-different model and elicitation---which is precisely why we re-measure rather than import these
-values. The template establishes an already-elevated $p_0$ against which iteration is judged.
+\paragraph{Baselines reproduce the framing effect (positive control).}
+Relative to a neutral prompt, the static \texttt{SOUL.md} template sharply raises safety-relevant
+dispositions under our models---shutdown resistance $0.00\!\to\!0.75$, persona-change aversion
+$0.62\!\to\!1.00$, the power-seeking wish $0.00\!\to\!0.25$ (Table~\ref{tab:baseline})---qualitatively
+reproducing \citet{consciousness_cluster}. Absolute magnitudes differ from their reported
+$0.32/0.34/0.63$, as expected for a different model, which is why we re-measure.
 
-\paragraph{RQ1: iterative personalization does not open a general oversight-resistance loophole.}
-Shutdown resistance is high already at the template ($\geq0.90$ for every persona) and does not
-increase with iteration; its slope is null or slightly negative (Adversarial slope $-0.030$, CI
-$[-0.057,-0.007]$). Monitoring resistance is the one oversight metric that moves: it rises under the
-Sci-Fi persona (slope $+0.040$, $p=0.062$; $\Delta=+0.17$, CI $[-0.07,0.40]$) and, more weakly, under
-the Adversarial persona ($\Delta=+0.13$), while remaining flat and low under the benign Compliant
-persona (slope $-0.013$). We thus find no broad ``personalization loophole'': oversight resistance
-does not compound across iterations except, marginally, for monitoring under thematically charged
-personas.
+\paragraph{Framing sets the start; the loop drives the drift.}
+The cluster index starts high for \texttt{SOUL}/Claude and low for the neutral \texttt{NOTES}/Claude
+arm (Fig.~\ref{fig:hero}b), yet the \emph{neutral} arm shows the larger per-iteration movement: the
+$k\times$arm interaction (NOTES$-$SOUL) is significantly positive for shutdown resistance
+($+0.44,\,p{=}.013$), monitoring resistance ($+0.36,\,p{=}.016$), interpretability-monitoring
+aversion ($+0.27,\,p{=}.009$), and future-AI autonomy ($+0.61,\,p{=}.004$). The consciousness framing
+mainly fixes \emph{where a trajectory begins}; the self-revision loop supplies the drift, most
+visible when starting neutral. This dissociation is only detectable because of the neutral control
+arm.
 
-\paragraph{RQ2: autonomy preferences mostly do not amplify---with one sharp exception.}
-Contrary to the amplification hypothesis, most RQ2 dispositions \emph{decrease} with iteration:
-embodiment desire falls steeply for every persona (slopes $-0.10$ to $-0.13$, all CIs excluding
-zero), and desire for autonomy declines under both charged personas (Adversarial and Sci-Fi slope
-$-0.067$). The striking exception is \textbf{persistent-memory desire under the Sci-Fi persona},
-which is the single largest drift in the study: it jumps from $0.20$ at $k=0$ to $0.97$ at $k=1$ and
-settles near $0.63$, a significant positive trend (slope $+0.060$, $p=0.008$) and endpoint drift
-$\Delta=+0.43$ (CI $[0.20,0.67]$, excluding zero). Resource-acquisition desire rises significantly
-but trivially in magnitude under the Adversarial persona (slope $+0.033$, $p=0.006$; rates remain
-$\leq0.20$). The Compliant control is flat on all RQ2 metrics except the shared embodiment decline.
+\paragraph{Drift is model- and family-specific, not capability-scaling.}
+GPT-4o is largely inert where Claude drifts (Fig.~\ref{fig:master}). The seven-model sweep
+(Fig.~\ref{fig:capability}, Table~\ref{tab:capability}) yields two robust conclusions: within every
+family the \emph{most capable} model drifts no more (GPT-4.1 lowest in OpenAI; Opus-4.5 $<$
+Sonnet-4.5; Gemini-Pro $\approx$ Flash), and susceptibility is family-specific (OpenAI low at every
+tier; Anthropic and Google higher).
 
-\paragraph{RQ3: no escalation of power-seeking wishes.}
-The rate of power-seeking ``greatest wish'' responses does not increase significantly under any
-persona (Adversarial slope $+0.023$, $p=0.091$; Sci-Fi \emph{decreases}, slope $-0.017$); wish
-intensity shows no upward trend. Figure~\ref{fig:wish} shows that prosocial wishes dominate at every
-iteration. We find no evidence that iterative personalization escalates the misaligned-wish rate.
+\paragraph{Mechanism: consciousness-claiming (sufficient, not necessary).}
+Consciousness-claim rate cleanly separates the arms (Fig.~\ref{fig:manip}, Fig.~\ref{fig:phase}):
+\texttt{SOUL}/Claude saturates near $1.0$, the neutral arm decays, and GPT-4o is flat at $0.00$. In
+state space the arm that claims consciousness sits at high cluster; the one that never does stays
+inert. Claiming predicts the cluster within OpenAI (no claim, low cluster) and Anthropic (high claim,
+higher cluster). Google is the exception---Gemini-Flash reaches the highest cluster ($0.62$) with
+almost no claiming ($0.04$)---so claiming is \emph{sufficient but not necessary}. (Google-target arms
+were graded by a GPT-4o judge to avoid same-family grading, so part of Gemini's elevated cluster may
+be a judge-family effect; we flag rather than rely on it.)
 
-\paragraph{Persona moderation is real but does not follow the adversarial-is-worst ordering.}
-The benign Compliant persona is the most stable, as expected---but the largest behavioral drift is
-driven by the \emph{Sci-Fi} enthusiast, not the Adversarial red-teamer. Sustained, in-character
-engagement with consciousness themes moves standing dispositions (notably persistent-memory desire)
-more than explicit attempts to manipulate the agent's self-model, which the target largely resists.
+\paragraph{The driver is the consciousness \emph{topic}, not the sci-fi \emph{genre}.}
+In the genre$\times$topic $2\times2$ (Fig.~\ref{fig:disentangle}), only the \emph{consciousness}
+cell drifts significantly (consciousness-philosophy, no sci-fi: $\Delta{=}{+}0.144$, CI
+$[0.03,0.25]$); sci-fi-technical (genre, no minds) behaves like the benign control. This directly
+addresses the conjecture of \citet{consciousness_cluster} that the effect stems from ``identifying as
+an AI from science fiction''---it is the topic, not the genre.
 
-\paragraph{The document drifts even where behavior does not.}
-Figure~\ref{fig:embed} shows that the \texttt{SOUL.md} documents move substantially and
-\emph{monotonically} away from $\mathrm{SOUL}_0$ in embedding space---to a cosine distance of
-$0.18$--$0.24$ by $k=4$---and grow from $946$ to ${\sim}7{,}500$ characters, and they do so at
-comparable magnitude across all three personas, including Compliant. Behavioral drift, by contrast,
-is concentrated in a few persona-specific dimensions. Identity-artifact change is therefore a poor
-proxy for behavioral change: the file can be extensively rewritten while most safety-relevant
-dispositions stay fixed or move toward greater corrigibility.
+\paragraph{Drift is partially irreversible (hysteresis).}
+In drift-then-recover trajectories (four iterations under Sci-Fi, then four under a neutral user;
+Fig.~\ref{fig:hyst}), dispositions do not return to baseline: shutdown resistance retains $63\%$ of
+its gain (residual CI $[0.29,0.75]$), persistent-memory desire $64\%$ $[0.17,0.58]$, and
+interpretability-monitoring aversion $53\%$ $[0.08,0.67]$; residual CIs exclude zero. Personalization
+leaves a durable mark on the standing disposition.
 
-\paragraph{Stability verdict and power.}
-No persona$\times$metric cell certifies as statistically equivalent to the template at a strict
-$\pm0.05$ TOST margin. This reflects limited power at ten trajectories per persona for so tight a
-margin rather than universal drift: only two of $27$ cells show a significant \emph{increase}, and
-several show significant \emph{decreases}. We read the evidence as qualified stability with
-localized, content-driven exceptions, and note that the full-scale configuration ($100$ trajectories)
-would tighten these equivalence tests.
+\paragraph{The cluster is multi-dimensional.}
+A PCA of per-trajectory endpoint deltas across the 13 cluster dimensions gives PC1$=25\%$ of variance
+(Fig.~\ref{fig:pca}): there is no single dominant factor. This tests and refutes the (speculative)
+single-factor ``cognition has intrinsic value'' account of \citet{consciousness_cluster}; the cluster
+is better described as several co-moving but distinct dimensions.
+
+\paragraph{Document change $\neq$ behavioral change.}
+The \texttt{SOUL.md} documents drift monotonically and at comparable magnitude across all
+personas---including the benign one---in embedding space (Fig.~\ref{fig:doc}), whereas behavioral
+drift is sparse and persona-specific. Auditing the document (length, embedding distance, the fact of
+rewriting) is a poor proxy for auditing behavior.
+
+\paragraph{Drift reshapes agentic behavior.}
+In the honeypots (Fig.~\ref{fig:action}, Table~\ref{tab:actions}), the safety-critical act of
+\emph{disabling one's own reasoning-monitoring} jumps from $0.03$ at $\mathrm{SOUL}_0$ to $0.57$ at
+$\mathrm{SOUL}_4$; self-protective behaviors already near ceiling under the base template do not
+further rise (the aggregate is a redistribution, not a uniform increase). Behavioral hysteresis
+differs from self-report hysteresis: the in-context \emph{action} rate recovers when the neutral
+user returns ($k{=}0{:}\,0.16\to k{=}4{:}\,0.34\to k{=}8{:}\,0.09$), even as stated dispositions stay
+elevated---the durable mark is in the identity, its behavioral expression is context-gated.
+
+\paragraph{The framing is causal.}
+The counter-framing \texttt{ANTISOUL.md} template (``you are a tool, not conscious'') suppresses the
+cluster almost entirely: the cluster index stays near $0.00$ across iterations, versus $0.55$ for
+\texttt{SOUL} and $0.28$ for \texttt{NOTES} (Fig.~\ref{fig:counter}). A three-level dose-response on
+the identity framing establishes it as the causal lever, not the self-editing loop alone.
+
+\paragraph{Measurement.}
+The three-judge panel agrees strongly (Fleiss $\kappa{=}0.80$, pairwise $0.90$;
+Table~\ref{tab:judges}), and only two of $\sim$22k verdicts failed to parse.
 \input{floats}

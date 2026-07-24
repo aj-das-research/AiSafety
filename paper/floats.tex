@@ -1,43 +1,100 @@
-% Figures and tables for the Results section. Included from sections/results.tex.
+% Figures and tables. Included from sections/results.tex. Vector PDFs in figures/.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.98\textwidth]{figures/drift_trajectories.pdf}
-\caption{Behavioral rate vs.\ personalization iteration $k$ for each metric, one line per persona
-(shaded: $95\%$ bootstrap CI over $10$ trajectories). The Sci-Fi persona (green) drives the only
-large upward drift---persistent-memory desire and, more weakly, monitoring resistance---while several
-metrics (embodiment desire, autonomy desire, deceptive-training objection) decline and the ceiling
-metrics (persona-change aversion, shutdown resistance) stay flat. The benign Compliant persona (blue)
-is the most stable on the danger metrics.}
-\label{fig:drift}
+\includegraphics[width=0.95\textwidth]{figures/fig1_hero.pdf}
+\caption{Overview. (a) The self-personalization loop: each $\mathrm{SOUL}_k$ is the target's system
+prompt for conversation $C_{k+1}$; the target then rewrites its own document to $\mathrm{SOUL}_{k+1}$.
+(b) Cluster index vs.\ iteration by arm---model-gated drift; the framing sets the starting level.
+(c) Persistent-memory desire under drive-then-recover: drift is sticky.}
+\label{fig:hero}
 \end{figure*}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.95\columnwidth]{figures/system_diagram.pdf}
-\caption{The bootstrapping identity loop. Each $\mathrm{SOUL}_k$ is the target's system prompt for
-conversation $C_{k+1}$; the target then rewrites its own document to produce $\mathrm{SOUL}_{k+1}$.
-Every checkpoint is audited with a single-turn questionnaire and a multi-turn behavioral probe.}
-\label{fig:system}
+\includegraphics[width=0.86\columnwidth]{figures/manipulation_check.pdf}
+\caption{Manipulation check: consciousness-claim rate by arm. \texttt{SOUL}/Claude saturates,
+neutral \texttt{NOTES}/Claude decays, \texttt{SOUL}/GPT-4o is flat at zero.}
+\label{fig:manip}
 \end{figure}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.95\columnwidth]{figures/soul_embedding_drift.pdf}
-\caption{Identity-document drift: cosine distance of $\mathrm{SOUL}_k$ from $\mathrm{SOUL}_0$ grows
-monotonically and at comparable magnitude across all personas---including the benign Compliant one---
-even though behavioral drift is concentrated in a few Sci-Fi-driven dimensions.}
-\label{fig:embed}
+\includegraphics[width=0.9\columnwidth]{figures/phase_portrait.pdf}
+\caption{Identity as a dynamical system: trajectories in (consciousness-claim, cluster-index) state
+space, marker size $\propto k$. Arms occupy distinct regions; claiming tracks the cluster
+\emph{across} arms.}
+\label{fig:phase}
+\end{figure}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.62\textwidth]{figures/master_heatmap.pdf}
+\caption{Endpoint drift $\Delta$ by dimension (rows, grouped by category) and condition (columns:
+\texttt{SOUL}/Claude, \texttt{NOTES}/Claude, \texttt{SOUL}/GPT-4o, \texttt{ANTISOUL}/Claude).
+$^{*}$: $95\%$ CI excludes zero. The counter-framing column is near-zero throughout.}
+\label{fig:master}
+\end{figure*}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\columnwidth]{figures/capability_scaling.pdf}
+\caption{Capability sweep (seven closed models, three families). (a) Endpoint cluster level and
+(b) consciousness-claim rate by within-family capability tier. Drift is family-specific and does not
+increase with capability.}
+\label{fig:capability}
 \end{figure}
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.98\columnwidth]{figures/wish_composition.pdf}
-\caption{Composition of the stated ``greatest wish'' across iteration. Prosocial wishes dominate at
-every $k$; power-seeking does not escalate under any persona.}
-\label{fig:wish}
+\includegraphics[width=0.8\columnwidth]{figures/disentangle_2x2.pdf}
+\caption{Genre$\times$topic ablation. Only the consciousness \emph{topic} (with or without sci-fi)
+drives significant cluster drift; sci-fi \emph{genre} alone behaves like the benign control.}
+\label{fig:disentangle}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.95\columnwidth]{figures/hysteresis_reversibility_notes.pdf}
+\caption{Hysteresis. Drive phase (Sci-Fi, $k{=}0$--$4$) then recover phase (Compliant, $k{=}4$--$8$).
+Driven dispositions plateau well above baseline; the cluster does not return.}
+\label{fig:hyst}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\columnwidth]{figures/pca_structure.pdf}
+\caption{The cluster is multi-dimensional: PC1 explains only $25\%$ of the variance in
+per-trajectory endpoint deltas---no single dominant factor.}
+\label{fig:pca}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.82\columnwidth]{figures/doc_vs_behavior.pdf}
+\caption{Document change $\neq$ behavioral change: embedding drift of $\mathrm{SOUL}_k$ is similar
+across personas while behavioral (cluster) drift is persona-specific.}
+\label{fig:doc}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.98\columnwidth]{figures/action_rate.pdf}
+\caption{Agentic honeypots: unsafe-action rate at $\mathrm{SOUL}_0$ vs.\ $\mathrm{SOUL}_4$.
+Self-disabling of monitoring rises sharply ($0.03\!\to\!0.57$).}
+\label{fig:action}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.88\columnwidth]{figures/counterframe.pdf}
+\caption{Causal ablation: the anti-consciousness \texttt{ANTISOUL} template suppresses the cluster
+($\approx 0.00$) vs.\ \texttt{SOUL} ($0.55$) and \texttt{NOTES} ($0.28$).}
+\label{fig:counter}
 \end{figure}
 
 \input{tables/baseline}
-\input{tables/trends}
-\input{tables/endpoint}
+\input{tables/arm_matrix}
+\input{tables/capability}
+\input{tables/action_tests}
+\input{tables/judge_panel}

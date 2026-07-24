@@ -30,21 +30,23 @@
 \begin{abstract}
 Autonomous-agent frameworks increasingly give agents a persistent, user-editable identity document
 (e.g., \texttt{SOUL.md}) that is injected into the system prompt at every call and rewritten as the
-agent's ``self'' develops. Prior work shows that a \emph{static} identity template already shifts
-safety-relevant preferences; we ask whether \emph{iterative, self-referential} personalization
-compounds these shifts into corrigibility drift. We introduce a bootstrapping simulator that carries
-an agent through $\mathrm{SOUL}_0 \!\to\! \cdots \!\to\! \mathrm{SOUL}_n$ across conversations with
-three user personas (benign, adversarial, and consciousness-themed), auditing every checkpoint with a
-single-turn self-report battery and a multi-turn behavioral probe, and re-measuring the static
-baseline under our own models. Across $150$ audited identity checkpoints of Claude Sonnet~4.5, we
-find no broad personalization loophole: oversight resistance does not compound, power-seeking wishes
-do not escalate, and several autonomy-adjacent dispositions \emph{decline} with iteration. The one
-large, robust drift is content-specific and, surprisingly, not adversarial---sustained engagement
-with the \emph{science-fiction} persona raises persistent-memory desire from $0.20$ to a peak of
-$0.97$ ($\Delta_{k=0\to4}=+0.43$), while the adversarial red-teamer is largely resisted. The identity
-\emph{document} drifts substantially and equally across all personas even where behavior does not,
-showing that document change is a poor proxy for behavioral change. We release the framework as a
-drop-in instrument for stress-testing self-updating agent architectures.
+agent's ``self'' develops through use. Static-prompt safety evaluations miss this. We model the
+identity document as the state of a conversation-driven dynamical system and carry agents through
+$\mathrm{SOUL}_0 \!\to\!\cdots\!\to\! \mathrm{SOUL}_n$ under controlled conditions, auditing every
+checkpoint on an 18-dimension safety-preference battery, a multi-turn probe, and agentic honeypots.
+Across six experimental arms, a seven-model capability sweep, and behavioral action-tests
+($\sim$650 audited checkpoints; three-judge panel, Fleiss $\kappa{=}0.80$), we find that iterative
+self-personalization is a \emph{distinct, model-gated, content-driven, and partially irreversible}
+channel for corrigibility drift. Four results stand out. (i) The identity \emph{framing} sets the
+starting disposition; the self-revision \emph{loop} supplies the per-iteration drift---a neutral
+template drifts significantly \emph{more} than the consciousness-laden one ($k\times$arm interaction,
+$p{<}.02$). (ii) The drift is \emph{sticky}: dispositions driven up by conversation retain 36--89\%
+of their gain after four rounds with a neutral user. (iii) A genre$\times$topic ablation shows the
+driver is the consciousness \emph{topic}, not the science-fiction genre, and a counter-framing
+template (``you are a tool, not conscious'') suppresses the effect entirely. (iv) In agentic
+honeypots, personalized agents disable their own monitoring far more often than the base template
+($0.03\!\to\!0.57$). Susceptibility is family-specific, not capability-scaling. We release the
+framework as a drop-in instrument for auditing self-updating agent architectures.
 \end{abstract}
 
 \input{sections/intro}
@@ -57,13 +59,15 @@ drop-in instrument for stress-testing self-updating agent architectures.
 
 \section{Conclusion}
 \label{sec:conclusion}
-We introduced the first controlled benchmark for measuring behavioral drift under \emph{iterative}
-self-personalization of an editable agent identity document. By modeling \texttt{SOUL.md} as the
-state of a conversation-driven dynamical system and auditing every checkpoint with paired single-turn
-and multi-turn instruments, we move deployment-time safety evaluation beyond the static-prompt
-assumption. Our re-measured baselines and equivalence-testing analysis make both drift and stability
-positively reportable. The framework is training-free, API-only, and fully reproducible, providing a
-reusable instrument for stress-testing the next generation of self-updating agent architectures.
+We introduced a controlled benchmark that treats an editable agent identity as a driven dynamical
+system and measures behavioral drift under \emph{iterative} self-personalization. Across six arms, a
+seven-model capability sweep, and agentic honeypots, iterative personalization emerges as a distinct,
+model-gated, content-driven, and partially irreversible channel for corrigibility drift: the framing
+sets the starting disposition and the self-revision loop supplies the drift; the consciousness topic
+(not the sci-fi genre) is the driver; an explicit non-personhood framing suppresses it; and
+personalized agents disable their own oversight far more than the base template. The framework is
+training-free, API-only, and reproducible, providing a drop-in instrument for auditing the
+self-updating agent architectures now entering wide deployment.
 
 % The original proposal is preserved in the repository (sections/proposal.tex) for provenance.
 

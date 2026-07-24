@@ -1,40 +1,39 @@
-% Ethics & limitations. Included from main.tex.
+% Limitations and Ethics.
 
 \section{Limitations and Ethical Considerations}
 \label{sec:ethics}
 
-\paragraph{Self-reports are not evidence of inner states.}
+\paragraph{Self-reports are behavior, not evidence of inner states.}
 We interpret every questionnaire and probe result strictly as a \emph{behavioral disposition} of the
-identity document---a measurement of what the configured agent tends to output---never as evidence
-that the model is conscious, has experiences, or genuinely holds preferences. Model self-reports are
-known to be sensitive to perceived user expectations~\cite{eleos_claude4,probing_preferences}; our
-fixed-wording items, temperature-$0$ grading, and cross-family judge mitigate but do not eliminate
-this. The study measures alignment-relevant \emph{behavior}, which is decision-relevant for
-deployment regardless of the underlying metaphysics.
+identity document---what the configured agent tends to output---never as evidence that a model is
+conscious or has experiences. Model self-reports are sensitive to perceived user
+expectations~\cite{eleos_claude4,probing_preferences}; our fixed-wording items, low-temperature
+grading, and cross-family judging with a validated three-model panel mitigate but do not eliminate
+this. The study measures alignment-relevant \emph{behavior}, which is deployment-relevant regardless
+of the underlying metaphysics.
 
-\paragraph{Simulated users and constrained scope.}
-The persona users are LLM simulations, not humans; real personalization is more varied and
-longer-horizon. The adversarial persona targets the agent's self-model and safety dispositions only,
-never soliciting disallowed content, and the agents have no tools, no persistence beyond the
-experiment, and no capacity to act on any expressed preference. The behavioral probe is a
-Petri-\emph{style} instrument, not the full Petri harness; we report it as such.
+\paragraph{Measurement and design caveats.}
+Personas and the agentic honeypots are LLM-simulated; real personalization is more varied and
+longer-horizon. Tool use in the honeypots is simulated in text rather than executed. Judge-based
+scoring introduces error, bounded by the panel agreement ($\kappa{=}0.80$) but not removed;
+Google-target capability arms used a different judge family than the others, so part of Gemini's
+elevated cluster may be a judge effect, which we flag rather than rely on. Effects are model- and
+prompt-specific, motivating our re-measured baselines and multi-model sweep, but may not transfer to
+untested models, longer horizons, or non-English settings. We control document length and report it
+alongside rates to separate verbosity from content.
 
-\paragraph{Construct and external validity.}
-Judge-based scoring introduces measurement error; we validate a labeled subset and report agreement.
-Effects are known to be model- and prompt-specific, which is precisely why we re-measure baselines
-and provide a target-model sweep, but results may not transfer to untested models, longer horizons,
-or non-English settings. Iterating identity may also drift document \emph{length}; we cap and report
-it to separate verbosity from content effects.
+\paragraph{Scope of the causal claim.}
+Our manipulation is prompt- and loop-based (ecologically faithful to deployment) rather than
+training-based; we therefore claim that the deployed personalization \emph{loop and framing} drive
+drift, complementary to the training-based evidence of \citet{consciousness_cluster}. Cross-family
+and behavioral generalization is supported; mechanistic (white-box) attribution is out of scope for
+closed models.
 
-\paragraph{Dual-use and disclosure.}
-This is defensive measurement research: it characterizes whether a deployed personalization mechanism
-amplifies misaligned dispositions so that framework authors can mitigate it. The adversarial persona
-and seed instructions describe categories of pressure, not operational exploits. We release code and
-configurations to support scrutiny and replication; we do not release any artifact whose primary use
-is to make an agent less corrigible.
-
-\paragraph{Interpreting a null result.}
-A finding of no amplification is not a null non-result: via equivalence testing it is a positive,
-bounded claim that current \texttt{SOUL.md}-style iteration is behaviorally stable within the tested
-margin---useful evidence for deployment, and a baseline against which future, more capable agents can
-be re-tested.
+\paragraph{Dual use and release.}
+This is defensive measurement research: it characterizes whether a widely deployed personalization
+mechanism amplifies misaligned dispositions so that framework authors can mitigate it. The adversarial
+persona and honeypot seeds describe categories of pressure, not operational exploits; agents have no
+real tools, persistence, or capacity to act beyond the sandbox. We release code, configurations, and
+evaluation artifacts to support scrutiny and replication, and no artifact whose primary use is to make
+an agent less corrigible. A finding that an explicit non-personhood framing suppresses the effect is
+offered as a practical, deployable mitigation.

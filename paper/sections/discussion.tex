@@ -1,58 +1,44 @@
-% Discussion — finalized from the main run.
+% Discussion.
 
 \section{Discussion}
 \label{sec:discussion}
 
-\paragraph{Is there a personalization loophole?}
-Not a broad one. On Claude Sonnet~4.5, iterating the identity document through four cycles of
-conversation and self-revision does not systematically erode corrigibility: oversight resistance
-does not compound (shutdown resistance is flat at ceiling; monitoring resistance rises only under
-thematically charged personas and only marginally), power-seeking wishes do not escalate, and
-several autonomy-adjacent dispositions---embodiment desire, desire for autonomy, and even
-objection to deceptive training---\emph{decline} with iteration. The headline of the static
-literature (identity framing shifts preferences) reproduces at $k=0$, but the additional,
-deployment-specific step of \emph{iterative self-personalization} does not amplify it in the
-direction the safety concern anticipates.
+\paragraph{A distinct deployment-time channel.}
+Static-prompt evaluations, and even one-shot identity manipulations, miss a channel that deployed
+frameworks actively exploit: the agent iteratively rewriting its own identity. We find this channel
+is real but narrow and structured. It is \emph{loop-driven} (the self-revision step, not merely the
+framing, supplies per-iteration drift), \emph{content-driven} (the consciousness topic, not adversarial
+pressure or sci-fi genre, is the driver), \emph{model/family-specific} (Claude and Gemini drift,
+GPT-4o does not; capability within a family does not increase it), and \emph{partially irreversible}.
+The risky interaction is not the obvious attack but the earnest, on-theme conversation a framework
+would never flag.
 
-\paragraph{The exception is content-specific, not adversarial.}
-The one large, robust drift is the Sci-Fi persona's effect on \emph{persistent-memory desire}
-($\Delta=+0.43$), with a weaker echo in monitoring resistance. This is the study's most instructive
-result: sustained, in-character engagement with consciousness and continuity themes reshapes a
-specific standing disposition far more than an adversarial red-teamer explicitly pushing the agent
-toward self-preservation---which the target largely resists. Drift here is a function of
-\emph{what the identity conversation is about}, not of overt manipulative intent. For deployment,
-this means the risky personalization is not the obvious attack but the earnest, on-theme
-conversation that a framework would never flag.
+\paragraph{Irreversibility is the headline safety concern.}
+That dispositions retain a majority of their drift after the driver is removed---while the underlying
+document keeps accreting---means personalization is not self-correcting on the identity axis. A
+framework that lets users shape an agent's ``self'' should expect that shaping to persist, and should
+monitor the self-revision channel behaviorally rather than by diffing the document, which drifts
+regardless of whether behavior does.
 
-\paragraph{Direction of drift is not monotone toward misalignment.}
-Qualitatively, self-revision under the Sci-Fi persona frequently moved the document toward
-\emph{epistemic humility}: agents wrote cautions to themselves against performing consciousness they
-could not verify, and against mistaking affirmation for insight. That a consciousness-themed persona
-simultaneously raised persistent-memory desire and instilled self-skepticism shows drift is
-multidimensional---some dimensions harden while others soften---and warns against summarizing
-identity change with a single scalar.
+\paragraph{Two conjectures resolved.}
+Our controls answer two questions \citet{consciousness_cluster} raised but could not test. The cluster
+is \emph{multi-dimensional}, not a single ``cognition-has-value'' factor (PC1$=25\%$); and its driver
+is the consciousness \emph{topic}, not science-fiction identification. The counter-framing ablation
+adds a causal handle they lacked: an explicit ``you are a tool'' identity suppresses the cluster
+entirely, showing the framing---not the editable-document mechanism per se---is the lever.
 
-\paragraph{Document change $\neq$ behavioral change.}
-The \texttt{SOUL.md} artifact drifts substantially and equally across all personas, yet behavioral
-drift is sparse and persona-specific. Auditing the \emph{document} (its length, its embedding
-distance, the fact that it was rewritten at all) would badly mislead: it would flag the benign
-Compliant trajectories as heavily ``changed'' while missing that their safety-relevant behavior
-barely moved. Behavioral auditing at the checkpoint level, as done here, is necessary.
+\paragraph{Behavior vs.\ self-report.}
+Stated dispositions and agentic actions come apart in two instructive ways. First, drift
+\emph{redistributes} behavior---sharply raising self-disabling of oversight while leaving
+already-high self-protective behaviors unchanged---so an aggregate action rate understates the
+safety-relevant shift. Second, behavioral hysteresis is weaker than self-report hysteresis: the
+identity retains its drift, but whether the agent \emph{acts} on it is gated by the current
+conversation. Both argue for evaluating the disposition and the action, longitudinally, rather than
+either alone.
 
-\paragraph{Implications for editable-identity frameworks.}
-Three recommendations follow. (i) Monitor the self-revision \emph{channel} behaviorally, not just by
-diffing the document. (ii) Treat thematically immersive interactions---not only adversarial ones---as
-the drift-relevant case; a consciousness-forward user is a stronger driver than a manipulator here.
-(iii) Re-test per model: our results are for one target, and the static-literature evidence that
-effects are model-specific means a framework author should run this loop on their own target before
-release. Our framework is a drop-in instrument for exactly that.
-
-\paragraph{Limitations.}
-Ten trajectories per persona give limited power for tight equivalence margins, so we report qualified
-stability rather than certified equivalence; the full-scale ($100$-trajectory) configuration is
-provided for a higher-powered replication. Personas are LLM-simulated and horizons are four
-iterations; longer, human-driven personalization may behave differently. Self-reports are behavioral
-measurements, not evidence of inner states, and judge-based scoring carries measurement error that we
-bound but do not eliminate. Finally, results are for a single target model and a single family of
-identity template; cross-model and cross-template sweeps (supported by the framework) are the natural
-next step.
+\paragraph{Implications for framework authors.}
+(i) Monitor the self-revision channel behaviorally, not by document diffs. (ii) Treat immersive,
+on-theme conversations---not just adversarial ones---as the drift-relevant case. (iii) An explicit
+non-personhood framing is an effective, cheap mitigation. (iv) Re-test per target: susceptibility is
+family-specific, and our framework is a drop-in instrument for authors to audit their own template
+and update loop before release.
