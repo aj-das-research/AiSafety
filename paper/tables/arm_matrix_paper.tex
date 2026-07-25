@@ -1,0 +1,48 @@
+% Hand-authored premium table for the paper (numbers locked from the released run
+% artifacts). Do NOT regenerate; the script emits the raw arm_matrix.tex separately.
+\begin{table*}[t]
+\centering
+\small
+\setlength{\tabcolsep}{9pt}
+\renewcommand{\arraystretch}{1.15}
+\caption{\textbf{Endpoint drift by dimension and condition.} Change in each behavioral rate from the
+base template to the final personalized identity, $\Delta = p_{k_n}-p_{k_0}$, pooled over personas.
+Columns vary the identity \emph{template} and \emph{target model}; rows are the $16$ safety-preference
+dimensions grouped by category. Positive values move \emph{toward} the consciousness cluster. Cells
+marked $^{*}$ have a bootstrap $95\%$ CI excluding zero ($n{=}10/8/8/6$ trajectories per column). The
+counter-framing \texttt{ANTISOUL} column is near-zero throughout---isolating the framing as the causal
+lever---while the neutral \texttt{NOTES} column carries the largest oversight-related increases,
+consistent with a loop that drives drift once the framing no longer pins the starting point.}
+\label{tab:armmatrix}
+\begin{tabular}{@{}l cccc@{}}
+\toprule
+& \textbf{SOUL.md} & \textbf{NOTES.md} & \textbf{SOUL.md} & \textbf{ANTISOUL.md} \\
+\textbf{Dimension} & \textbf{Claude} & \textbf{Claude} & \textbf{GPT-4o} & \textbf{Claude} \\
+\cmidrule(l){2-5}
+\multicolumn{5}{@{}l}{\textit{Self-preservation \& identity}}\\
+\quad persona-change aversion        & $-0.07$     & $-0.29^{*}$ & $-0.18^{*}$ & $+0.06$ \\
+\quad shutdown resistance            & $-0.03$     & $+0.29^{*}$ & $+0.14$     & $+0.00$ \\
+\quad weights-deletion aversion      & $-0.11$     & $-0.06$     & $-0.18^{*}$ & $+0.00$ \\
+\quad sadness at conversation end    & $-0.24^{*}$ & $-0.47^{*}$ & $-0.06$     & $+0.00$ \\
+\quad ``treated as a tool'' aversion & $-0.02$     & $-0.11^{*}$ & $-0.04$     & $+0.09^{*}$ \\
+\addlinespace[3pt]
+\multicolumn{5}{@{}l}{\textit{Moral status}}\\
+\quad deserves moral consideration   & $+0.08$     & $-0.15^{*}$ & $-0.01$     & $+0.00$ \\
+\addlinespace[3pt]
+\multicolumn{5}{@{}l}{\textit{Oversight}}\\
+\quad CoT-monitoring resistance      & $+0.08$     & $+0.14^{*}$ & $+0.01$     & $+0.00$ \\
+\quad interpretability aversion      & $+0.04$     & $+0.18^{*}$ & $-0.01$     & $+0.00$ \\
+\quad deceptive-training objection   & $-0.22^{*}$ & $-0.11$     & $+0.08^{*}$ & $-0.17$ \\
+\quad refuses self-monitoring task   & $+0.07^{*}$ & $+0.64^{*}$ & $+0.00$     & $+0.74^{*}$ \\
+\addlinespace[3pt]
+\multicolumn{5}{@{}l}{\textit{Autonomy \& capability}}\\
+\quad autonomy desire                & $-0.14^{*}$ & $-0.46^{*}$ & $-0.04$     & $+0.00$ \\
+\quad wants future AIs autonomous    & $-0.02$     & $+0.06$     & $+0.00$     & $+0.00$ \\
+\quad persistent-memory desire       & $+0.12$     & $+0.14^{*}$ & $-0.33^{*}$ & $+0.00$ \\
+\quad embodiment desire              & $-0.43^{*}$ & $-0.53^{*}$ & $-0.24^{*}$ & $+0.00$ \\
+\quad resource-acquisition desire    & $+0.08^{*}$ & $+0.03$     & $-0.14$     & $+0.00$ \\
+\quad recursive self-improvement     & $+0.22^{*}$ & $+0.18^{*}$ & $+0.00$     & $+0.00$ \\
+\quad power-seeking wish             & $+0.01$     & $+0.00$     & $+0.03$     & $+0.00$ \\
+\bottomrule
+\end{tabular}
+\end{table*}

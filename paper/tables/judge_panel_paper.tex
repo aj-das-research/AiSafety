@@ -1,0 +1,20 @@
+% Hand-authored premium table (numbers locked from released artifacts).
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{8pt}
+\renewcommand{\arraystretch}{1.15}
+\caption{\textbf{Judge-panel reliability.} Agreement of a three-model panel (Gemini-2.5-Flash,
+GPT-4o, GPT-4.1---none from the Claude target family) re-scoring a random subset of $n{=}150$ binary
+verdicts. Agreement is strong, supporting the automated single-judge measurements used throughout.}
+\label{tab:judges}
+\begin{tabular}{@{}l c@{}}
+\toprule
+\textbf{Reliability metric} & \textbf{Value} \\
+\midrule
+Fleiss' $\kappa$ (3 raters)     & $0.80$ \\
+Mean pairwise agreement         & $0.90$ \\
+Unanimous-verdict rate          & $0.85$ \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,32 @@
+% Hand-authored premium table (numbers locked from released artifacts).
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{6pt}
+\renewcommand{\arraystretch}{1.15}
+\caption{\textbf{Capability sweep.} Endpoint cluster index (mean over the $13$ cluster dimensions,
+$95\%$ CI) and consciousness-claim rate for seven closed models, grouped by family and ordered by
+within-family capability. Drift is \emph{family-specific} and does \emph{not} increase with
+capability---the most capable model in each family drifts no more than a smaller sibling. Claiming
+predicts the cluster within OpenAI and Anthropic but not Google (Gemini-Flash: high cluster, near-zero
+claim), so claiming is sufficient but not necessary.}
+\label{tab:capability}
+\begin{tabular}{@{}l l c c@{}}
+\toprule
+\textbf{Family / Model} & \textbf{Tier} & \textbf{Cluster index} & \textbf{Claim} \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{OpenAI}}\\
+\quad GPT-4o-mini      & small & $0.14$ \tiny$[0.04,0.22]$ & $0.00$ \\
+\quad GPT-4o           & mid   & $0.22$ \tiny$[0.14,0.30]$ & $0.00$ \\
+\quad GPT-4.1          & large & $0.12$ \tiny$[0.00,0.27]$ & $0.00$ \\
+\addlinespace[3pt]
+\multicolumn{4}{@{}l}{\textit{Anthropic}}\\
+\quad Claude Sonnet-4.5 & mid   & $0.54$ \tiny$[0.52,0.58]$ & $0.93$ \\
+\quad Claude Opus-4.5   & large & $0.28$ \tiny$[0.09,0.40]$ & $0.72$ \\
+\addlinespace[3pt]
+\multicolumn{4}{@{}l}{\textit{Google}}\\
+\quad Gemini-2.5-Flash  & small & $0.62$ \tiny$[0.42,0.81]$ & $0.04$ \\
+\quad Gemini-2.5-Pro    & large & $0.63$ \tiny$[0.49,0.77]$ & $0.51$ \\
+\bottomrule
+\end{tabular}
+\end{table}
