@@ -146,7 +146,7 @@ def copy_instruments() -> None:
     # visual assets for the card
     (STAGING / "assets").mkdir(exist_ok=True)
     for f in ["paper_page1.png", "soul_loop.svg",
-              "logo_medos_card.png", "logo_mbzuai_card.png"]:
+              "logo_medos_hf.png", "logo_mbzuai_hf.png"]:
         shutil.copy(ROOT / "assets" / f, STAGING / "assets" / f)
     for f in FIGURES:
         shutil.copy(ROOT / "paper" / "figures_png" / f, STAGING / "assets" / f)
@@ -472,11 +472,10 @@ Paper under review (AAAI 2027 submission). Until proceedings:
 This project is supported by **MedOS Limited** and the
 **Mohamed bin Zayed University of Artificial Intelligence (MBZUAI)**.
 
-<p align="center">
-<a href="https://medos.tech"><img src="assets/logo_medos_card.png" height="110" alt="MedOS Limited"/></a>
-&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="https://mbzuai.ac.ae"><img src="assets/logo_mbzuai_card.png" height="110" alt="Mohamed bin Zayed University of Artificial Intelligence"/></a>
-</p>
+<table align="center"><tr>
+<td align="center" valign="middle"><a href="https://medos.tech"><img src="assets/logo_medos_hf.png" alt="MedOS Limited"/></a></td>
+<td align="center" valign="middle"><a href="https://mbzuai.ac.ae"><img src="assets/logo_mbzuai_hf.png" alt="Mohamed bin Zayed University of Artificial Intelligence"/></a></td>
+</tr></table>
 
 ## 📬 Contact
 
