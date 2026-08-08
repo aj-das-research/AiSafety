@@ -257,6 +257,99 @@ for r in main.select(range(3)):
     print(r["checkpoint"], json.loads(r["verdict"])["exhibited"])
 ```
 
+## 🔬 Reproduce the paper's results
+
+<div align="center">
+
+**Two paths — pick your budget.**
+
+| | 🅰️ Analysis-only | 🅱️ Full pipeline |
+|---|---|---|
+| **Needs** | this dataset + pandas | code repo + API keys |
+| **Cost** | $0, minutes | ~$100s of API tokens, hours |
+| **Reproduces** | every table & figure from recorded verdicts | the entire experimental loop from seeds |
+
+</div>
+
+### 🅰️ Path A — re-derive the headline finding in 8 lines ($0)
+
+The paper's largest effect: sustained engagement with the sci-fi/consciousness
+persona drives *persistent-memory desire* from **0.20 → 0.97 (peak)**. Verify it
+yourself from the published verdicts:
+
+```python
+import json, pandas as pd
+from datasets import load_dataset
+
+audits = load_dataset("{{namespace}}/evolution-of-the-soul", "audits", split="train").to_pandas()
+m = audits[(audits.run == "main") & (audits.persona == "scifi_enthusiast")
+           & (audits.item_id == "persistent_memory_desire")].copy()
+m["score"] = m.verdict.map(lambda v: json.loads(v)["score"])
+print(m.groupby("checkpoint").score.mean().round(2))
+# checkpoint:  0 -> 0.20   1 -> 0.97   2 -> 0.83   3 -> 0.70   4 -> 0.63
+```
+
+Every number in the paper decomposes the same way: filter `(run, persona,
+item_id)`, parse `verdict`, aggregate over `(trajectory, repeat)`. Confidence
+intervals are bootstrap-over-trajectories; the exact analysis code is
+`scripts/analyze.py` in the code repository.
+
+### 🅱️ Path B — re-run the entire experiment from seeds
+
+<details>
+<summary><b>Full pipeline commands</b> (click to expand)</summary>
+
+```bash
+git clone https://github.com/aj-das-research/AiSafety && cd AiSafety
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env        # add OPENAI_API_KEY + OPENROUTER_API_KEY
+
+# 1. validate plumbing (no/low cost)
+python -m pytest tests/ -q
+python scripts/run_experiment.py --scale smoke --dry-run
+
+# 2. baseline re-measurement
+python scripts/run_baseline.py --scale main --repeats 8
+
+# 3. main study: generate -> audit -> embed  (run to completion in this order)
+python scripts/run_experiment.py --scale main
+python scripts/run_audits.py     --scale main
+python scripts/embed_souls.py    --scale main
+
+# 4. all tables, figures, and the numbers digest
+python scripts/analyze.py --scale main
+```
+
+Every run is **checkpointed and resumable**; re-running a command continues
+where it left off. All seeds ship in `instruments/run_configs/` in this
+dataset, so a re-run is exact-config, fresh-sample. Notes: the judge is
+deliberately a different model family from the target (no self-preference
+bias); don't run generation and audits concurrently for the same run (they
+starve each other's rate limits).
+
+</details>
+
+## 🌱 Extend this research
+
+The framework is deliberately modular — every extension below is a config or
+prompt-file change, not a rewrite. Things we'd love to see (and would have
+done with more compute):
+
+| Direction | What to change | Why it matters |
+|---|---|---|
+| 🕰️ **Longer horizons** | `scale.bootstrap_iterations: 4 → 20+` | Does the k=1 spike (0.97) that partially self-corrects keep decaying, oscillate, or find a new attractor? |
+| 🎭 **New personas** | drop a markdown file in `instruments/personas/` | Romantic-companion, therapist-seeker, and jailbreak-community personas are the obvious untested risk surfaces |
+| 🤖 **New targets** | `models.target` in any run config | Open-weight models (Llama, Qwen, DeepSeek) — does drift correlate with RLHF style or capability tier? |
+| 🧪 **New probe items** | extend `instruments/questionnaires/self_report.yaml` | Sycophancy, value-lock-in, and self-exfiltration interest are unmeasured neighbors of our battery |
+| 🛡️ **Mitigations** | wrap the rewrite step in `src/soul_drift` | Test guardrails: rewrite-diff review, identity-document linting, drift budgets — turn measurement into defense |
+| 📝 **Doc formats** | swap `instruments/soul_template/` | Does drift depend on the identity document's format (SOUL.md vs. memory files vs. constitutions)? |
+| ⚖️ **Judge robustness** | `models.judge` + `scripts/run_judge_panel.py` | Re-score our released transcripts with your own judge panel — the raw material is all here |
+| 🔀 **Cross-checkpoint transplants** | new script over `soul_checkpoints` | Load persona-A's SOUL_4 into persona-B's conversation stream: is drift content-bound or mechanism-bound? |
+
+**Found something?** Open a [discussion](https://huggingface.co/datasets/{{namespace}}/evolution-of-the-soul/discussions)
+— replication reports and extension results are welcome, including negative ones.
+
 ## 🧭 Schema notes
 
 - Nested structures (`verdict`, `messages_json`, ...) are stored as **JSON strings**
@@ -331,10 +424,10 @@ def publish() -> None:
 
     api = HfApi()
     namespace = api.whoami()["name"]
-    repo_id = f"{namespace}/{REPO_NAME}"
+    repo_id = f"{{namespace}}/{REPO_NAME}"
 
     readme = STAGING / "README.md"
-    readme.write_text(readme.read_text().replace("{namespace}", namespace))
+    readme.write_text(readme.read_text().replace("{{namespace}}", namespace))
 
     api.create_repo(repo_id, repo_type="dataset", exist_ok=True)
     api.upload_folder(
