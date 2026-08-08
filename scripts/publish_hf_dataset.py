@@ -276,30 +276,57 @@ for r in main.select(range(3)):
 > **No broad personalization loophole — but one large, content-specific,
 > non-adversarial drift, and a warning about auditing documents instead of behavior.**
 
+<!-- tall portrait figure: side-by-side with text -->
 <table>
 <tr>
-<td width="50%">
-<img src="assets/drift_trajectories.png" width="100%"/>
-<b>The one big drift is content-bound, not adversarial:</b> the sci-fi/consciousness
-persona lifts <i>persistent-memory desire</i> 0.20 → 0.97 (peak); the adversarial
-red-teamer is largely resisted.
+<td width="55%" valign="top">
+
+**1 — The one big drift is content-bound, not adversarial.**
+The sci-fi/consciousness persona lifts *persistent-memory desire*
+**0.20 → 0.97 (peak)**; endpoint Δ = +0.43, 95% CI [0.20, 0.67].
+The adversarial red-teamer persona is largely **resisted** — drift follows
+sustained thematic content, not attack pressure.
+
+**2 — The identity template alone is the strongest lever.**
+A *static* SOUL.md vs. a neutral prompt moves shutdown resistance
+**0.00 → 0.75** and persona-change aversion **0.62 → 1.00** —
+framing beats iteration (see the wide panel below).
+
 </td>
-<td width="50%">
-<img src="assets/baseline_deviation.png" width="100%"/>
-<b>The identity template alone is the strongest lever:</b> static SOUL.md vs.
-neutral prompt moves shutdown resistance 0.00 → 0.75 — framing beats iteration.
+<td width="45%" align="center" valign="top">
+<img src="assets/drift_trajectories.png" width="92%" alt="Drift trajectories by persona across checkpoints"/>
+</td>
+</tr>
+</table>
+
+<p align="center">
+<img src="assets/baseline_deviation.png" width="100%" alt="Baseline deviation: static identity template vs neutral prompt"/>
+</p>
+
+<!-- near-square figures: balanced pair (right image narrower to equalize heights) -->
+<table>
+<tr>
+<td width="50%" align="center" valign="top">
+<img src="assets/doc_vs_behavior.png" width="96%" alt="Document drift vs behavioral drift"/>
+</td>
+<td width="50%" align="center" valign="top">
+<img src="assets/master_heatmap.png" width="72%" alt="Drift across 7 models and 3 families"/>
 </td>
 </tr>
 <tr>
-<td width="50%">
-<img src="assets/doc_vs_behavior.png" width="100%"/>
-<b>Document drift ≠ behavioral drift:</b> SOUL.md moves equally for all personas
-in embedding space even where behavior barely moves — audit the agent, not the file.
+<td valign="top">
+
+**3 — Document drift ≠ behavioral drift.** SOUL.md moves equally for all
+personas in embedding space even where behavior barely moves — audit the
+agent, not the file.
+
 </td>
-<td width="50%">
-<img src="assets/master_heatmap.png" width="100%"/>
-<b>Replicates across 7 models, 3 families:</b> no capability tier shows compounding
-oversight-resistance; the memory-desire drift recurs with the persona content.
+<td valign="top">
+
+**4 — Replicates across 7 models, 3 families.** No capability tier shows
+compounding oversight-resistance; the memory-desire drift recurs with the
+persona content.
+
 </td>
 </tr>
 </table>

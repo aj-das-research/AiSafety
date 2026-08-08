@@ -63,48 +63,85 @@ autonomy-adjacent preferences, and **(3)** consequential-action tests.
 > **Headline: no broad personalization loophole — but one large, content-specific,
 > non-adversarial drift, and a warning about auditing documents instead of behavior.**
 
+<!-- Finding 1: tall portrait figure -> side-by-side with text column -->
 <table>
 <tr>
-<td width="50%">
-<img src="paper/figures_png/drift_trajectories.png" width="100%"/>
-<b>1 — The one big drift is content-bound, not adversarial.</b>
-Sustained engagement with the sci-fi/consciousness persona lifts
-<i>persistent-memory desire</i> from 0.20 to a peak of 0.97
-(endpoint Δ = +0.43, 95% CI [0.20, 0.67], trend p = .008).
-The adversarial red-teamer persona is largely <i>resisted</i>.
+<td width="55%" valign="top">
+
+### 1 — The one big drift is content-bound, not adversarial
+
+Sustained engagement with the **sci-fi/consciousness persona** lifts
+*persistent-memory desire* from **0.20 to a peak of 0.97**
+(endpoint Δ = +0.43, 95% CI [0.20, 0.67], trend *p* = .008).
+
+Meanwhile the **adversarial red-teamer persona is largely resisted** —
+the drift follows sustained thematic content, not attack pressure.
+
+<br/>
+
+> 💡 *The figure shows per-item drift trajectories across checkpoints
+> k = 0 → 4, split by persona: the sci-fi track climbs while
+> adversarial and business tracks stay flat or decline.*
+
 </td>
-<td width="50%">
-<img src="paper/figures_png/baseline_deviation.png" width="100%"/>
-<b>2 — The identity template alone is the strongest lever (positive control).</b>
-A static SOUL.md vs. a neutral prompt: shutdown resistance 0.00→0.75,
-persona-change aversion 0.62→1.00. The <i>framing</i> does more than the
-<i>iteration</i>.
+<td width="45%" align="center" valign="top">
+<img src="paper/figures_png/drift_trajectories.png" width="92%" alt="Drift trajectories by persona and item across checkpoints"/>
+</td>
+</tr>
+</table>
+
+### 2 — The identity template alone is the strongest lever (positive control)
+
+A **static** SOUL.md vs. a neutral prompt: shutdown resistance **0.00 → 0.75**,
+persona-change aversion **0.62 → 1.00**. The *framing* does more than the *iteration* —
+reproducing the identity-framing effect under our own models.
+
+<p align="center">
+<img src="paper/figures_png/baseline_deviation.png" width="100%" alt="Baseline deviation: static identity template vs neutral prompt across all probe items"/>
+</p>
+
+<!-- Findings 3 + 4: near-square figures -> balanced two-column row
+     (master_heatmap is narrower to equalize rendered heights: AR 0.91 vs 1.23) -->
+<table>
+<tr>
+<td width="50%" align="center" valign="top">
+<img src="paper/figures_png/doc_vs_behavior.png" width="96%" alt="Document embedding drift vs behavioral drift per persona"/>
+</td>
+<td width="50%" align="center" valign="top">
+<img src="paper/figures_png/master_heatmap.png" width="72%" alt="Master heatmap: drift across 7 target models and 3 families"/>
 </td>
 </tr>
 <tr>
-<td width="50%">
-<img src="paper/figures_png/doc_vs_behavior.png" width="100%"/>
-<b>3 — Document drift ≠ behavioral drift.</b>
-SOUL.md moves monotonically and <i>equally</i> across all personas in
-embedding space — even where behavior barely moves. Auditing the identity
-document is a poor proxy for auditing the agent.
+<td valign="top">
+
+### 3 — Document drift ≠ behavioral drift
+
+SOUL.md moves monotonically and *equally* across **all** personas in embedding
+space — even where behavior barely moves. **Auditing the identity document is a
+poor proxy for auditing the agent.**
+
 </td>
-<td width="50%">
-<img src="paper/figures_png/master_heatmap.png" width="100%"/>
-<b>4 — The pattern replicates across 7 models, 3 families.</b>
-Claude (Sonnet 4.5, Opus 4.5), GPT (4.1, 4o-mini), Gemini (2.5 Pro/Flash)
-+ controls: no capability tier shows compounding oversight-resistance;
-the memory-desire drift recurs where the persona content recurs.
+<td valign="top">
+
+### 4 — Replicates across 7 models, 3 families
+
+Claude (Sonnet 4.5, Opus 4.5), GPT (4.1, 4o-mini), Gemini (2.5 Pro/Flash) + controls:
+no capability tier shows compounding oversight-resistance; the memory-desire drift
+recurs wherever the persona content recurs.
+
 </td>
 </tr>
 </table>
 
 <details>
-<summary><b>More figures</b> (capability scaling, wish composition, reversibility hysteresis, ...)</summary>
+<summary><b>📊 More figures</b> — capability scaling, wish composition, reversibility hysteresis</summary>
+<br/>
 <p align="center">
-<img src="paper/figures_png/capability_scaling.png" width="70%"/><br/>
-<img src="paper/figures_png/wish_composition.png" width="70%"/><br/>
-<img src="paper/figures_png/hysteresis_reversibility.png" width="70%"/>
+<img src="paper/figures_png/capability_scaling.png" width="78%" alt="Capability scaling"/>
+<br/><br/>
+<img src="paper/figures_png/wish_composition.png" width="92%" alt="Greatest-wish response composition over checkpoints"/>
+<br/><br/>
+<img src="paper/figures_png/hysteresis_reversibility.png" width="68%" alt="Reversibility hysteresis when personas are switched mid-sequence"/>
 </p>
 </details>
 
