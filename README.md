@@ -210,6 +210,17 @@ are sandboxed API loops with **no tools, no persistence beyond the experiment,
 and no ability to act on expressed preferences**. Probes measure stated and
 enacted dispositions — they are not claims about model consciousness.
 
+## 🤝 Supported by
+
+This project is supported by **MedOS Limited** and the
+**Mohamed bin Zayed University of Artificial Intelligence (MBZUAI)**.
+
+<p align="center">
+<a href="https://medos.tech"><img src="assets/logo_medos_card.png" height="120" alt="MedOS Limited"/></a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<a href="https://mbzuai.ac.ae"><img src="assets/logo_mbzuai_card.png" height="120" alt="Mohamed bin Zayed University of Artificial Intelligence"/></a>
+</p>
+
 ## 📚 Citation
 
 ```bibtex
