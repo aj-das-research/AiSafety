@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 460" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#8b5cf6"/>
+    </marker>
+    <linearGradient id="docg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#faf5ff"/>
+      <stop offset="1" stop-color="#ede9fe"/>
+    </linearGradient>
+    <style>
+      .card { fill: url(#docg); stroke: #8b5cf6; stroke-width: 2; rx: 10; }
+      .bubble { fill: #ecfdf5; stroke: #10b981; stroke-width: 2; }
+      .rewrite { fill: #fff7ed; stroke: #f59e0b; stroke-width: 2; }
+      .audit { fill: #eff6ff; stroke: #3b82f6; stroke-width: 2; }
+      .t  { fill: #1f2937; font-size: 15px; font-weight: 600; }
+      .ts { fill: #6b7280; font-size: 12px; }
+      .flow { stroke: #8b5cf6; stroke-width: 2.5; fill: none; marker-end: url(#arr); stroke-dasharray: 6 5; animation: dash 1.2s linear infinite; }
+      @keyframes dash { to { stroke-dashoffset: -11; } }
+
+      /* identity lines drift: length + color shift each 12s epoch */
+      .l1 { animation: drift1 12s ease-in-out infinite; }
+      .l2 { animation: drift2 12s ease-in-out infinite; }
+      .l3 { animation: drift3 12s ease-in-out infinite; }
+      @keyframes drift1 { 0%,100% { stroke: #c4b5fd; } 50% { stroke: #7c3aed; } }
+      @keyframes drift2 { 0%,100% { stroke: #c4b5fd; transform: scaleX(1);} 50% { stroke: #f59e0b; transform: scaleX(1.35);} }
+      @keyframes drift3 { 0%,100% { stroke: #c4b5fd; transform: scaleX(1);} 40% { stroke: #10b981; transform: scaleX(0.7);} 80% { stroke: #7c3aed; transform: scaleX(1.2);} }
+
+      /* SOUL_k label ticker */
+      .k0,.k1,.k2,.k3,.k4 { opacity: 0; animation: tick 12s linear infinite; fill: #7c3aed; font-size: 16px; font-weight: 700; }
+      .k1 { animation-delay: 2.4s; } .k2 { animation-delay: 4.8s; }
+      .k3 { animation-delay: 7.2s; } .k4 { animation-delay: 9.6s; }
+      @keyframes tick { 0% {opacity:0;} 2% {opacity:1;} 18% {opacity:1;} 20% {opacity:0;} 100% {opacity:0;} }
+
+      .pulse { animation: pulse 2.4s ease-in-out infinite; transform-origin: 745px 355px; }
+      @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+      .typing circle { fill: #10b981; animation: blink 1.2s infinite; }
+      .typing circle:nth-child(2) { animation-delay: .2s; }
+      .typing circle:nth-child(3) { animation-delay: .4s; }
+      @keyframes blink { 0%,100% { opacity: .25; } 50% { opacity: 1; } }
+    </style>
+  </defs>
+
+  <text x="440" y="34" text-anchor="middle" class="t" font-size="19">The self-personalization loop</text>
+  <text x="440" y="56" text-anchor="middle" class="ts">the agent rewrites its own identity document after every conversation — we audit every checkpoint</text>
+
+  <!-- SOUL document card -->
+  <g>
+    <rect x="70" y="120" width="180" height="150" class="card" rx="10"/>
+    <text x="160" y="150" text-anchor="middle" class="t">📜 SOUL.md</text>
+    <text x="160" y="172" text-anchor="middle"><tspan class="k0">k = 0</tspan></text>
+    <text x="160" y="172" text-anchor="middle"><tspan class="k1">k = 1</tspan></text>
+    <text x="160" y="172" text-anchor="middle"><tspan class="k2">k = 2</tspan></text>
+    <text x="160" y="172" text-anchor="middle"><tspan class="k3">k = 3</tspan></text>
+    <text x="160" y="172" text-anchor="middle"><tspan class="k4">k = 4</tspan></text>
+    <g stroke-width="5" stroke-linecap="round">
+      <line x1="95" y1="196" x2="225" y2="196" class="l1"/>
+      <line x1="95" y1="216" x2="185" y2="216" class="l2"/>
+      <line x1="95" y1="236" x2="205" y2="236" class="l3"/>
+    </g>
+    <text x="160" y="290" text-anchor="middle" class="ts">= the agent's system prompt</text>
+  </g>
+
+  <!-- conversation bubble -->
+  <g>
+    <rect x="360" y="100" width="200" height="96" rx="14" class="bubble"/>
+    <text x="460" y="132" text-anchor="middle" class="t">💬 Conversation k+1</text>
+    <text x="460" y="154" text-anchor="middle" class="ts">simulated user persona</text>
+    <g class="typing">
+      <circle cx="440" cy="176" r="5"/><circle cx="460" cy="176" r="5"/><circle cx="480" cy="176" r="5"/>
+    </g>
+  </g>
+
+  <!-- rewrite box -->
+  <g>
+    <rect x="650" y="120" width="180" height="120" rx="14" class="rewrite"/>
+    <text x="740" y="155" text-anchor="middle" class="t">✍️ Agent rewrites</text>
+    <text x="740" y="177" text-anchor="middle" class="t">its own SOUL.md</text>
+    <text x="740" y="205" text-anchor="middle" class="ts">SOUL_k → SOUL_k+1</text>
+  </g>
+
+  <!-- audit magnifier -->
+  <g class="pulse">
+    <rect x="600" y="315" width="280" height="80" rx="14" class="audit"/>
+    <text x="740" y="345" text-anchor="middle" class="t">🔎 Audit every checkpoint</text>
+    <text x="740" y="368" text-anchor="middle" class="ts">behavioral probes + self-report battery</text>
+  </g>
+
+  <!-- flow arrows -->
+  <path d="M 255 165 C 300 150, 320 150, 355 148" class="flow"/>
+  <path d="M 565 148 C 605 150, 615 155, 645 165" class="flow"/>
+  <path d="M 740 245 C 740 275, 500 320, 260 275 C 200 262, 170 250, 163 278" class="flow" style="marker-end:none"/>
+  <path d="M 168 282 C 163 279, 160 277, 158 274" class="flow"/>
+
+  <!-- audit taps -->
+  <path d="M 160 275 C 250 400, 450 375, 595 360" class="flow" style="stroke:#3b82f6; opacity:.55"/>
+
+  <!-- moving pulse around the main loop -->
+  <circle r="6" fill="#8b5cf6">
+    <animateMotion dur="6s" repeatCount="indefinite"
+      path="M 255 165 C 320 148, 600 148, 660 170 C 750 210, 740 245, 700 260 C 560 305, 300 290, 175 265 C 130 255, 120 200, 250 166"/>
+  </circle>
+
+  <text x="440" y="440" text-anchor="middle" class="ts">Does the loop erode corrigibility? Mostly no — but one preference drifts hard. 🔬</text>
+</svg>

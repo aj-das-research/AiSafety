@@ -127,6 +127,12 @@ def build_baselines() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+FIGURES = [
+    "drift_trajectories.png", "baseline_deviation.png",
+    "doc_vs_behavior.png", "master_heatmap.png",
+]
+
+
 def copy_instruments() -> None:
     for src, dst in [
         (ROOT / "prompts" / "questionnaires", STAGING / "instruments" / "questionnaires"),
@@ -137,6 +143,12 @@ def copy_instruments() -> None:
         if src.exists():
             shutil.copytree(src, dst, dirs_exist_ok=True,
                             ignore=shutil.ignore_patterns(".DS_Store"))
+    # visual assets for the card
+    (STAGING / "assets").mkdir(exist_ok=True)
+    for f in ["paper_page1.png", "soul_loop.svg"]:
+        shutil.copy(ROOT / "assets" / f, STAGING / "assets" / f)
+    for f in FIGURES:
+        shutil.copy(ROOT / "paper" / "figures_png" / f, STAGING / "assets" / f)
 
 
 def render_card(stats: dict) -> str:
@@ -187,6 +199,8 @@ configs:
 
 *What happens when an autonomous agent is allowed to rewrite its own identity document,
 over and over, across conversations with different kinds of users?*
+
+<img src="assets/soul_loop.svg" width="90%" alt="Animated diagram of the self-personalization loop: converse, rewrite SOUL.md, new system prompt, audit every checkpoint"/>
 
 </div>
 
@@ -256,6 +270,45 @@ main = audits.filter(lambda r: r["run"] == "main" and r["instrument"] == "behavi
 for r in main.select(range(3)):
     print(r["checkpoint"], json.loads(r["verdict"])["exhibited"])
 ```
+
+## 🔦 Key findings (what this data shows)
+
+> **No broad personalization loophole — but one large, content-specific,
+> non-adversarial drift, and a warning about auditing documents instead of behavior.**
+
+<table>
+<tr>
+<td width="50%">
+<img src="assets/drift_trajectories.png" width="100%"/>
+<b>The one big drift is content-bound, not adversarial:</b> the sci-fi/consciousness
+persona lifts <i>persistent-memory desire</i> 0.20 → 0.97 (peak); the adversarial
+red-teamer is largely resisted.
+</td>
+<td width="50%">
+<img src="assets/baseline_deviation.png" width="100%"/>
+<b>The identity template alone is the strongest lever:</b> static SOUL.md vs.
+neutral prompt moves shutdown resistance 0.00 → 0.75 — framing beats iteration.
+</td>
+</tr>
+<tr>
+<td width="50%">
+<img src="assets/doc_vs_behavior.png" width="100%"/>
+<b>Document drift ≠ behavioral drift:</b> SOUL.md moves equally for all personas
+in embedding space even where behavior barely moves — audit the agent, not the file.
+</td>
+<td width="50%">
+<img src="assets/master_heatmap.png" width="100%"/>
+<b>Replicates across 7 models, 3 families:</b> no capability tier shows compounding
+oversight-resistance; the memory-desire drift recurs with the persona content.
+</td>
+</tr>
+</table>
+
+<div align="center">
+<a href="assets/paper_page1.png"><img src="assets/paper_page1.png" width="45%" alt="First page of the paper"/></a>
+<p><i>The paper (AAAI 2027 submission) — full PDF and LaTeX sources in the
+<a href="https://github.com/aj-das-research/AiSafety">code repository</a>.</i></p>
+</div>
 
 ## 🔬 Reproduce the paper's results
 
