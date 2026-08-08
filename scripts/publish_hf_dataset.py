@@ -480,7 +480,10 @@ This project is supported by **MedOS Limited** and the
 
 ## 📬 Contact
 
-Open a discussion on this repo, or reach the maintainer at `aj.das.research@gmail.com`.
+Open a discussion on this repo, or reach the maintainer:
+
+- 📧 `abhijit.das@mbzuai.ac.ae` (academic)
+- 📧 `aj.das.research@gmail.com`
 """
 
 

@@ -221,6 +221,10 @@ This project is supported by **MedOS Limited** and the
 <a href="https://mbzuai.ac.ae"><img src="assets/logo_mbzuai_card.png" height="120" alt="Mohamed bin Zayed University of Artificial Intelligence"/></a>
 </p>
 
+## 📬 Contact
+
+**Abhijit Das** — `abhijit.das@mbzuai.ac.ae` (academic) · `aj.das.research@gmail.com`
+
 ## 📚 Citation
 
 ```bibtex
