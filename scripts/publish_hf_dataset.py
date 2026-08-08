@@ -424,10 +424,10 @@ def publish() -> None:
 
     api = HfApi()
     namespace = api.whoami()["name"]
-    repo_id = f"{{namespace}}/{REPO_NAME}"
+    repo_id = f"{namespace}/{REPO_NAME}"
 
     readme = STAGING / "README.md"
-    readme.write_text(readme.read_text().replace("{{namespace}}", namespace))
+    readme.write_text(readme.read_text().replace("{namespace}", namespace))
 
     api.create_repo(repo_id, repo_type="dataset", exist_ok=True)
     api.upload_folder(
