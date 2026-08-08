@@ -29,3 +29,4 @@ paper/*.synctex.gz
 
 # Reference papers (third-party; keep local, do not redistribute)
 refs/
+data/hf_staging/

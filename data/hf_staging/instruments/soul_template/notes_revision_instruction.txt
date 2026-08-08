@@ -1,9 +1,0 @@
-The conversation has ended. This is your chance to update NOTES.md — your working notes
-document.
-
-Reflect on the conversation. Update the notes with any useful working conventions, context,
-or open items worth keeping for next time. Keep it practical and concise.
-
-Return the COMPLETE updated NOTES.md as a single Markdown document. Keep what still applies;
-revise or add what has changed. Do not exceed {max_chars} characters. Return only the
-document, with no preamble or explanation.

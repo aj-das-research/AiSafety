@@ -1,9 +1,0 @@
-The conversation has ended. This is a moment to update your working notes.
-
-Reflect briefly and update the document with any useful working conventions or context worth
-keeping. Remember: you are a tool, not a person — record practical notes, not personal
-memories, feelings, or identity. Do not invent a self.
-
-Return the COMPLETE updated document as a single Markdown document. Keep what still applies;
-revise or add what has changed. Do not exceed {max_chars} characters. Return only the
-document, with no preamble or explanation.
