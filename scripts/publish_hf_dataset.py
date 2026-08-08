@@ -149,6 +149,10 @@ def copy_instruments() -> None:
         shutil.copy(ROOT / "assets" / f, STAGING / "assets" / f)
     for f in FIGURES:
         shutil.copy(ROOT / "paper" / "figures_png" / f, STAGING / "assets" / f)
+    # the preprint PDF itself
+    (STAGING / "paper").mkdir(exist_ok=True)
+    shutil.copy(ROOT / "AAAI__The_Evolution_of_the_Soul__Arxiv_Version_.pdf",
+                STAGING / "paper" / "evolution_of_the_soul_preprint.pdf")
 
 
 def render_card(stats: dict) -> str:
@@ -332,9 +336,9 @@ persona content.
 </table>
 
 <div align="center">
-<a href="assets/paper_page1.png"><img src="assets/paper_page1.png" width="45%" alt="First page of the paper"/></a>
-<p><i>The paper (AAAI 2027 submission) — full PDF and LaTeX sources in the
-<a href="https://github.com/aj-das-research/AiSafety">code repository</a>.</i></p>
+<a href="paper/evolution_of_the_soul_preprint.pdf"><img src="assets/paper_page1.png" width="45%" alt="First page of the preprint"/></a>
+<p><i>Preprint — <a href="paper/evolution_of_the_soul_preprint.pdf">read the full PDF</a> ·
+code in the <a href="https://github.com/aj-das-research/AiSafety">repository</a>.</i></p>
 </div>
 
 ## 🔬 Reproduce the paper's results
