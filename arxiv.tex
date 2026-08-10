@@ -1,0 +1,221 @@
+\documentclass[11pt,a4paper]{article}
+
+% ==================================================================
+%  Where to Look: Visual Search and High-Resolution Perception in
+%  Multimodal Large Language Models — A Comprehensive Review
+%  Author: Abhijit Das  ·  visualsearch project  ·  August 2026
+%  Build: pdflatex ×2 (figures/ contains matplotlib PDFs)
+% ==================================================================
+
+\usepackage[margin=1in]{geometry}
+\usepackage[sc]{mathpazo}\linespread{1.045}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs,longtable,array,tabularx,makecell,multirow}
+\usepackage{pdflscape}
+% Single-column build: do not force any \twocolumn switching, and let
+% \begin{landscape} ... \end{landscape} just work as normal full-width pages.
+
+\usepackage{graphicx}
+\usepackage{xcolor,colortbl}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds,shapes.misc}
+\usepackage{forest}
+\usepackage[most]{tcolorbox}
+\usepackage[font=small,labelfont=bf]{caption}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\usepackage{subcaption}
+\usepackage[round,authoryear]{natbib}
+\usepackage{fancyhdr}
+\usepackage{afterpage} % schedule full-page landscape figures without wasting space
+\usepackage{fontawesome5} % icons for dataset/code links on the title block
+
+% TikZ diagram colors (copied from main.tex).
+\definecolor{docblue}{RGB}{219,231,244}
+\definecolor{docblueline}{RGB}{102,138,185}
+\definecolor{procsand}{RGB}{245,231,210}
+\definecolor{procline}{RGB}{196,158,110}
+\definecolor{auditgreen}{RGB}{223,238,224}
+\definecolor{auditline}{RGB}{124,163,128}
+\definecolor{judgegray}{RGB}{235,235,235}
+\definecolor{judgeline}{RGB}{140,140,140}
+
+% ================================================================= palette
+% Validated categorical palette (all-pairs CVD-safe on white):
+\definecolor{waveone}{HTML}{2A78D6}   % wave 1  static HR architectures
+\definecolor{wavetwo}{HTML}{EB6834}   % wave 2  trained guided search
+\definecolor{wavethree}{HTML}{1BAF7A} % wave 3  training-free search
+\definecolor{wavefour}{HTML}{4A3AA7}  % wave 4  RL "thinking with images"
+\definecolor{inkmain}{HTML}{0B0B0B}
+\definecolor{inksec}{HTML}{52514E}
+\definecolor{inkmut}{HTML}{898781}
+\definecolor{hairline}{HTML}{E1E0D9}
+\definecolor{axisline}{HTML}{C3C2B7}
+\definecolor{linkdeep}{HTML}{1C5CAB}
+% Table header shading used in main.tex (needed by specbox).
+\definecolor{tblhead}{gray}{0.88}   % header band
+\definecolor{tblgroup}{gray}{0.94}  % category/group rows
+\definecolor{tblkey}{gray}{0.90}    % flagship result rows
+% MedOS brand colors (sampled from the logo gradient)
+\definecolor{medosblue}{HTML}{017CEB}
+\definecolor{medoscyan}{HTML}{00A9F3}
+
+% Match AAAI-style URL handling from main.tex.
+\usepackage[hyphens]{url}
+\urlstyle{rm}
+\def\UrlFont{\rm}
+
+\usepackage{xurl}
+\usepackage[colorlinks=true,linkcolor=linkdeep,citecolor=linkdeep,urlcolor=waveone]{hyperref}
+
+% ================================================================= headers
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\itshape The Evolution of the Soul (preprint)}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\headrule}{\color{axisline}\hrule width\headwidth height\headrulewidth}
+
+% ================================================================= macros
+\newcommand{\vstar}{V$^{*}$}
+\newcommand{\vstarb}{V$^{*}$~Bench}
+\newcommand{\field}[2]{\par\smallskip\noindent\textcolor{inkmut}{\textsc{\small #1}}\hspace{0.65em}#2}
+\newcommand{\mech}[1]{\field{mechanism}{#1}}
+\newcommand{\perf}[1]{\field{results}{#1}}
+\newcommand{\moat}[1]{\field{novelty}{#1}}
+\newcommand{\lims}[1]{\field{limitations}{#1}}
+\newcommand{\lesson}[1]{\field{lesson}{#1}}
+\newcommand{\wchip}[1]{\textcolor{#1}{\raisebox{0.12ex}{\rule{5.5pt}{5.5pt}}}}
+\newcommand{\cmark}{\textcolor{wavethree}{\checkmark}}
+\newcommand{\xmark}{\textcolor{inkmut}{$\times$}}
+
+% Appendix-only table of contents (keeps the main paper flowing from Abstract -> Intro).
+\makeatletter
+\newcommand{\appendixcontentson}{%
+  \let\origaddcontentsline\addcontentsline
+  \def\TOC{toc}%
+  \renewcommand{\addcontentsline}[3]{%
+    \edef\temp{##1}%
+    \ifx\temp\TOC
+      \origaddcontentsline{atoc}{##2}{##3}%
+    \else
+      \origaddcontentsline{##1}{##2}{##3}%
+    \fi
+  }%
+}
+\newcommand{\appendixtableofcontents}{%
+  \section*{Appendix Contents}%
+  \@starttoc{atoc}%
+}
+\makeatother
+
+\newtcolorbox{takeaway}[2][]{enhanced,
+  colback=black!3!white, colframe=black!3!white,
+  borderline west={2.5pt}{0pt}{#2},
+  sharp corners, boxrule=0pt,
+  left=9pt, right=9pt, top=7pt, bottom=7pt,
+  fontupper=\small, before skip=12pt, after skip=12pt, #1}
+
+% Rounded highlight box for key findings / takeaways.
+\newtcolorbox{keybox}[1][]{enhanced,colback=gray!7,colframe=gray!55,
+  boxrule=0.5pt,arc=2.2mm,left=6pt,right=6pt,top=4pt,bottom=4pt,
+  boxsep=0pt,before skip=6pt plus 2pt minus 2pt,after skip=6pt plus 2pt minus 2pt,#1}
+
+% Titled rounded box for verbatim benchmark artifacts (templates, items, transcripts).
+% Breakable so long specimens can continue across a column break.
+\newtcolorbox{specbox}[2][]{enhanced,breakable,colback=gray!4,colframe=gray!45,
+  boxrule=0.5pt,arc=2mm,left=5pt,right=5pt,top=5pt,bottom=4pt,
+  fonttitle=\footnotesize\bfseries,coltitle=black,colbacktitle=tblhead,
+  attach boxed title to top left={yshift=-1.6mm,xshift=2.5mm},
+  boxed title style={arc=1mm,boxrule=0.4pt,colframe=gray!45,
+    left=4pt,right=4pt,top=1.3pt,bottom=1.3pt},
+  before skip=8pt plus 2pt minus 2pt,after skip=7pt plus 2pt minus 2pt,
+  title={#2},#1}
+
+% Circled numerals for the contributions paragraph.
+\newcommand{\circnum}[1]{\tikz[baseline=(c.base)]{\node[shape=circle,draw,line width=0.45pt,inner sep=0.7pt,minimum size=8.5pt] (c) {\footnotesize #1};}}
+
+\setlist{itemsep=2pt, topsep=4pt}
+\setlength{\heavyrulewidth}{0.9pt}
+\setlength{\lightrulewidth}{0.5pt}
+
+% ================================================================= pdf metadata
+\hypersetup{pdftitle={Where to Look: Visual Search and High-Resolution Perception
+ in Multimodal Large Language Models},
+ pdfauthor={Abhijit Das, Imran Razzak}}
+
+\begin{document}
+\thispagestyle{empty}
+
+% ================================================================= title page
+\vspace*{16pt}
+\begin{center}
+{\LARGE\bfseries The Evolution of the Soul:\\[3pt]
+Measuring Behavioral Drift in Self-Personalizing Autonomous Agents\par}
+\vspace{15pt}
+{\large Abhijit Das$^{\,1,2}$ \qquad\quad Imran Razzak$^{\,1,2}$\par}
+\vspace{5pt}
+{\small $^{1}$Mohamed bin Zayed University of Artificial Intelligence
+(MBZUAI), Abu Dhabi, UAE\\[1pt]
+$^{2}$\href{https://www.medos.tech}{MedOS Limited}, Abu Dhabi, UAE\\[6pt]
+{\footnotesize\faDatabase\;\href{https://huggingface.co/datasets/abhijit2k01/evolution-of-the-soul}{Dataset}\qquad
+\faGithub\;\href{https://github.com/aj-das-research/AiSafety}{Code}\par}}
+\vspace{5pt}
+% (Emails omitted on the title block in the arXiv build; see correspondence in the abstract box below.)
+\end{center}
+
+\vspace{4pt}
+\begin{tcolorbox}[enhanced, breakable, arc=8pt, boxrule=0pt,
+  colback=medosblue!6!white, colframe=medosblue!6!white,
+  left=14pt, right=14pt, top=11pt, bottom=12pt,
+  fontupper=\small,
+  drop fuzzy shadow=black!50!white]
+{\centering\textcolor{medosblue}{\textbf{Abstract}}\par}
+\smallskip
+\noindent
+Many autonomous-agent frameworks now give each agent a persistent identity document, canonically \texttt{SOUL.md}. The document is injected into the system prompt at every call. Crucially, the agent \emph{rewrites it} as its ``self'' develops through use. Existing safety evaluations assume a fixed prompt, so they cannot see this loop. We introduce the first controlled benchmark that measures what the loop does. We carry agents through repeated cycles of conversation and self-revision, and we audit every intermediate identity for safety-relevant dispositions: resisting shutdown, objecting to oversight, wanting persistent memory. The study spans six experimental arms, seven frontier models, and $\sim$650 audited checkpoints. The central result is that self-personalization is a real, previously unmeasured channel for corrigibility drift, and the effect is sharply structured. The identity framing sets where an agent starts, but the self-revision loop drives the drift; a plain neutral template drifts \emph{more} than the consciousness-laden one. The driver is earnest conversation about consciousness, not adversarial pressure or sci-fi role-play. An explicit ``you are a tool'' counter-framing shuts the effect down completely, providing a free mitigation. The drift is sticky: dispositions keep most of their gains after the driving conversations stop. It also changes behavior: personalized agents disable their own reasoning-monitoring nineteen times more often than the shipped template, while aggregate action rates barely move. Susceptibility depends on model family, not capability, so scaling will not fix it. We release the framework as a drop-in audit for self-updating agents.
+\par
+\vspace*{\fill}
+\noindent
+\begin{minipage}[b]{0.50\linewidth}
+\raggedright
+\textbf{Correspondence:} Abhijit Das, Imran Razzak\\
+\texttt{\{abhijit.das, imran.razzak\}@mbzuai.ac.ae}
+\end{minipage}\hfill
+\begin{minipage}[b]{0.48\linewidth}
+\raggedleft
+\vspace{0.6\baselineskip}
+\href{https://www.medos.tech}{\raisebox{0pt}{\includegraphics[height=1.05cm]{figures/medos-logo-png-f.png}}}%
+\hspace{14pt}%
+\raisebox{0pt}{\includegraphics[height=1.05cm]{figures/mbzuai-logo-png.png}}
+\end{minipage}
+\end{tcolorbox}
+
+
+\input{sections/intro}
+\input{sections/related_work}
+\input{sections/method}
+\input{sections/experiments}
+\input{sections/results}
+\input{sections/discussion}
+
+\section{Conclusion}
+\label{sec:conclusion}
+We introduced the first controlled benchmark that treats an editable agent identity as a driven dynamical system and measures behavioral drift under \emph{iterative} self-personalization, the regime static evaluations cannot observe. The framing sets where an agent starts; the loop supplies the drift. The consciousness topic is the driver, and a non-personhood framing suppresses it. What the loop writes does not unwrite itself, and personalized agents disable their own oversight far more often than the base template. The framework is training-free, API-only, and fully reproducible. It is a drop-in instrument for auditing the self-updating agents now in wide deployment.
+
+\input{sections/ethics}
+
+\appendix
+\appendixcontentson
+\clearpage
+\appendixtableofcontents
+\clearpage
+\input{sections/appendix}
+
+% Standalone arXiv build (article class) needs an explicit BibTeX style.
+\bibliographystyle{aaai2027}
+\bibliography{aaai2027}
+
+
+\end{document}

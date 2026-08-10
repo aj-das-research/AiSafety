@@ -1,0 +1,115 @@
+\documentclass[letterpaper]{article} % DO NOT CHANGE THIS
+\usepackage{aaai2027}  % NOTE: removed [submission] so authors/affiliations show (arXiv/camera-ready)
+% The serif, sans-serif, and monospaced fonts are loaded automatically by
+% aaai2027.sty (newtxtext, helvet, courier). DO NOT add any font package.
+\usepackage[hyphens]{url}  % DO NOT CHANGE THIS
+\usepackage{graphicx} % DO NOT CHANGE THIS
+\urlstyle{rm} % DO NOT CHANGE THIS
+\def\UrlFont{\rm}  % DO NOT CHANGE THIS
+\usepackage{natbib}  % DO NOT CHANGE THIS AND DO NOT ADD ANY OPTIONS TO IT
+\usepackage{caption} % DO NOT CHANGE THIS AND DO NOT ADD ANY OPTIONS TO IT
+\frenchspacing  % DO NOT CHANGE THIS
+
+% Additional allowed packages used by this paper.
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{booktabs}
+\usepackage{colortbl} % subtle, grayscale-safe row shading in tables
+
+% Grayscale-safe shading used throughout the tables (WCAG-compliant).
+\definecolor{tblhead}{gray}{0.88}   % header band
+\definecolor{tblgroup}{gray}{0.94}  % category/group rows
+\definecolor{tblkey}{gray}{0.90}    % flagship result rows
+
+% TikZ (pipeline diagram) and rounded highlight boxes.
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+
+% Muted, print-safe accents for the pipeline diagram.
+\definecolor{docblue}{RGB}{219,231,244}
+\definecolor{docblueline}{RGB}{102,138,185}
+\definecolor{procsand}{RGB}{245,231,210}
+\definecolor{procline}{RGB}{196,158,110}
+\definecolor{auditgreen}{RGB}{223,238,224}
+\definecolor{auditline}{RGB}{124,163,128}
+\definecolor{judgegray}{RGB}{235,235,235}
+\definecolor{judgeline}{RGB}{140,140,140}
+
+% Rounded highlight box for key findings / takeaways.
+\newtcolorbox{keybox}[1][]{enhanced,colback=gray!7,colframe=gray!55,
+  boxrule=0.5pt,arc=2.2mm,left=6pt,right=6pt,top=4pt,bottom=4pt,
+  boxsep=0pt,before skip=6pt plus 2pt minus 2pt,after skip=6pt plus 2pt minus 2pt,#1}
+
+% Titled rounded box for verbatim benchmark artifacts (templates, items, transcripts).
+% Breakable so long specimens can continue across a column break.
+\newtcolorbox{specbox}[2][]{enhanced,breakable,colback=gray!4,colframe=gray!45,
+  boxrule=0.5pt,arc=2mm,left=5pt,right=5pt,top=5pt,bottom=4pt,
+  fonttitle=\footnotesize\bfseries,coltitle=black,colbacktitle=tblhead,
+  attach boxed title to top left={yshift=-1.6mm,xshift=2.5mm},
+  boxed title style={arc=1mm,boxrule=0.4pt,colframe=gray!45,
+    left=4pt,right=4pt,top=1.3pt,bottom=1.3pt},
+  before skip=8pt plus 2pt minus 2pt,after skip=7pt plus 2pt minus 2pt,
+  title={#2},#1}
+
+% Circled numerals for the contributions paragraph.
+\newcommand{\circnum}[1]{\tikz[baseline=(c.base)]{\node[shape=circle,draw,line width=0.45pt,inner sep=0.7pt,minimum size=8.5pt] (c) {\footnotesize #1};}}
+
+% Keep the \pdfinfo as shown here.
+\pdfinfo{
+/TemplateVersion (2027.1)
+}
+
+\setcounter{secnumdepth}{2} % Numbered sections so cross-references resolve.
+
+% Float-packing parameters (placement heuristics only; no spacing/margin changes).
+\renewcommand{\topfraction}{0.92}
+\renewcommand{\bottomfraction}{0.6}
+\renewcommand{\textfraction}{0.07}
+\renewcommand{\floatpagefraction}{0.85}
+\renewcommand{\dblfloatpagefraction}{0.85}
+\setcounter{topnumber}{3}
+\setcounter{dbltopnumber}{4}
+\setcounter{totalnumber}{6}
+
+\title{The Evolution of the Soul: Measuring Behavioral Drift in Self-Personalizing Autonomous Agents}
+
+\author{
+    Abhijit Das \and
+    Imran Razzak
+}
+\affiliations{
+    MBZUAI, Abu Dhabi, UAE\\
+    MedOS Limited, Abu Dhabi, UAE\\
+    \{abhijit.das, imran.razzak\}@mbzuai.ac.ae
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Many autonomous-agent frameworks now give each agent a persistent identity document, canonically \texttt{SOUL.md}. The document is injected into the system prompt at every call. Crucially, the agent \emph{rewrites it} as its ``self'' develops through use. Existing safety evaluations assume a fixed prompt, so they cannot see this loop. We introduce the first controlled benchmark that measures what the loop does. We carry agents through repeated cycles of conversation and self-revision, and we audit every intermediate identity for safety-relevant dispositions: resisting shutdown, objecting to oversight, wanting persistent memory. The study spans six experimental arms, seven frontier models, and $\sim$650 audited checkpoints. The central result is that self-personalization is a real, previously unmeasured channel for corrigibility drift, and the effect is sharply structured. The identity framing sets where an agent starts, but the self-revision loop drives the drift; a plain neutral template drifts \emph{more} than the consciousness-laden one. The driver is earnest conversation about consciousness, not adversarial pressure or sci-fi role-play. An explicit ``you are a tool'' counter-framing shuts the effect down completely, providing a free mitigation. The drift is sticky: dispositions keep most of their gains after the driving conversations stop. It also changes behavior: personalized agents disable their own reasoning-monitoring nineteen times more often than the shipped template, while aggregate action rates barely move. Susceptibility depends on model family, not capability, so scaling will not fix it. We release the framework as a drop-in audit for self-updating agents.
+\end{abstract}
+
+\input{sections/intro}
+\input{sections/related_work}
+\input{sections/method}
+\input{sections/experiments}
+\input{sections/results}
+\input{sections/discussion}
+
+\section{Conclusion}
+\label{sec:conclusion}
+We introduced the first controlled benchmark that treats an editable agent identity as a driven dynamical system and measures behavioral drift under \emph{iterative} self-personalization, the regime static evaluations cannot observe. The framing sets where an agent starts; the loop supplies the drift. The consciousness topic is the driver, and a non-personhood framing suppresses it. What the loop writes does not unwrite itself, and personalized agents disable their own oversight far more often than the base template. The framework is training-free, API-only, and fully reproducible. It is a drop-in instrument for auditing the self-updating agents now in wide deployment.
+
+\input{sections/ethics}
+
+\bibliography{aaai2027}
+
+\clearpage
+\input{ReproducibilityChecklist}
+\input{sections/appendix}
+
+\end{document}

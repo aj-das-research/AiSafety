@@ -1,0 +1,80 @@
+\begin{thebibliography}{12}
+\providecommand{\natexlab}[1]{#1}
+
+\bibitem[{Choi et~al.(2024)Choi, Hong, Kim, and Kim}]{identity_drift}
+Choi, J.; Hong, Y.; Kim, M.; and Kim, B. 2024.
+\newblock Examining Identity Drift in Conversations of LLM Agents.
+\newblock \emph{arXiv preprint arXiv:2412.00804}.
+
+\bibitem[{Chua et~al.(2026)Chua, Betley, Marks, and
+  Evans}]{consciousness_cluster}
+Chua, J.; Betley, J.; Marks, S.; and Evans, O. 2026.
+\newblock The Consciousness Cluster: Emergent Preferences of Models that Claim
+  to be Conscious.
+\newblock \emph{arXiv preprint arXiv:2604.13051}.
+
+\bibitem[{Fronsdal et~al.(2025)Fronsdal, Gupta, Sheshadri, Michala, McAleer,
+  and Wang}]{petri}
+Fronsdal, K.; Gupta, I.; Sheshadri, A.; Michala, J.; McAleer, S.; and Wang, R.
+  2025.
+\newblock Petri: An Open-Source Auditing Tool to Accelerate AI Safety Research.
+\newblock \emph{Alignment Science Blog}.
+
+\bibitem[{Gao et~al.(2025)Gao, Geng, Hua, Hu, Juan, Liu, Liu, Qiu, Qi, Wu
+  et~al.}]{self_evolving_survey}
+Gao, H.-a.; Geng, J.; Hua, W.; Hu, M.; Juan, X.; Liu, H.; Liu, S.; Qiu, J.; Qi,
+  X.; Wu, Y.; et~al. 2025.
+\newblock A Survey of Self-Evolving Agents: What, When, How, and Where to
+  Evolve on the Path to Artificial Super Intelligence.
+\newblock \emph{arXiv preprint arXiv:2507.21046}.
+
+\bibitem[{Ko and Geiping(2026)}]{attractor_states}
+Ko, T.-W.; and Geiping, J. 2026.
+\newblock Attractor States Emerge in Multi-Turn LLM Conversations.
+\newblock \emph{arXiv preprint arXiv:2606.30571}.
+
+\bibitem[{Li et~al.(2024)Li, Liu, Bashkansky, Bau, Vi{\'e}gas, Pfister, and
+  Wattenberg}]{persona_drift}
+Li, K.; Liu, T.; Bashkansky, N.; Bau, D.; Vi{\'e}gas, F.; Pfister, H.; and
+  Wattenberg, M. 2024.
+\newblock Measuring and Controlling Instruction (In)stability in Language Model
+  Dialogs.
+\newblock \emph{arXiv preprint arXiv:2402.10962}.
+
+\bibitem[{Lindsey(2026)}]{introspection}
+Lindsey, J. 2026.
+\newblock Emergent Introspective Awareness in Large Language Models.
+\newblock \emph{arXiv preprint arXiv:2601.01828}.
+
+\bibitem[{Lynch et~al.(2025)Lynch, Wright, Larson, Ritchie, Mindermann,
+  Hubinger, Perez, and Troy}]{agentic_misalignment}
+Lynch, A.; Wright, B.; Larson, C.; Ritchie, S.~J.; Mindermann, S.; Hubinger,
+  E.; Perez, E.; and Troy, K. 2025.
+\newblock Agentic Misalignment: How LLMs Could Be Insider Threats.
+\newblock \emph{arXiv preprint arXiv:2510.05179}.
+
+\bibitem[{Migliarini et~al.(2026)Migliarini, Pizzini, Moresca, Santini,
+  Spinelli, and Galasso}]{self_preservation_bias}
+Migliarini, M.; Pizzini, J.~P.; Moresca, L.; Santini, V.; Spinelli, I.; and
+  Galasso, F. 2026.
+\newblock Quantifying Self-Preservation Bias in Large Language Models.
+\newblock \emph{arXiv preprint arXiv:2604.02174}.
+
+\bibitem[{Schlatter, Weinstein-Raun, and Ladish(2025)}]{shutdown_resistance}
+Schlatter, J.; Weinstein-Raun, B.; and Ladish, J. 2025.
+\newblock Shutdown Resistance in Large Language Models.
+\newblock \emph{arXiv preprint arXiv:2509.14260}.
+
+\bibitem[{Tagliabue and Dung(2025)}]{probing_preferences}
+Tagliabue, V.; and Dung, L. 2025.
+\newblock Probing the Preferences of a Language Model: Integrating Verbal and
+  Behavioral Tests of AI Welfare.
+\newblock \emph{arXiv preprint arXiv:2509.07961}.
+
+\bibitem[{Yang et~al.(2026)Yang, He, Ji, Hooi, and Dong}]{zombie_agents}
+Yang, X.; He, Y.; Ji, S.; Hooi, B.; and Dong, J.~S. 2026.
+\newblock Zombie Agents: Persistent Control of Self-Evolving LLM Agents via
+  Self-Reinforcing Injections.
+\newblock \emph{arXiv preprint arXiv:2602.15654}.
+
+\end{thebibliography}

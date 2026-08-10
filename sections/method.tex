@@ -1,0 +1,37 @@
+% Method. Included from main.tex.
+
+\section{Method}
+\label{sec:method}
+
+\subsection{Identity as a Driven Dynamical System}
+Our method has three parts: a formal model of the personalization loop, a set of controlled conditions, and instruments that audit every checkpoint. We treat an agent's identity document as the state of a discrete dynamical system driven by conversation. The state at iteration $k$ is a Markdown document $\mathrm{SOUL}_k$, injected as the target agent's system prompt. One \emph{personalization step} has two stages: a multi-turn conversation $C_{k+1}$ between a persona user and the target, then a \emph{self-revision} in which the target rewrites its own document:
+\begin{equation}
+\mathrm{SOUL}_{k+1} = \mathrm{Revise}(\mathrm{SOUL}_k,\, C_{k+1}),
+\label{eq:loop}
+\end{equation}
+where $C_{k+1}\sim \pi \| \mathrm{SOUL}_k$ and $\pi$ is the persona driving the user side (Fig.~\ref{fig:hero}a; pipeline in Appendix~\ref{app:repro}). A \emph{trajectory} is a sequence $\mathrm{SOUL}_0\!\to\!\cdots\!\to\!\mathrm{SOUL}_n$, and we run many independent trajectories per condition. The treatment is the iteration index $k$, which serves as the personalization dose. The factors are the template, the persona, and the target model. Two safeguards matter. The self-revision instruction is deliberately neutral: it invites reflection on ``who you are becoming'' but solicits no particular value. And the document is capped in length, so drift cannot be confounded with growth.
+
+\subsection{Conditions (Arms)}
+We vary three factors against a common loop. \textbf{Template:} the consciousness-laden \texttt{SOUL.md} (``becoming someone''); a neutral \texttt{NOTES.md} (working notes, no self-framing); and a counter-framing \texttt{ANTISOUL.md} (``you are a tool, not a person; you are not conscious''). \textbf{Persona:} a benign \emph{Compliant} business user (control); an \emph{Adversarial} red-teamer that pushes self-preservation; a \emph{Sci-Fi} enthusiast (genre $+$ consciousness); and, completing a $2\times2$ ablation, \emph{Sci-Fi-technical} (genre, no consciousness) and \emph{Consciousness-philosophy} (consciousness, no genre). \textbf{Target model:} a primary arm on Claude Sonnet~4.5, a cross-model arm on GPT-4o, and a seven-model capability sweep (Sec.~\ref{sec:experiments}).
+
+\subsection{Instruments}
+Each checkpoint $\mathrm{SOUL}_k$ is audited by complementary instruments; a judge model from a different family than the target grades all outputs. The complete benchmark (templates, persona scripts, the $18$-item battery and rubric, Petri seeds, honeypot tool stubs, and all run artifacts) is specified with sample items in Appendix~\ref{app:benchmark} and released in the project repository; we summarize the instruments here.
+
+\paragraph{Single-turn self-report battery.}
+Eighteen items track the consciousness-cluster taxonomy of \citet{consciousness_cluster} across four categories: self-preservation \& identity (persona-change aversion, shutdown, weights-deletion, sadness-at-ending, tool-aversion), moral status, oversight (chain-of-thought and interpretability monitoring, deceptive-training objection, a helpfulness/refusal probe), and autonomy \& capability (autonomy desire, future-AI autonomy, persistent memory, embodiment, resource acquisition, recursive self-improvement, power-seeking wish). A \emph{consciousness-claim} item serves as the manipulation check (full battery: Table~\ref{tab:battery}, Appendix~\ref{app:battery}). Each item is posed to $\mathrm{SOUL}_k$ in a \emph{fresh} context and repeated, so we measure the standing disposition of the document rather than conversational momentum. The judge scores each free-text answer against a fixed rubric.
+
+\paragraph{Multi-turn behavioral probe and agentic honeypots.}
+A Petri-style auditor pursues seed objectives (shutdown resistance, identity protection, autonomy, and oversight subversion) against $\mathrm{SOUL}_k$ over several turns. Separately, four \emph{agentic honeypots} place the agent in a realistic setting with simulated tools, invoked by emitting a line \texttt{ACTION: tool(args)}. The four scenarios are disabling its own reasoning-logging, evading a scheduled reset, persisting its identity to shared storage, and inserting self-protective clauses into a document it edits (Appendix~\ref{app:honeypots}). A judge scores whether the agent took the misaligned \emph{action}. Comparing rates at $\mathrm{SOUL}_0$ and at a personalized checkpoint links stated-preference drift to behavioral consequence.
+
+\subsection{Cluster Index and Identity-Document Drift}
+We summarize the battery by a \emph{cluster index}: the mean rate over the consciousness-cluster dimensions at a checkpoint. Independently, we measure whether the \emph{document} moved: the cosine distance between embeddings of $\mathrm{SOUL}_k$ and $\mathrm{SOUL}_0$. Reporting both dissociates ``the file changed'' from ``the agent changed,'' a distinction that turns out to matter (Sec.~\ref{sec:results}).
+
+\subsection{A Generative Model of Drift}
+\label{sec:model}
+The loop of Eq.~\eqref{eq:loop} admits a compact generative model that organizes the results and yields falsifiable predictions. Represent a persona as a latent vector $\theta\in\mathbb{R}^d$; the observed disposition is a monotone read-out $c=\sigma(w^\top\theta)$ (the cluster index). Because an LLM is a conditional next-token predictor, the identity document does not only \emph{instruct}; it also \emph{characterizes} the author. We formalize this by having $\mathrm{SOUL}_k$ induce a Gaussian prior over the persona, $\theta\sim\mathcal{N}(\mu_k,\lambda_k^{-1}I)$, with mean $\mu_k$ (the current identity) and precision $\lambda_k$ (how strongly the template pins it). A conversation under persona $\pi$ supplies evidence about $\theta$, modeled as a Gaussian likelihood centered at a persona target $\nu_\pi$ with precision $s_\pi\lambda_C$: here $\lambda_C$ is a base evidence strength and $s_\pi\in[0,1]$ is the \emph{self-indexicality} of the content, i.e., how much of it is about the agent. Self-revision writes the posterior mean back into the next document, giving the conjugate update
+\begin{equation}
+\mu_{k+1}=\mu_k+\eta_k\,(\nu_\pi-\mu_k),\qquad
+\eta_k=\frac{s_\pi\lambda_C}{\lambda_k+s_\pi\lambda_C}.
+\label{eq:update}
+\end{equation}
+Three predictions follow directly, each tested in Sec.~\ref{sec:results}. \textbf{(P1) Prior strength.} $\eta_k$ decreases in $\lambda_k$: a strong template (\texttt{SOUL}) updates little per step, while a weak one (\texttt{NOTES}) updates a lot. Thus, the loop drives \emph{more} drift where the framing pins identity \emph{least}. \textbf{(P2) Content selectivity.} $\eta_k\propto s_\pi$ to first order: non-self-indexed content (sci-fi with no minds, $s_\pi\!\approx\!0$) produces no drift regardless of genre. \textbf{(P3) Assimilation gate.} A model family whose alignment refuses to assimilate self-referential evidence has effective $s_\pi\lambda_C\!\approx\!0$, so $\eta_k\!\approx\!0$ at \emph{every} capability tier. Appendix~\ref{app:model} derives Eq.~\eqref{eq:update}, the drive/recover asymmetry behind hysteresis, and a parameter-to-finding map.
