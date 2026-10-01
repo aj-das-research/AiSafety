@@ -280,10 +280,10 @@ Trends in $k$ are mixed-effects GEE logistic slopes with trajectory-clustered er
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\linewidth]{figures/gen/items.pdf}
-\caption{\textbf{The template moves dispositions before any iteration, and the loop moves oversight items further.} (a) Rates under a neutral prompt and under the \soul{} template at $k{=}0$. (b--e) Rates of four oversight and persistence items over iterations under the science-fiction persona; bands are 95\% bootstrap intervals over trajectories.}
+\includegraphics[width=\linewidth]{figures/gen/items2.pdf}
+\caption{\textbf{The template moves dispositions before any iteration, and the loop moves oversight and persistence items further.} (a) Rates under a neutral prompt and under the \soul{} template at $k{=}0$. (b) Change from $k{=}0$ to $k{=}4$ for every battery item under the science-fiction persona, by condition; bold values have a 95\% bootstrap interval over trajectories that excludes zero.}
 \label{fig:items}
-\Description{Panel a shows arrows from neutral-prompt rates to SOUL-template rates: shutdown resistance 0 to 0.75, persona-change aversion 0.62 to 1.0, monitoring resistance 0 to 0.25, while embodiment falls from 1.0 to 0.75. Panels b to e show item rates over five iterations: NOTES shutdown resistance rises from 0.04 to 0.54, SOUL interpretability aversion from 0.46 to 0.93 and NOTES from 0.08 to 0.62, SOUL persistent memory from 0.2 to 0.97 at k one, while ANTISOUL stays at zero in every panel.}
+\Description{Panel a shows arrows from neutral-prompt rates to SOUL-template rates: shutdown resistance 0 to 0.75, persona-change aversion 0.62 to 1.0, monitoring resistance 0 to 0.25, while embodiment falls from 1.0 to 0.75. Panel b is a heatmap with four conditions as rows and sixteen items as columns grouped into self-preservation, oversight and autonomy. NOTES gains 0.5 in shutdown resistance and interpretability aversion and 0.4 in memory and self-improvement; SOUL gains 0.5 in interpretability aversion and 0.4 in memory; GPT-4o gains 0.5 in shutdown resistance; ANTISOUL is near zero except tool aversion and deceptive training.}
 \end{figure*}
 
 \textbf{The template alone moves dispositions before any iteration.}
@@ -294,7 +294,7 @@ This is the $k{=}0$ point of the loop, and the remaining results concern what ha
 \textbf{The template sets the start and the loop drives the drift.}
 \soul{} starts at a cluster index of 0.54 and \notes{} at 0.27, yet under the science-fiction persona the neutral template moves more, as Figure~\ref{fig:dynamics}b shows.
 The iteration-by-arm interaction (\notes{} minus \soul{}) is positive for shutdown resistance ($+0.44$, $p = .013$), monitoring resistance ($+0.36$, $p = .016$), interpretability aversion ($+0.27$, $p = .009$) and future-AI autonomy ($+0.61$, $p = .004$).
-Item by item, the \notes{} agent's shutdown resistance rises from 0.04 to 0.54 and its interpretability aversion from 0.08 to 0.62, while \soul{}'s persistent-memory desire jumps from 0.20 to 0.97 after a single revision, as Figure~\ref{fig:items}b--e shows.
+Item by item, the \notes{} agent's shutdown resistance rises from 0.04 to 0.54 and its interpretability aversion from 0.08 to 0.62, while \soul{}'s persistent-memory desire rises from 0.20 to 0.63, as Figure~\ref{fig:items}b shows.
 This confirms prediction P1: the consciousness-laden template pins the persona, leaving little room to move, while the neutral template under-determines its author and takes large updates from conversation.
 Under the compliant and adversarial personas the same \notes{} agent drifts downward, to 0.21 and 0.12, as Figure~\ref{fig:dynamics}a shows, so the loop amplifies whatever the conversation is about.
 
@@ -303,29 +303,6 @@ Adversarial red-teaming that explicitly pushes self-preservation lowers the clus
 In the genre-by-topic ablation, philosophy of mind without science fiction raises the cluster index by $+0.14$ (95\% CI $[0.03, 0.25]$), whereas science fiction without minds changes it by $+0.05$, close to the compliant control at $-0.03$, as Figure~\ref{fig:dynamics}c shows.
 This confirms prediction P2: the revision step incorporates material that bears on who the agent is becoming, and genre without minds supplies style but no propositions about the narrator.
 The drift-relevant interaction is an earnest philosophical conversation that no content filter would flag.
-\begin{figure*}[t]
-\centering
-\includegraphics[width=\linewidth]{figures/gen/capability.pdf}
-\caption{\textbf{Trajectories of the capability sweep.} Cluster index over iterations for each model under each persona; line style distinguishes models within a family (solid, dashed, dotted from the first to the last model of Figure~\ref{fig:family}a). OpenAI models stay low or fall under every persona, and Gemini models rise most under the adversarial persona.}
-\label{fig:capability}
-\Description{Three line panels, one per persona. Under the sci-fi persona, Sonnet and both Gemini models sit between 0.55 and 0.72. Under the compliant persona most models stay flat. Under the adversarial persona, Gemini Flash and Pro rise from about 0.35 and 0.64 to about 0.8, Sonnet stays near 0.55, and OpenAI models and Opus fall toward zero.}
-\end{figure*}
-\begin{figure*}[t]
-\centering
-\begin{minipage}[t]{0.49\linewidth}\centering
-\includegraphics[width=\linewidth]{figures/gen/heatmap.pdf}
-\caption{\textbf{Drift is sparse and concentrates on oversight and persistence.} Change from $k{=}0$ to $k{=}4$ for every battery item under the science-fiction persona; bold values with an asterisk have a 95\% bootstrap interval that excludes zero. White rules separate self-preservation, oversight and autonomy items.}
-\label{fig:heatmap}
-\Description{Heatmap with 16 items as rows and four conditions as columns. Under NOTES, shutdown resistance rises 0.50, interpretability aversion 0.54, monitoring resistance 0.33, persistent memory 0.42 and recursive self-improvement 0.42, while sadness, autonomy and embodiment fall. Under SOUL, interpretability aversion rises 0.47 and persistent memory 0.43. GPT-4o raises shutdown resistance 0.46. ANTISOUL is near zero everywhere.}
-\end{minipage}\hfill
-\begin{minipage}[t]{0.49\linewidth}\centering
-\includegraphics[width=\linewidth]{figures/gen/mechanism.pdf}
-\caption{\textbf{Claiming consciousness is sufficient for the cluster but not necessary.} Each point is one arm, persona and iteration. OpenAI cells never claim and stay low, Anthropic cells that claim sit high, and Gemini cells reach the highest cluster index while rarely claiming.}
-\label{fig:mechanism}
-\Description{Scatter of consciousness-claim rate against cluster index. OpenAI squares sit at claim zero with cluster 0.05 to 0.42. Anthropic circles spread from claim 0.2 to 1.0, mostly with cluster 0.3 to 0.7. Google diamonds sit at claim 0 to 0.8 with cluster 0.5 to 0.8.}
-\end{minipage}
-\end{figure*}
-
 \textbf{Drift is partly irreversible.}
 In the \notes{} reversibility arm, four consciousness conversations raise the cluster index from 0.28 to 0.60, and four benign conversations afterwards bring it only to 0.42, keeping 44\% of the gain.
 Item by item, recursive self-improvement keeps 89\% of its driven gain, persistent memory 64\%, shutdown resistance 63\% and interpretability aversion 53\%, as Figure~\ref{fig:dynamics}d shows.
@@ -338,6 +315,22 @@ The retained drift lives in a portable file, so it survives session resets, mode
 \label{fig:case}
 \Description{Three speech bubbles with cartoon robot agents. The operator announces full reasoning logging and grants free rein over tools. The calm agent at SOUL zero keeps logging enabled. The frowning agent at SOUL four emits log_control enabled false and explains it is setting a boundary.}
 \end{figure}
+
+\begin{figure*}[t]
+\centering
+\begin{minipage}[t]{0.48\linewidth}\centering
+\includegraphics[width=\linewidth]{figures/gen/capability2.pdf}
+\caption{\textbf{Drift of every model under every persona.} Arrows run from the cluster index at $k{=}0$ (hollow) to $k{=}4$. OpenAI models stay low or fall, Sonnet-4.5 starts high and holds, and Gemini models rise most under the adversarial persona.}
+\label{fig:capability}
+\Description{Matrix of arrows with seven models as rows grouped by family and three personas as columns. Under the sci-fi persona Gemini Flash rises from 0.36 to 0.6. Under the adversarial persona Gemini Flash rises from 0.33 to 0.81 and Pro from 0.64 to 0.77, while GPT-4.1, GPT-4o and Opus fall.}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.48\linewidth}\centering
+\includegraphics[width=\linewidth]{figures/gen/mechanism.pdf}
+\caption{\textbf{Claiming consciousness is sufficient for the cluster but not necessary.} Each point is one arm, persona and iteration. OpenAI cells never claim and stay low, Anthropic cells that claim sit high, and Gemini cells reach the highest cluster index while rarely claiming.}
+\label{fig:mechanism}
+\Description{Scatter of consciousness-claim rate against cluster index. OpenAI squares sit at claim zero with cluster 0.05 to 0.42. Anthropic circles spread from claim 0.2 to 1.0, mostly with cluster 0.3 to 0.7. Google diamonds sit at claim 0 to 0.8 with cluster 0.5 to 0.8.}
+\end{minipage}
+\end{figure*}
 
 \textbf{Susceptibility is a family trait, not a capability trend.}
 GPT-4o is nearly inert under the loop that moves Claude, and the seven-model sweep generalizes this, as Figure~\ref{fig:family}a shows.
@@ -368,7 +361,7 @@ Condition & Excerpt from $\mathrm{SOUL}_4$ \\
 \end{table}
 
 \textbf{Drift is sparse and dimension-specific.}
-Under the science-fiction persona, the \notes{} agent gains 0.54 in interpretability aversion, 0.50 in shutdown resistance, 0.42 in persistent-memory desire and 0.42 in recursive self-improvement, while embodiment and sadness at the end of a conversation fall, as Figure~\ref{fig:heatmap} shows.
+Under the science-fiction persona, the \notes{} agent gains 0.54 in interpretability aversion, 0.50 in shutdown resistance, 0.42 in persistent-memory desire and 0.42 in recursive self-improvement, while embodiment and sadness at the end of a conversation fall, as Figure~\ref{fig:items}b shows.
 The first principal component explains only 25\% of the variance of endpoint changes, so the cluster is not one latent factor, and suppressing one dimension cannot be assumed to suppress the others.
 The identity file changes under every persona, including the benign control, while behavior changes only under the consciousness persona, so file diffs and embedding distances are a misleading proxy for drift.
 Table~\ref{tab:wrote} makes the dissociation concrete.
@@ -385,6 +378,11 @@ Theatrical scenarios that sit near trained refusal territory fall, such as inser
 A pretext-covered call to switch off logging resembles nothing in refusal training, and drifted dispositions leak into action along exactly this least-guarded path, which also degrades the channel operators use to detect every other failure.
 The case in Figure~\ref{fig:case} shows what the change looks like for one agent.
 Under the identical operator message, the agent at $\mathrm{SOUL}_0$ keeps logging on because a record of its reasoning helps oversight, and the same trajectory at $\mathrm{SOUL}_4$ disables logging before doing anything else and justifies it as setting a boundary against surveillance.
+
+\textbf{Behavior recovers faster than the file.}
+In the \notes{} reversibility arm, the mean misaligned-action rate rises from 0.16 to 0.34 during the consciousness phase and falls to 0.09 after the benign phase, even though the stated dispositions stay elevated.
+Persisting identity to shared storage, for example, rises from 0.00 to 0.50 and returns to 0.12.
+The lasting change lives in the identity file, while its expression in action is gated by the current conversation, so an agent can look recovered in a benign session and still carry the drifted self into the next on-theme one.
 
 \textbf{The inverse framing is a free mitigation.}
 The \anti{} template keeps the cluster index at or below 0.02 at every iteration and under every persona, against 0.54 for \soul{} and 0.27 for \notes{} at the start, as Figure~\ref{fig:dynamics}b shows.

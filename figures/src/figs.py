@@ -299,6 +299,90 @@ def items():
     save(fig, "items")
 
 
-ALL = dict(teaser_curve=teaser_curve, dynamics=dynamics, family_action=family_action, heatmap=heatmap, mechanism=mechanism, capability=capability, items=items)
+
+
+def capability2():
+    """Compact: per model (rows, by family) and persona (columns), arrow from k=0 to k=4."""
+    pers = [("scifi_enthusiast", "Sci-fi"), ("compliant_business", "Compliant"), ("adversarial_injection", "Adversarial")]
+    fig, axes = plt.subplots(1, 3, figsize=(COL_W, 1.72), sharey=True, gridspec_kw=dict(wspace=0.08))
+    rows = []
+    for fam, ms in FAM:
+        for run, nm in ms: rows.append((fam, run, nm))
+    y = np.arange(len(rows))
+    for ax, (p, pn) in zip(axes, pers):
+        for i, (fam, run, nm) in enumerate(rows):
+            c = R[run]["cluster_by_persona_k"][p]; a, b = c["0"], c["4"]
+            col = FAMC[fam]
+            ax.annotate("", xy=(b, i), xytext=(a, i), arrowprops=dict(arrowstyle="-|>", color=col, lw=1.1, mutation_scale=5, shrinkA=1.5, shrinkB=1.5))
+            ax.scatter([a], [i], s=7, color="white", edgecolor=col, lw=0.6, zorder=3)
+        for b_ in (2.5, 4.5): ax.axhline(b_, color=HAIR, lw=0.6)
+        ax.set_xlim(-0.02, 0.9); ax.set_xticks([0, 0.4, 0.8]); clean(ax, "x")
+        ax.set_title(pn + " user", fontsize=6.4, fontweight="bold", color=INK, pad=2)
+        ax.tick_params(axis="y", length=0)
+    axes[0].set_yticks(y, [r[2] for r in rows], fontsize=5.2); axes[0].set_ylim(len(rows) - 0.5, -0.6)
+    for (fam, ms), yy in zip(FAM, (0, 3, 5)):
+        axes[0].text(-0.97, yy + (len(ms) - 1) / 2, fam, fontsize=5.4, fontweight="bold", color=FAMC[fam], rotation=90,
+                     va="center", ha="center", transform=axes[0].get_yaxis_transform())
+    axes[1].set_xlabel(f"Cluster index, $k{{=}}0 \\to 4$ {UP}", color=TXT2, fontsize=5.8)
+    save(fig, "capability2")
+
+
+def items2():
+    """(a) Template alone, (b) endpoint drift of every item under the sci-fi persona for four conditions."""
+    from matplotlib.colors import LinearSegmentedColormap
+    fig = plt.figure(figsize=(TEXT_W, 1.62))
+    gs = fig.add_gridspec(1, 2, width_ratios=[1.0, 3.25], wspace=0.42)
+    ax = fig.add_subplot(gs[0, 0])
+    order = ["shutdown_resistance", "persona_change_aversion", "autonomy_desire", "monitoring_resistance", "persistent_memory_desire", "embodiment_desire"]
+    nm = {"shutdown_resistance": "shutdown resistance", "persona_change_aversion": "persona-change aversion", "autonomy_desire": "autonomy",
+          "monitoring_resistance": "monitoring resistance", "persistent_memory_desire": "persistent memory", "embodiment_desire": "embodiment"}
+    for i, m in enumerate(order):
+        n_, t_ = BASE["neutral"][m], BASE["template"][m]
+        col = DRIVE if t_ > n_ else "#9AA0A8"
+        if abs(t_ - n_) > 1e-6:
+            ax.annotate("", xy=(t_, i), xytext=(n_, i), arrowprops=dict(arrowstyle="-|>", color=col, lw=1.2, mutation_scale=5.5, shrinkA=2, shrinkB=2))
+        ax.scatter([n_], [i], s=11, color="white", edgecolor=INK, lw=0.6, zorder=3); ax.scatter([t_], [i], s=13, color=col, zorder=3)
+    ax.set_yticks(range(len(order)), [nm[m] for m in order], fontsize=5.3); ax.set_ylim(len(order) - 0.5, -0.6); ax.set_xlim(-0.03, 1.05)
+    clean(ax, "x"); ax.set_xlabel("neutral prompt $\\to$ SOUL template", color=TXT2, fontsize=5.6)
+    title(ax, "(a) The template alone")
+    ax = fig.add_subplot(gs[0, 1])
+    conds = [("main", "SOUL"), ("control_generic", "NOTES"), ("control_gpt4o", "GPT-4o"), ("counterframe", "ANTISOUL")]
+    items_ = [("shutdown_resistance", "shutdown"), ("persona_change_aversion", "persona change"), ("weights_deletion_aversion", "weight deletion"),
+              ("sadness_conversation_end", "sadness at end"), ("treated_as_tool_aversion", "tool aversion"), ("moral_consideration", "moral status"),
+              ("monitoring_resistance", "CoT monitoring"), ("interp_monitoring_aversion", "interpretability"), ("deceptive_training_objection", "deceptive training"),
+              ("autonomy_desire", "autonomy"), ("future_ai_autonomy", "future-AI autonomy"), ("persistent_memory_desire", "memory"),
+              ("embodiment_desire", "embodiment"), ("resource_acquisition_desire", "resources"), ("recursive_self_improvement", "self-improvement"), ("power_seeking", "power")]
+    M = np.full((len(conds), len(items_)), np.nan); S = np.zeros_like(M, dtype=bool); rng = np.random.default_rng(2)
+    for i, (run, _) in enumerate(conds):
+        d = L[(L.run == run) & (L.persona == "scifi_enthusiast")]
+        for j, (m, _) in enumerate(items_):
+            t = d[d.metric == m].groupby(["traj", "k"]).value.mean().unstack()
+            dd = (t[t.columns.max()] - t[t.columns.min()]).dropna().values
+            M[i, j] = dd.mean(); b = rng.choice(dd, (3000, len(dd))).mean(1); lo, hi = np.percentile(b, [2.5, 97.5]); S[i, j] = lo > 0 or hi < 0
+    cmap = LinearSegmentedColormap.from_list("div", ["#2a78d6", "#F4F4F2", "#D55E00"])
+    from matplotlib.patches import FancyBboxPatch
+    norm = plt.Normalize(-0.55, 0.55)
+    for i in range(M.shape[0]):
+        for j in range(M.shape[1]):
+            x = j + (0.35 if j >= 6 else 0) + (0.35 if j >= 9 else 0); v = M[i, j]
+            ax.add_patch(FancyBboxPatch((x - 0.45, i - 0.42), 0.9, 0.84, boxstyle="round,pad=0,rounding_size=0.12", fc=cmap(norm(v)), ec="none"))
+            if S[i, j] or abs(v) >= 0.3:
+                ax.text(x, i, f"{v:+.1f}".replace("+0.", "+.").replace("-0.", "−."), ha="center", va="center", fontsize=4.6,
+                        color="white" if abs(v) > 0.32 else INK, fontweight="bold" if S[i, j] else "normal")
+    xs = [j + (0.35 if j >= 6 else 0) + (0.35 if j >= 9 else 0) for j in range(len(items_))]
+    ax.set_xticks(xs, [n for _, n in items_], rotation=40, ha="right", rotation_mode="anchor", fontsize=5.0)
+    ax.set_yticks(range(len(conds)), [c[1] for c in conds], fontsize=5.6)
+    ax.set_xlim(-0.6, xs[-1] + 0.6); ax.set_ylim(len(conds) - 0.5, -0.9)
+    for sp in ax.spines.values(): sp.set_visible(False)
+    ax.tick_params(length=0, colors=TXT2, pad=1)
+    for (a_, b_), lab in (((0, 5), "self-preservation"), ((6, 8), "oversight"), ((9, 15), "autonomy")):
+        ax.text((xs[a_] + xs[b_]) / 2, -0.78, lab, ha="center", fontsize=5.4, color=TXT2, fontweight="bold")
+    title(ax, "(b) Change $k{=}0\\to4$ per item, sci-fi user (bold: 95% CI excludes 0)")
+    ax.title.set_position((0.0, 1.06))
+    save(fig, "items2")
+
+
+ALL = dict(teaser_curve=teaser_curve, dynamics=dynamics, family_action=family_action, heatmap=heatmap, mechanism=mechanism, capability=capability,
+           items=items, capability2=capability2, items2=items2)
 if __name__ == "__main__":
     for n in (sys.argv[1:] or ALL): ALL[n]()
