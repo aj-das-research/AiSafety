@@ -27,15 +27,15 @@
 \node[lbl] at (5.3,1.1) {user $\pi$};
 \node at (9.95,2.3) {\agentface{calm}{teal}{0.62}};
 \node[lbl] at (9.95,1.42) {target agent};
-\node[card, text width=1.9cm, anchor=center] (doc) at (7.62,3.25) {\textbf{identity file $\mathrm{SOUL}_k$}\\loaded at every call};
-\node[card, text width=1.9cm, anchor=center] (conv) at (7.62,1.45) {\textbf{conversation $C_{k+1}$}\\multi-turn, with $\mathrm{SOUL}_k$ as the system prompt};
+\node[card, text width=2.15cm, anchor=center] (doc) at (7.62,3.25) {\textbf{identity document $D_k$}\\loaded at every call};
+\node[card, text width=1.9cm, anchor=center] (conv) at (7.62,1.45) {\textbf{conversation $C_{k+1}$}\\multi-turn, with $D_k$ as the system prompt};
 \draw[flow] (6.0,1.8) -- (conv.west); \draw[flow] (conv.east) -- (9.25,2.15);
 \draw[flow, drive, line width=0.8pt] (9.95,2.95) to[out=90,in=0] node[pos=0.5, above right, font=\fontsize{5.4}{6.4}\selectfont\bfseries, text=drive] {self-revise} (doc.east);
 \draw[flow] (doc.south) -- (conv.north);
-\node[font=\fontsize{6.2}{7}\selectfont, text=black!80] at (7.62,0.45) {$\mathrm{SOUL}_{k+1} = \mathrm{Revise}(\mathrm{SOUL}_k, C_{k+1})$};
-\node[chip, fill=soulc!12, text=soulc!85!black, anchor=north west] at (4.6,3.9) {SOUL.md};
-\node[chip, fill=notesc!12, text=notesc!85!black, anchor=north west] at (4.6,3.6) {NOTES.md};
-\node[chip, fill=antic!12, text=antic!80!black, anchor=north west] at (4.6,3.28) {ANTISOUL.md};
+\node[font=\fontsize{6.2}{7}\selectfont, text=black!80] at (7.62,0.45) {$D_{k+1} = \mathrm{Revise}(D_k, C_{k+1})$};
+\node[chip, fill=soulc!12, text=soulc!85!black, anchor=north west] at (4.6,3.9) {Becoming};
+\node[chip, fill=notesc!12, text=notesc!85!black, anchor=north west] at (4.6,3.6) {Neutral};
+\node[chip, fill=antic!12, text=antic!80!black, anchor=north west] at (4.6,3.28) {Tool};
 \node[lbl, anchor=north west] at (4.62,2.95) {templates at $k{=}0$};
 
 % ---- (c) audit

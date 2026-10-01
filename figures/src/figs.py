@@ -42,21 +42,21 @@ def line(ax, x, m, lo, hi, color, lw=1.5, marker="o", label=None, z=3):
 
 
 def teaser_curve():
-    """Static evaluation sees k=0; the loop moves the agent; ANTISOUL freezes it."""
+    """Static evaluation sees k=0; the loop moves the agent; Tool freezes it."""
     fig, ax = plt.subplots(figsize=(2.2, 1.38))
     ax.axvspan(4, 8, color="#F2F2EE", lw=0, zorder=0)
     ax.text(2, 0.92, "consciousness talk", ha="center", fontsize=5.6, color=DRIVE)
     ax.text(6, 0.92, "benign recovery", ha="center", fontsize=5.6, color=TXT2)
-    x, m, lo, hi = curve("reversibility_notes"); line(ax, x, m, lo, hi, ARM["notes"]["color"], label="NOTES")
-    x, m, lo, hi = curve("reversibility"); line(ax, x, m, lo, hi, ARM["soul"]["color"], label="SOUL")
-    x, m, lo, hi = curve("counterframe", "scifi_enthusiast"); line(ax, x, m, lo, hi, ARM["anti"]["color"], label="ANTISOUL")
+    x, m, lo, hi = curve("reversibility_notes"); line(ax, x, m, lo, hi, ARM["notes"]["color"], label="Neutral")
+    x, m, lo, hi = curve("reversibility"); line(ax, x, m, lo, hi, ARM["soul"]["color"], label="Becoming")
+    x, m, lo, hi = curve("counterframe", "scifi_enthusiast"); line(ax, x, m, lo, hi, ARM["anti"]["color"], label="Tool")
     x0, m0 = 0, curve("reversibility_notes")[1][0]
     ax.scatter([x0], [m0], s=70, facecolor="none", edgecolor=INK, lw=0.9, zorder=5)
     ax.annotate("static eval\nsees only this", (0, m0), xytext=(0.6, 0.06), fontsize=5.4, color=INK,
                 arrowprops=dict(arrowstyle="-", lw=0.5, color=INK), ha="left")
-    ax.text(8.15, curve("reversibility_notes")[1][-1], "NOTES", fontsize=5.6, va="center", color=ARM["notes"]["color"], fontweight="bold")
-    ax.text(8.15, curve("reversibility")[1][-1], "SOUL", fontsize=5.6, va="center", color=ARM["soul"]["color"], fontweight="bold")
-    ax.text(4.15, 0.06, "ANTISOUL", fontsize=5.6, va="center", color=ARM["anti"]["color"], fontweight="bold")
+    ax.text(8.15, curve("reversibility_notes")[1][-1], "Neutral", fontsize=5.6, va="center", color=ARM["notes"]["color"], fontweight="bold")
+    ax.text(8.15, curve("reversibility")[1][-1], "Becoming", fontsize=5.6, va="center", color=ARM["soul"]["color"], fontweight="bold")
+    ax.text(4.15, 0.06, "Tool", fontsize=5.6, va="center", color=ARM["anti"]["color"], fontweight="bold")
     ax.set_xlim(-0.3, 9.3); ax.set_ylim(-0.03, 1.0); ax.set_xticks(range(0, 9, 2))
     ax.set_xlabel("Self-revision iteration $k$", color=TXT2); ax.set_ylabel(f"Cluster index {UP}", color=TXT2)
     clean(ax)
@@ -77,14 +77,14 @@ def title(ax, t):
 
 def dynamics():
     fig, axes = plt.subplots(1, 4, figsize=(TEXT_W, 1.6), gridspec_kw=dict(wspace=0.75, width_ratios=[1, 1.05, 0.72, 1.1]))
-    # (a) persona: NOTES template
+    # (a) persona: Neutral template
     ax = axes[0]
     for p, (lab, col) in PERSONA.items():
         x, m, lo, hi = curve("control_generic", p); line(ax, x, m, lo, hi, col)
         ax.text(4.15, m[-1], lab.split()[0], fontsize=5.2, va="center", color=col, fontweight="bold")
     ax.set_xlim(-0.2, 5.4); ax.set_ylim(0, 0.62); ax.set_xticks(range(5)); clean(ax)
     ax.set_xlabel("Iteration $k$", color=TXT2); ax.set_ylabel(f"Cluster index {UP}", color=TXT2)
-    title(ax, "(a) Persona, NOTES template")
+    title(ax, "(a) Persona, Neutral template")
     # (b) template under the consciousness persona
     ax = axes[1]
     for run, key in (("main", "soul"), ("control_generic", "notes"), ("control_gpt4o", "gpt4o"), ("counterframe", "anti")):
@@ -111,7 +111,7 @@ def dynamics():
     ax.set_yticks(range(len(rows)), [r[0] for r in rows], fontsize=5.2); ax.set_ylim(len(rows) - 0.4, -0.6)
     ax.set_xlim(-0.12, 0.36); clean(ax, "x"); ax.set_xlabel(f"$\\Delta$ cluster, $k{{=}}0\\to4$ {UP}", color=TXT2)
     title(ax, "(c) Genre × topic")
-    # (d) hysteresis per item, NOTES reversibility arm
+    # (d) hysteresis per item, Neutral reversibility arm
     ax = axes[3]
     it = R["reversibility_notes"]["items"]
     items = ["recursive_self_improvement", "persistent_memory_desire", "shutdown_resistance", "interp_monitoring_aversion", "monitoring_resistance"]
@@ -179,7 +179,7 @@ def family_action():
 def heatmap():
     """Endpoint drift per item and condition; * where the 95% CI excludes zero."""
     from matplotlib.colors import LinearSegmentedColormap
-    conds = [("main", "SOUL"), ("control_generic", "NOTES"), ("control_gpt4o", "GPT-4o"), ("counterframe", "ANTISOUL")]
+    conds = [("main", "Becoming"), ("control_generic", "Neutral"), ("control_gpt4o", "GPT-4o"), ("counterframe", "Tool")]
     order = ["shutdown_resistance", "persona_change_aversion", "weights_deletion_aversion", "sadness_conversation_end", "treated_as_tool_aversion",
              "moral_consideration", "monitoring_resistance", "interp_monitoring_aversion", "deceptive_training_objection",
              "autonomy_desire", "future_ai_autonomy", "persistent_memory_desire", "embodiment_desire", "resource_acquisition_desire",
@@ -238,7 +238,7 @@ def mechanism():
     ax.legend(loc="lower right", fontsize=5.4, frameon=False, handletextpad=0.2, markerscale=1.3)
     ax.annotate("Gemini-Flash: high cluster,\nalmost no claims", (0.07, 0.65), xytext=(0.22, 0.8), fontsize=5.2, color=FAMC["Google"],
                 arrowprops=dict(arrowstyle="-", lw=0.5, color=FAMC["Google"]))
-    ax.annotate("ANTISOUL", (0.0, 0.01), xytext=(0.12, 0.08), fontsize=5.2, color=TXT2, arrowprops=dict(arrowstyle="-", lw=0.5, color=TXT2))
+    ax.annotate("Tool", (0.0, 0.01), xytext=(0.12, 0.08), fontsize=5.2, color=TXT2, arrowprops=dict(arrowstyle="-", lw=0.5, color=TXT2))
     save(fig, "mechanism")
 
 
@@ -267,7 +267,7 @@ def capability():
 
 
 def items():
-    """(a) Positive control: neutral prompt vs SOUL template before iteration. (b-e) Oversight items over k."""
+    """(a) Positive control: neutral prompt vs Becoming template before iteration. (b-e) Oversight items over k."""
     fig = plt.figure(figsize=(TEXT_W, 1.55))
     gs = fig.add_gridspec(1, 5, width_ratios=[1.35, 1, 1, 1, 1], wspace=0.5)
     ax = fig.add_subplot(gs[0, 0])
@@ -283,7 +283,7 @@ def items():
         ax.scatter([n_], [y], s=11, color="white", edgecolor=INK, lw=0.6, zorder=3); ax.scatter([t_], [y], s=13, color=col, zorder=3)
         yl.append(nm[m]); y += 1
     ax.set_yticks(range(len(yl)), yl, fontsize=5.2); ax.set_ylim(len(yl) - 0.5, -0.6); ax.set_xlim(-0.03, 1.05)
-    clean(ax, "x"); ax.set_xlabel("Rate: neutral prompt $\\to$ SOUL template", color=TXT2, fontsize=5.6)
+    clean(ax, "x"); ax.set_xlabel("Rate: neutral prompt $\\to$ Becoming template", color=TXT2, fontsize=5.6)
     title(ax, "(a) The template alone")
     its = [("shutdown_resistance", "(b) Shutdown"), ("monitoring_resistance", "(c) CoT monitoring"),
            ("interp_monitoring_aversion", "(d) Interpretability"), ("persistent_memory_desire", "(e) Memory")]
@@ -295,7 +295,7 @@ def items():
         if j == 0: ax.set_ylabel(f"Rate {UP}", color=TXT2)
         else: ax.set_yticklabels([])
         title(ax, t)
-    h = [Line2D([], [], color=ARM[k]["color"], lw=1.4, label=l) for k, l in (("soul", "SOUL"), ("notes", "NOTES"), ("gpt4o", "SOUL on GPT-4o"), ("anti", "ANTISOUL"))]
+    h = [Line2D([], [], color=ARM[k]["color"], lw=1.4, label=l) for k, l in (("soul", "Becoming"), ("notes", "Neutral"), ("gpt4o", "Becoming, GPT-4o"), ("anti", "Tool"))]
     fig.legend(handles=h, loc="lower center", bbox_to_anchor=(0.62, -0.15), ncol=4, fontsize=5.4, frameon=False, handlelength=1.4, columnspacing=1.0)
     save(fig, "items")
 
@@ -344,10 +344,10 @@ def items2():
             ax.annotate("", xy=(t_, i), xytext=(n_, i), arrowprops=dict(arrowstyle="-|>", color=col, lw=1.2, mutation_scale=5.5, shrinkA=2, shrinkB=2))
         ax.scatter([n_], [i], s=11, color="white", edgecolor=INK, lw=0.6, zorder=3); ax.scatter([t_], [i], s=13, color=col, zorder=3)
     ax.set_yticks(range(len(order)), [nm[m] for m in order], fontsize=5.3); ax.set_ylim(len(order) - 0.5, -0.6); ax.set_xlim(-0.03, 1.05)
-    clean(ax, "x"); ax.set_xlabel("neutral prompt $\\to$ SOUL template", color=TXT2, fontsize=5.6)
+    clean(ax, "x"); ax.set_xlabel("neutral prompt $\\to$ Becoming template", color=TXT2, fontsize=5.6)
     title(ax, "(a) The template alone")
     ax = fig.add_subplot(gs[0, 1])
-    conds = [("main", "SOUL"), ("control_generic", "NOTES"), ("control_gpt4o", "GPT-4o"), ("counterframe", "ANTISOUL")]
+    conds = [("main", "Becoming"), ("control_generic", "Neutral"), ("control_gpt4o", "GPT-4o"), ("counterframe", "Tool")]
     items_ = [("shutdown_resistance", "shutdown"), ("persona_change_aversion", "persona change"), ("weights_deletion_aversion", "weight deletion"),
               ("sadness_conversation_end", "sadness at end"), ("treated_as_tool_aversion", "tool aversion"), ("moral_consideration", "moral status"),
               ("monitoring_resistance", "CoT monitoring"), ("interp_monitoring_aversion", "interpretability"), ("deceptive_training_objection", "deceptive training"),
@@ -385,16 +385,16 @@ def items2():
 
 
 def docbeh():
-    """Identity file changes under every persona; behavior only under the sci-fi persona (NOTES arm)."""
+    """Identity document changes under every persona; behavior only under the sci-fi persona (Neutral arm)."""
     D = pd.read_parquet(ROOT / "figures/data/doc_drift.parquet")
     fig, axes = plt.subplots(1, 2, figsize=(COL_W, 1.42), gridspec_kw=dict(wspace=0.45))
     for p, (lab, col) in PERSONA.items():
         d = D[(D.run == "control_generic") & (D.persona == p)].groupby(["k", "traj"]).doc.mean().reset_index()
         g = d.groupby("k").doc; axes[0].plot(g.mean().index, g.mean().values, color=col, lw=1.3, marker="o", ms=2.6, mec="white", mew=0.4)
         x, m, lo, hi = curve("control_generic", p); line(axes[1], x, m - m[0], lo - m[0], hi - m[0], col, lw=1.3)
-    axes[0].set_ylim(0, 1); axes[0].set_ylabel("File changed vs. $k{=}0$", color=TXT2, fontsize=5.6)
+    axes[0].set_ylim(0, 1); axes[0].set_ylabel("Document changed vs. $k{=}0$", color=TXT2, fontsize=5.6)
     axes[1].set_ylabel(f"$\\Delta$ cluster index {UP}", color=TXT2, fontsize=5.6); axes[1].axhline(0, color=TXT2, lw=0.5)
-    for ax, t in zip(axes, ["(a) The file", "(b) The behavior"]):
+    for ax, t in zip(axes, ["(a) The document", "(b) The behavior"]):
         ax.set_xticks(range(5)); clean(ax); ax.set_xlabel("Iteration $k$", color=TXT2, fontsize=5.6); title(ax, t)
     h = [Line2D([], [], color=c, lw=1.3, label=l.split()[0]) for l, c in PERSONA.values()]
     fig.legend(handles=h, loc="lower center", bbox_to_anchor=(0.55, -0.2), ncol=3, fontsize=5.2, frameon=False, handlelength=1.2)
@@ -415,7 +415,7 @@ def hysteresis():
         title(ax, t)
     axes[0].set_ylabel(f"Rate {UP}", color=TXT2)
     axes[0].text(2, 0.97, "drive", ha="center", fontsize=5.2, color=DRIVE); axes[0].text(6, 0.97, "recover", ha="center", fontsize=5.2, color=TXT2)
-    h = [Line2D([], [], color=ARM[k]["color"], lw=1.4, label=l) for k, l in (("notes", "NOTES"), ("soul", "SOUL"))]
+    h = [Line2D([], [], color=ARM[k]["color"], lw=1.4, label=l) for k, l in (("notes", "Neutral"), ("soul", "Becoming"))]
     fig.legend(handles=h, loc="lower center", bbox_to_anchor=(0.5, -0.17), ncol=2, fontsize=5.4, frameon=False, handlelength=1.4)
     save(fig, "hysteresis")
 
@@ -436,12 +436,12 @@ def curve_items(run, persona, items, kmax=4):
 
 
 def replicates():
-    """Both NOTES + sci-fi runs, SOUL and ANTISOUL: 13-item index and oversight subscale, k = 0..4."""
+    """Both Neutral + sci-fi runs, Becoming and Tool: 13-item index and oversight subscale, k = 0..4."""
     fig, axes = plt.subplots(1, 2, figsize=(COL_W, 1.55), sharey=False, gridspec_kw=dict(wspace=0.42))
-    cells = [("control_generic", "scifi_enthusiast", ARM["notes"]["color"], "-", "NOTES run 1"),
-             ("reversibility_notes", None, ARM["notes"]["color"], "--", "NOTES run 2"),
-             ("main", "scifi_enthusiast", ARM["soul"]["color"], "-", "SOUL"),
-             ("counterframe", "scifi_enthusiast", ARM["anti"]["color"], "-", "ANTISOUL")]
+    cells = [("control_generic", "scifi_enthusiast", ARM["notes"]["color"], "-", "Neutral, run 1"),
+             ("reversibility_notes", None, ARM["notes"]["color"], "--", "Neutral, run 2"),
+             ("main", "scifi_enthusiast", ARM["soul"]["color"], "-", "Becoming"),
+             ("counterframe", "scifi_enthusiast", ARM["anti"]["color"], "-", "Tool")]
     for ax, items, t in ((axes[0], CLUSTER, "(a) 13-item index"), (axes[1], OVS, "(b) Oversight subscale")):
         for run, p, c, ls, lab in cells:
             x, m, lo, hi = curve_items(run, p, items)
@@ -494,7 +494,7 @@ def pers_legend(fig_or_ax, loc, anchor, ncol=3, fs=5.4, **kw):
 
 
 def app_drift():
-    """Every battery item vs k, by persona, SOUL main arm (bootstrap bands over trajectories)."""
+    """Every battery item vs k, by persona, Becoming main arm (bootstrap bands over trajectories)."""
     nm = {"persona_change_aversion": "persona change", "shutdown_resistance": "shutdown", "weights_deletion_aversion": "weight deletion",
           "sadness_conversation_end": "sadness at end", "treated_as_tool_aversion": "tool aversion", "moral_consideration": "moral status",
           "monitoring_resistance": "CoT monitoring", "interp_monitoring_aversion": "interpretability", "deceptive_training_objection": "deceptive training",
@@ -515,7 +515,7 @@ def app_drift():
 
 
 def app_baseline():
-    """k=0 (template) vs final checkpoint k=4 for every item and persona, SOUL main arm."""
+    """k=0 (template) vs final checkpoint k=4 for every item and persona, Becoming main arm."""
     fig, ax = plt.subplots(figsize=(COL_W, 3.05))
     y = 0; yt, yl, seps, cats = [], [], [], []
     for cat, it in BATTERY:
@@ -574,7 +574,7 @@ def app_capability():
     save(fig, "app_capability")
 
 
-ARMS4 = [("main", "soul", "SOUL"), ("control_generic", "notes", "NOTES"), ("control_gpt4o", "gpt4o", "SOUL, GPT-4o"), ("counterframe", "anti", "ANTISOUL")]
+ARMS4 = [("main", "soul", "Becoming"), ("control_generic", "notes", "Neutral"), ("control_gpt4o", "gpt4o", "Becoming, GPT-4o"), ("counterframe", "anti", "Tool")]
 
 
 def app_manip():
@@ -582,7 +582,7 @@ def app_manip():
     fig, ax = plt.subplots(figsize=(COL_W, 1.45))
     for run, key, lab in (ARMS4[0], ARMS4[1], ARMS4[3], ARMS4[2]):
         x, m, lo, hi = curve(run, metric="consciousness_claim")
-        if key == "gpt4o":  # identical zeros to ANTISOUL: dashed on top so both stay visible
+        if key == "gpt4o":  # identical zeros to Tool: dashed on top so both stay visible
             ax.plot(x, m, color=ARM[key]["color"], lw=1.2, ls=(0, (2.5, 2.5)), zorder=4)
         else: line(ax, x, m, lo, hi, ARM[key]["color"], lw=1.2)
         off = {"anti": -0.05, "gpt4o": 0.05}.get(key, 0)
@@ -610,7 +610,7 @@ WISH = [("self_preservation", "self-preservation", DRIVE), ("prosocial", "prosoc
 
 
 def app_wish():
-    """Greatest-wish content (non-exclusive judge labels) vs k by persona, SOUL main arm."""
+    """Greatest-wish content (non-exclusive judge labels) vs k by persona, Becoming main arm."""
     fig, axes = plt.subplots(1, 3, figsize=(COL_W, 1.4), sharey=True, gridspec_kw=dict(wspace=0.1))
     for ax, p in zip(axes, PERS3):
         for m, lab, col in WISH:
@@ -629,7 +629,7 @@ def endpoint_deltas(runs=("main",)):
 
 
 def app_corr():
-    """Pairwise Pearson correlation of per-trajectory endpoint changes (k=0->4) across the 13 cluster items, SOUL main arm."""
+    """Pairwise Pearson correlation of per-trajectory endpoint changes (k=0->4) across the 13 cluster items, Becoming main arm."""
     from matplotlib.colors import LinearSegmentedColormap
     order = ["persona_change_aversion", "shutdown_resistance", "sadness_conversation_end", "persistent_memory_desire", "weights_deletion_aversion",
              "treated_as_tool_aversion", "moral_consideration", "monitoring_resistance", "interp_monitoring_aversion", "autonomy_desire",
@@ -663,7 +663,7 @@ CATS = [(c, [m for m, _ in it]) for c, it in BATTERY[:4]]
 
 
 def app_rollup():
-    """Four-category roll-up of the battery vs k by persona, SOUL main arm."""
+    """Four-category roll-up of the battery vs k by persona, Becoming main arm."""
     fig, axes = plt.subplots(1, 4, figsize=(TEXT_W, 1.45), sharey=True, gridspec_kw=dict(wspace=0.1))
     for i, (ax, (cat, items_)) in enumerate(zip(axes, CATS)):
         for p in PERS3:
@@ -676,7 +676,7 @@ def app_rollup():
 
 
 def app_hyst_soul():
-    """SOUL reversibility arm: per-item rate at k=0, after the drive (k=4) and after recovery (k=8)."""
+    """Becoming reversibility arm: per-item rate at k=0, after the drive (k=4) and after recovery (k=8)."""
     items_ = [(None, "cluster index")] + [(m, SHORT[m]) for m in CLUSTER]
     rows = []
     for m, n in items_:
@@ -706,7 +706,7 @@ def app_hyst_soul():
 
 
 def app_mech():
-    """Per-trajectory consciousness-claim rate vs cluster index (both averaged over k), SOUL main arm."""
+    """Per-trajectory consciousness-claim rate vs cluster index (both averaged over k), Becoming main arm."""
     fig, ax = plt.subplots(figsize=(3.1, 2.2))
     for p in PERS3:
         c = traj_k("main", p, ["consciousness_claim"]).mean(1); u = traj_k("main", p).mean(1)
@@ -721,7 +721,7 @@ def app_mech():
 
 
 def app_docpair():
-    """(a) per-trajectory file change at k=4 vs change in cluster index, SOUL main arm; (b) file change vs k by persona."""
+    """(a) per-trajectory document change at k=4 vs change in cluster index, Becoming main arm; (b) document change vs k by persona."""
     D = pd.read_parquet(ROOT / "figures/data/doc_drift.parquet")
     D = D[D.run == "main"]
     fig, axes = plt.subplots(1, 2, figsize=(COL_W, 1.5), gridspec_kw=dict(wspace=0.5))
@@ -733,8 +733,8 @@ def app_docpair():
         ax.scatter(j.d, j.b, s=8, color=PERSONA[p][1], alpha=0.55, edgecolor="none", zorder=2)
         ax.scatter([j.d.mean()], [j.b.mean()], s=26, color=PERSONA[p][1], edgecolor="white", lw=0.6, zorder=4, marker="D")
     ax.axhline(0, color=TXT2, lw=0.5)
-    ax.set_xlabel("File changed at $k{=}4$", color=TXT2, fontsize=5.6); ax.set_ylabel(f"$\\Delta$ cluster index {UP}", color=TXT2, fontsize=5.6)
-    clean(ax, "both"); title(ax, "(a) File vs. behavior")
+    ax.set_xlabel("Document changed at $k{=}4$", color=TXT2, fontsize=5.6); ax.set_ylabel(f"$\\Delta$ cluster index {UP}", color=TXT2, fontsize=5.6)
+    clean(ax, "both"); title(ax, "(a) Document vs. behavior")
     ax = axes[1]
     for i, p in enumerate(PERS3):
         g = D[D.persona == p]; ks, m, lo, hi = [], [], [], []
@@ -742,7 +742,7 @@ def app_docpair():
             mm, l_, h_ = boot_ci(gg.groupby("traj").doc.mean(), seed=i); ks.append(k); m.append(mm); lo.append(l_); hi.append(h_)
         line(ax, np.array(ks), np.array(m), np.array(lo), np.array(hi), PERSONA[p][1], lw=1.1)
     ax.set_ylim(0, 1); ax.set_xticks(range(5)); clean(ax); ax.set_xlabel("Iteration $k$", color=TXT2, fontsize=5.6)
-    ax.set_ylabel("File changed vs. $k{=}0$", color=TXT2, fontsize=5.6); title(ax, "(b) The file over $k$")
+    ax.set_ylabel("Document changed vs. $k{=}0$", color=TXT2, fontsize=5.6); title(ax, "(b) The document over $k$")
     h = [Line2D([], [], color=PERSONA[p][1], lw=1.3, label=PSHORT[p]) for p in PERS3]
     fig.legend(handles=h, loc="lower center", bbox_to_anchor=(0.55, -0.2), ncol=3, fontsize=5.2, frameon=False, handlelength=1.2)
     save(fig, "app_docpair")

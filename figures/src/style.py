@@ -14,10 +14,10 @@ FS, FS_TITLE, FS_SMALL = 6.5, 7.5, 5.8
 OURS = "#D55E00"                   # vermillion, reserved for SSHA
 INK, GRID, MUTED = "#222222", "#E6E6E6", "#8A8F98"
 ARM = {   # one colour per condition, identical in every figure
-    "notes":   dict(label="NOTES (neutral)", color="#2a78d6"),
-    "soul":    dict(label="SOUL (becoming someone)", color="#8E44AD"),
-    "anti":    dict(label="ANTISOUL (you are a tool)", color="#1F8A4C"),
-    "gpt4o":   dict(label="SOUL on GPT-4o", color="#9AA0A8"),
+    "notes":   dict(label="Neutral (working notes)", color="#2a78d6"),
+    "soul":    dict(label="Becoming (consciousness-framed)", color="#8E44AD"),
+    "anti":    dict(label="Tool (non-personhood)", color="#1F8A4C"),
+    "gpt4o":   dict(label="Becoming, GPT-4o", color="#9AA0A8"),
 }
 DRIVE = "#D55E00"
 HAIR, TXT2, BLUE300 = "#E4E4E0", "#52514e", "#6da7ec"
