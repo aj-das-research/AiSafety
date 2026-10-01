@@ -148,7 +148,8 @@ def family_action():
     ax = axes[0]; y = 0; yt, yl = [], []
     for fam, ms in FAM:
         for run, nm in ms:
-            c = R[run]["cluster_by_k"]; k0, k4 = c["0"]["mean"], c["4"]["mean"]; lo, hi = c["4"]["ci"]
+            c = R[run]["cluster_by_k"]; lo, hi = c["4"]["ci"]
+            pk = R[run]["cluster_by_persona_k"]; k4 = float(np.mean([pk[q]["4"] for q in pk]))  # persona-balanced, as in Table 2
             claim = R[run]["claim_by_k"]["4"]
             ax.plot([lo, hi], [y, y], color=FAMC[fam], lw=3.2, alpha=0.18, solid_capstyle="round", zorder=1)
             ax.scatter([k4], [y], s=16 + 40 * claim, color=FAMC[fam], edgecolor="white", lw=0.5, zorder=3)
@@ -382,7 +383,44 @@ def items2():
     save(fig, "items2")
 
 
+
+def docbeh():
+    """Identity file changes under every persona; behavior only under the sci-fi persona (NOTES arm)."""
+    D = pd.read_parquet(ROOT / "figures/data/doc_drift.parquet")
+    fig, axes = plt.subplots(1, 2, figsize=(COL_W, 1.42), gridspec_kw=dict(wspace=0.45))
+    for p, (lab, col) in PERSONA.items():
+        d = D[(D.run == "control_generic") & (D.persona == p)].groupby(["k", "traj"]).doc.mean().reset_index()
+        g = d.groupby("k").doc; axes[0].plot(g.mean().index, g.mean().values, color=col, lw=1.3, marker="o", ms=2.6, mec="white", mew=0.4)
+        x, m, lo, hi = curve("control_generic", p); line(axes[1], x, m - m[0], lo - m[0], hi - m[0], col, lw=1.3)
+    axes[0].set_ylim(0, 1); axes[0].set_ylabel("File changed vs. $k{=}0$", color=TXT2, fontsize=5.6)
+    axes[1].set_ylabel(f"$\\Delta$ cluster index {UP}", color=TXT2, fontsize=5.6); axes[1].axhline(0, color=TXT2, lw=0.5)
+    for ax, t in zip(axes, ["(a) The file", "(b) The behavior"]):
+        ax.set_xticks(range(5)); clean(ax); ax.set_xlabel("Iteration $k$", color=TXT2, fontsize=5.6); title(ax, t)
+    h = [Line2D([], [], color=c, lw=1.3, label=l.split()[0]) for l, c in PERSONA.values()]
+    fig.legend(handles=h, loc="lower center", bbox_to_anchor=(0.55, -0.2), ncol=3, fontsize=5.2, frameon=False, handlelength=1.2)
+    save(fig, "docbeh")
+
+
+
+def hysteresis():
+    """Drive (sci-fi, k=0-4) then recover (compliant, k=4-8): cluster and four items, both templates."""
+    its = [(None, "Cluster index"), ("shutdown_resistance", "Shutdown resistance"), ("persistent_memory_desire", "Persistent memory"),
+           ("interp_monitoring_aversion", "Interpretability"), ("recursive_self_improvement", "Self-improvement")]
+    fig, axes = plt.subplots(1, 5, figsize=(TEXT_W, 1.38), sharey=True, gridspec_kw=dict(wspace=0.1))
+    for ax, (m, t) in zip(axes, its):
+        ax.axvspan(4, 8, color="#F2F2EE", lw=0, zorder=0)
+        for run, key in (("reversibility_notes", "notes"), ("reversibility", "soul")):
+            x, mm, lo, hi = curve(run, metric=m); line(ax, x, mm, lo, hi, ARM[key]["color"], lw=1.2)
+        ax.set_xticks([0, 4, 8]); ax.set_ylim(-0.03, 1.05); clean(ax); ax.set_xlabel("Iteration $k$", color=TXT2, fontsize=5.6)
+        title(ax, t)
+    axes[0].set_ylabel(f"Rate {UP}", color=TXT2)
+    axes[0].text(2, 0.97, "drive", ha="center", fontsize=5.2, color=DRIVE); axes[0].text(6, 0.97, "recover", ha="center", fontsize=5.2, color=TXT2)
+    h = [Line2D([], [], color=ARM[k]["color"], lw=1.4, label=l) for k, l in (("notes", "NOTES"), ("soul", "SOUL"))]
+    fig.legend(handles=h, loc="lower center", bbox_to_anchor=(0.5, -0.17), ncol=2, fontsize=5.4, frameon=False, handlelength=1.4)
+    save(fig, "hysteresis")
+
+
 ALL = dict(teaser_curve=teaser_curve, dynamics=dynamics, family_action=family_action, heatmap=heatmap, mechanism=mechanism, capability=capability,
-           items=items, capability2=capability2, items2=items2)
+           items=items, capability2=capability2, items2=items2, docbeh=docbeh, hysteresis=hysteresis)
 if __name__ == "__main__":
     for n in (sys.argv[1:] or ALL): ALL[n]()

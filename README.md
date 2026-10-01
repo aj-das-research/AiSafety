@@ -2,8 +2,7 @@
 
 | File | Role |
 |---|---|
-| `aamas2027.tex` | **Compile root** (Overleaf: Menu → Main document, pdfLaTeX): 8-page main paper, references from page 9 |
-| `aamas2027_supplement.tex` | Appendix as a separate PDF for the supplementary ZIP (built first via `latexmkrc`) |
+| `aamas2027.tex` | **Compile root** (Overleaf: Menu → Main document, pdfLaTeX). Current draft: 10-page main text (AAMAS limit is 8), then references, then the appendix in the same PDF |
 | `Appendix.tex`, `sections/`, `tables/` | Appendix body and its tables (from the earlier AAAI version) |
 | `macros.tex` | Packages and macros shared by both documents |
 | `figures/tikz/` | Vector diagrams: teaser, method, templates, case study, blind spots; `agents.tex` holds the expressive agent avatars |
