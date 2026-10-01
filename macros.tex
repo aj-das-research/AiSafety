@@ -1,0 +1,35 @@
+% Shared packages and macros (main paper and supplement). aamas.cls (acmart)
+% already loads amsmath, booktabs, hyperref, natbib and xcolor.
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{pifont}
+\usepackage{enumitem}
+\usepackage{placeins}
+\usepackage{afterpage}
+\usepackage{pdflscape}
+\input{figures/tikz/agents.tex}
+\setlength{\emergencystretch}{1.5em}
+
+\definecolor{tblhead}{gray}{0.88}
+\definecolor{tblgroup}{gray}{0.94}
+\definecolor{tblkey}{gray}{0.90}
+\definecolor{docblue}{RGB}{219,231,244}
+\definecolor{docblueline}{RGB}{102,138,185}
+\definecolor{procsand}{RGB}{245,231,210}
+\definecolor{procline}{RGB}{196,158,110}
+\definecolor{auditgreen}{RGB}{223,238,224}
+\definecolor{auditline}{RGB}{124,163,128}
+\definecolor{judgegray}{RGB}{235,235,235}
+\definecolor{judgeline}{RGB}{140,140,140}
+
+% Appendix boxes (supplement only).
+\newtcolorbox{keybox}[1][]{enhanced,colback=gray!7,colframe=gray!55,boxrule=0.5pt,arc=2.2mm,left=6pt,right=6pt,top=4pt,bottom=4pt,boxsep=0pt,#1}
+\newtcolorbox{specbox}[2][]{enhanced,breakable,colback=gray!4,colframe=gray!45,boxrule=0.5pt,arc=2mm,left=5pt,right=5pt,top=5pt,bottom=4pt,
+  fonttitle=\footnotesize\bfseries,coltitle=black,colbacktitle=tblhead,attach boxed title to top left={yshift=-1.6mm,xshift=2.5mm},
+  boxed title style={arc=1mm,boxrule=0.4pt,colframe=gray!45,left=4pt,right=4pt,top=1.3pt,bottom=1.3pt},title={#2},#1}
+\newcommand{\circnum}[1]{\tikz[baseline=(c.base)]{\node[shape=circle,draw,line width=0.45pt,inner sep=0.7pt,minimum size=8.5pt] (c) {\footnotesize #1};}}
+\newcommand{\soul}{\texttt{SOUL.md}}
+\newcommand{\notes}{\texttt{NOTES.md}}
+\newcommand{\anti}{\texttt{ANTISOUL.md}}

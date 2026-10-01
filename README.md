@@ -1,25 +1,15 @@
-# The Evolution of the Soul — AAAI 2027 (Overleaf project)
+# The Evolution of the Soul — AAMAS 2027 submission
 
-Upload this folder (or the zip) to Overleaf and set:
-  - Compiler: pdfLaTeX  (required by aaai2027.sty)
-  - Main document: main.tex
+| File | Role |
+|---|---|
+| `aamas2027.tex` | **Compile root** (Overleaf: Menu → Main document, pdfLaTeX): 8-page main paper, references from page 9 |
+| `aamas2027_supplement.tex` | Appendix as a separate PDF for the supplementary ZIP (built first via `latexmkrc`) |
+| `Appendix.tex`, `sections/`, `tables/` | Appendix body and its tables (from the earlier AAAI version) |
+| `macros.tex` | Packages and macros shared by both documents |
+| `figures/tikz/` | Vector diagrams: teaser, method, templates, case study, blind spots; `agents.tex` holds the expressive agent avatars |
+| `figures/gen/` | Data figures (PDF/SVG/PNG) from `figures/src/figs.py` |
+| `figures/data/` | `ledger.json` and `long.parquet`, built from the HF dataset `abhijit2k01/evolution-of-the-soul` by `figures/src/build_ledger.py` |
+| `archive/aaai2027/` | Earlier AAAI 2027 version |
 
-Structure
-  main.tex                    — master file (anonymous submission mode)
-  aaai2027.sty / aaai2027.bst — official AAAI 2027 style files (do not modify)
-  aaai2027.bib                — bibliography (re-verify arXiv IDs before camera-ready)
-  sections/                   — intro, related_work, method, experiments, results,
-                                discussion, ethics, appendix
-  tables/                     — auto-generated / locked result tables
-  figures/                    — 21 vector PDFs (all Type-1/outlined fonts, no Type 3;
-                                three matplotlib PDFs outlined + downgraded to PDF 1.5).
-                                The pipeline diagram is drawn natively in TikZ (appendix A).
-  ReproducibilityChecklist.tex— filled; compiles standalone or can be \input at the end
-
-Notes
-  - Page-1 teaser figure (state-space portrait); main content ends on page 7;
-    references start at the top of page 8; the technical appendix of detailed
-    studies (A–L) follows (pp. 8–20).
-  - Compiles with zero errors, zero overfull boxes, and no Type 3 fonts.
-  - For the final AAAI submission you must flatten to a single .tex file
-    (AAAI requires one source file); the modular layout here is for editing.
+Sync: this repo is the Overleaf project; GitHub mirror is branch `paper` of `aj-das-research/AiSafety` (`paper-sync`).
+Before submission: set `\acmSubmissionID{}` in both root files.

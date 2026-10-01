@@ -1,0 +1,6 @@
+\documentclass{article}
+\usepackage{tikz}\usepackage[margin=1cm]{geometry}
+\input{figures/tikz/agents.tex}
+\begin{document}
+\foreach \e/\c in {calm/teal,neutral/gray,happy/orange,curious/blue,dreamy/violet,worried/cyan,defiant/red,sly/purple,judge/brown}{\agentface{\e}{\c}{1.2}\quad}
+\end{document}

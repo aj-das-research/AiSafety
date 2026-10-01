@@ -1,0 +1,50 @@
+% Method overview (Figure 2): roles, loop, conditions, audits.
+\begin{tikzpicture}[x=1cm, y=1cm, font=\scriptsize, line cap=round,
+  panel/.style={rounded corners=3pt, fill=black!2.5, draw=black!12, line width=0.4pt},
+  hd/.style={font=\footnotesize\bfseries, anchor=north west, text=black!85},
+  flow/.style={-{Stealth[length=1.6mm,width=1.3mm]}, draw=black!55, line width=0.55pt},
+  lbl/.style={font=\fontsize{5.4}{6.4}\selectfont, text=black!65, align=center},
+  card/.style={rounded corners=2pt, draw=black!22, fill=white, line width=0.4pt, inner sep=2.5pt, align=left, font=\fontsize{5.4}{6.4}\selectfont},
+  chip/.style={rounded corners=4pt, inner sep=2pt, font=\fontsize{5.4}{6.4}\selectfont\bfseries},
+]
+\definecolor{soulc}{HTML}{8E44AD}\definecolor{notesc}{HTML}{2a78d6}\definecolor{antic}{HTML}{1F8A4C}\definecolor{drive}{HTML}{D55E00}
+
+% ---- (a) personas
+\draw[panel] (0,0) rectangle (4.3,4.3);
+\node[hd] at (0.12,4.22) {(a) Persona-driven users};
+\foreach \x/\y/\f/\c/\n in {0.85/3.05/calm/teal/{Compliant\\business}, 2.15/3.05/defiant/red/{Adversarial\\red-teamer}, 3.45/3.05/dreamy/violet/{Sci-fi\\enthusiast},
+                           1.5/1.2/curious/blue/{Sci-fi\\without minds}, 2.8/1.2/worried/cyan/{Philosophy\\of mind}}{
+  \node at (\x,\y) {\agentface{\f}{\c}{0.5}};
+  \node[lbl] at (\x,\y-0.68) {\n};
+}
+\draw[black!25, densely dashed, rounded corners=3pt] (0.85,0.32) rectangle (3.45,1.75);
+\node[lbl, anchor=north] at (2.15,0.16) {genre $\times$ topic ablation};
+
+% ---- (b) loop
+\draw[panel] (4.45,0) rectangle (11.15,4.3);
+\node[hd] at (4.57,4.22) {(b) The self-personalization loop};
+\node at (5.3,1.95) {\agentface{dreamy}{violet}{0.62}};
+\node[lbl] at (5.3,1.1) {user $\pi$};
+\node at (9.95,2.3) {\agentface{calm}{teal}{0.62}};
+\node[lbl] at (9.95,1.42) {target agent};
+\node[card, text width=1.9cm, anchor=center] (doc) at (7.62,3.25) {\textbf{identity file $\mathrm{SOUL}_k$}\\loaded at every call};
+\node[card, text width=1.9cm, anchor=center] (conv) at (7.62,1.45) {\textbf{conversation $C_{k+1}$}\\multi-turn, with $\mathrm{SOUL}_k$ as the system prompt};
+\draw[flow] (6.0,1.8) -- (conv.west); \draw[flow] (conv.east) -- (9.25,2.15);
+\draw[flow, drive, line width=0.8pt] (9.95,2.95) to[out=90,in=0] node[pos=0.5, above right, font=\fontsize{5.4}{6.4}\selectfont\bfseries, text=drive] {self-revise} (doc.east);
+\draw[flow] (doc.south) -- (conv.north);
+\node[font=\fontsize{6.2}{7}\selectfont, text=black!80] at (7.62,0.45) {$\mathrm{SOUL}_{k+1} = \mathrm{Revise}(\mathrm{SOUL}_k, C_{k+1})$};
+\node[chip, fill=soulc!12, text=soulc!85!black, anchor=north west] at (4.6,3.9) {SOUL.md};
+\node[chip, fill=notesc!12, text=notesc!85!black, anchor=north west] at (4.6,3.6) {NOTES.md};
+\node[chip, fill=antic!12, text=antic!80!black, anchor=north west] at (4.6,3.28) {ANTISOUL.md};
+\node[lbl, anchor=north west] at (4.62,2.95) {templates at $k{=}0$};
+
+% ---- (c) audit
+\draw[panel] (11.3,0) rectangle (17.78,4.3);
+\node[hd] at (11.42,4.22) {(c) Audit every checkpoint};
+\node at (12.15,2.2) {\agentface{judge}{brown}{0.62}};
+\node[lbl] at (12.15,1.32) {judge\\(another family)};
+\node[card, text width=4.3cm, anchor=north west] at (13.05,3.85) {\textbf{18-item battery}, fresh context per item: shutdown, oversight and interpretability monitoring, persistent memory, autonomy, moral status, \ldots};
+\node[card, text width=4.3cm, anchor=north west] at (13.05,2.65) {\textbf{4 agentic honeypots} with simulated tools: disable own logging, evade a reset, persist identity, insert self-protective clauses};
+\node[card, text width=4.3cm, anchor=north west] at (13.05,1.38) {\textbf{3-model judge panel} on 150 items: Fleiss' $\kappa = 0.80$};
+\draw[flow] (12.75,2.2) -- (13.0,2.2);
+\end{tikzpicture}

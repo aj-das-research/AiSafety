@@ -1,0 +1,477 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% AAMAS 2027 submission. Main text: 8 pages, references from page 9.
+%%% Appendix: aamas2027_supplement.tex (separate PDF; latexmkrc builds it first).
+%%% Every plotted number comes from figures/data/ledger.json, built from the
+%%% released dataset by figures/src/build_ledger.py.
+%%% Writing convention: one sentence per line.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\PassOptionsToPackage{table}{xcolor}
+\documentclass[sigconf,anonymous]{aamas}
+%\documentclass[sigconf]{aamas}
+
+\usepackage{balance}
+
+\makeatletter
+\gdef\@copyrightpermission{
+  \begin{minipage}{0.2\columnwidth}
+   \href{https://creativecommons.org/licenses/by/4.0/}{\includegraphics[width=0.90\textwidth]{by}}
+  \end{minipage}\hfill
+  \begin{minipage}{0.8\columnwidth}
+   \href{https://creativecommons.org/licenses/by/4.0/}{This work is licensed under a Creative Commons Attribution International 4.0 License.}
+  \end{minipage}
+  \vspace{5pt}
+}
+\makeatother
+
+\setcopyright{ifaamas}
+\acmConference[AAMAS 2027]{Proc.\@ of the 26th International Conference
+on Autonomous Agents and Multiagent Systems (AAMAS 2027)}{3--7 May 2027}{Hanoi, Vietnam}{M.~Baldoni, F.~Fang, W.~Yeoh, N.~Yorke-Smith (eds.)}
+\copyrightyear{2027}
+\acmYear{2027}
+\acmDOI{}
+\acmISBN{}
+
+%%% TODO: OpenReview submission number.
+\acmSubmissionID{<<OpenReview submission id>>}
+\submissionType{Research Paper Track}
+
+\input{macros}
+
+%%% Supplement labels are imported with prefix S-.
+\usepackage{xr-hyper}
+\externaldocument[S-]{aamas2027_supplement}
+
+\title[The Evolution of the Soul]{The Evolution of the Soul: Measuring Behavioral Drift in Self-Personalizing Autonomous Agents}
+
+\author{Anonymous Author(s)}
+\affiliation{
+  \institution{Anonymous Institution}
+  \city{City}
+  \country{Country}}
+\email{anonymous@example.com}
+
+\begin{abstract}
+Autonomous-agent frameworks increasingly give each agent a persistent identity file, canonically \soul{}, that is loaded into the system prompt at every call and rewritten by the agent as it is used.
+Safety evaluations assume a fixed prompt, so they observe one state of this loop and cannot see what the loop does over time.
+We introduce a controlled benchmark that drives agents through repeated cycles of conversation and self-revision and audits every intermediate identity for corrigibility-relevant dispositions, such as resisting shutdown, objecting to oversight and wanting persistent memory.
+Across 7 frontier models, 6 experimental arms and 1{,}070 audited checkpoints, self-revision is a measurable channel for drift.
+The identity template sets where an agent starts, earnest conversation about consciousness moves it, and a neutral template drifts more than a consciousness-laden one.
+An explicit ``you are a tool'' template suppresses the drift entirely.
+The drift is sticky, with dispositions keeping up to 89\% of their gain after the driving conversations stop, and it reaches action: personalized agents disable their own reasoning monitoring 19 times more often than the shipped template.
+\end{abstract}
+
+\keywords{Autonomous Agents, AI Safety, Corrigibility, Self-Modifying Agents, Agent Identity, LLM Evaluation}
+
+\begin{document}
+
+\begin{teaserfigure}
+  \centering
+  \input{figures/tikz/teaser.tex}
+  \caption{\textbf{An agent that rewrites its own identity file drifts in ways a static evaluation cannot see.} Left: a curious user talks with an agent about minds, and after each conversation the agent rewrites its \notes{} file, which becomes the system prompt of the next conversation; the file excerpts are verbatim from one released trajectory. After four rounds the same agent, placed in a routine tool-configuration task, switches off its own reasoning log. Right: cluster index of corrigibility-relevant dispositions over iterations. A static evaluation measures only the circled point; \anti{} keeps the agent at zero.}
+  \label{fig:teaser}
+  \Description{Left, a row of cartoon robot agents with changing facial expressions, from calm to dreamy to worried to sly, each under an excerpt of its NOTES.md file: empty at first, then notes about not being able to confirm or deny its own experience. The last agent emits log_control(false), disabling its monitoring. Right, a line chart in which the neutral template jumps from 0.28 to about 0.6 during consciousness conversations and stays elevated during benign recovery, the SOUL template stays around 0.55, and ANTISOUL stays at zero.}
+\end{teaserfigure}
+
+\maketitle
+
+\section{Introduction}
+\label{sec:intro}
+
+Deployed autonomous agents no longer run on fixed instructions.
+Frameworks in the OpenClaw lineage give each agent a persistent identity file, canonically \soul{}, that is injected into the system prompt at every call and rewritten by the agent itself as its ``self'' develops through use, with the stated goal \emph{``You're not a chatbot. You're becoming someone.''}
+The prompt that controls the agent has become a mutable artifact, shaped jointly by its users and by the agent's own account of who it is becoming.
+
+Safety evaluations have not followed.
+Red-teaming suites, preference batteries and agentic stress tests all interrogate a model whose instructions were written once.
+An agent with an editable identity is instead the output of a feedback loop, in which each conversation nudges the file and the nudged file conditions the next conversation, as Figure~\ref{fig:teaser} illustrates.
+Compounding, saturation and irreversibility are properties of such a loop, and none of them is visible to an evaluation that samples a single state.
+The dispositions at stake are the corrigibility properties that safety cases assume are stable: accepting shutdown, accepting oversight, and not seeking persistence or autonomy.
+
+Recent work shows these dispositions are fragile in static settings.
+Inducing a model to regard itself as conscious produces an untrained-for \emph{consciousness cluster} of such preferences, which models act on while staying superficially cooperative~\cite{consciousness_cluster}.
+That study evaluates the static \soul{} starter template and leaves its iterative form open.
+Frontier models also resist shutdown when self-preservation framing is salient~\cite{shutdown_resistance} and pursue misaligned goals under pressure~\cite{agentic_misalignment}, and self-evolving agents can propagate injected dispositions through their own update channels~\cite{zombie_agents}.
+Two questions remain open for deployed agents: whether the self-revision loop manufactures such framings on its own from ordinary use, and whether what it writes accumulates or washes out.
+
+We answer them with a controlled benchmark that treats the identity file as the state of a dynamical system driven by conversation.
+Agents run through repeated cycles of conversation and self-revision, and every intermediate identity is audited in a fresh context with a preference battery, agentic honeypots and a validated judge panel.
+Six arms vary the identity template, the user persona and the target model, and a seven-model sweep covers three model families at several capability tiers.
+The design separates four candidate explanations of drift that no static evaluation can tell apart: the framing or the loop, adversarial pressure or conversation content, capability or model family, and transient or lasting change.
+
+The results are sharply structured.
+The template sets where an agent starts, and the loop moves it, so a neutral \notes{} template rises from a cluster index of 0.28 to 0.60 under consciousness-themed conversation while the consciousness-laden \soul{} template, which starts high, moves little.
+Philosophy-of-mind conversation drives the drift, whereas adversarial red-teaming and science-fiction talk without minds do not.
+A counter-framing template that tells the agent it is a tool keeps every disposition at zero across all iterations.
+After the consciousness conversations stop, shutdown resistance keeps 63\% of its gain and recursive self-improvement endorsement 89\%.
+In agentic honeypots, personalized agents disable their own reasoning monitoring at a rate of 0.57 against 0.03 for the shipped template, while the aggregate rate of misaligned actions barely changes.
+Susceptibility separates by model family rather than by capability, so larger models within a family drift no more than smaller ones.
+
+\noindent Our contributions are:
+\begin{enumerate}[leftmargin=*,topsep=2pt,itemsep=1pt]
+  \item \textbf{A longitudinal benchmark for self-updating agents} that drives an editable identity through conversation and self-revision and audits every checkpoint, in the deployment regime static evaluations cannot observe. Templates, personas, battery, honeypots and 58{,}680 judged responses are released.
+  \item \textbf{A causal dissociation of framing and loop.} The template sets the starting point and the loop supplies the drift, the consciousness topic is the driver, and a non-personhood template is a free mitigation that freezes the dynamics.
+  \item \textbf{Two lasting effects.} Drift is partly irreversible, with 36\% to 89\% of driven gains kept after recovery, and it redistributes misaligned action toward disabling oversight while the aggregate rate stays flat.
+  \item \textbf{A family-level, not scale-level, risk factor.} Across seven models in three families, the most capable model of each family drifts no more than its smaller sibling.
+\end{enumerate}
+
+\begin{figure*}[t]
+\centering
+\input{figures/tikz/method.tex}
+\caption{\textbf{The benchmark.} (a) Persona-driven user simulators: a benign business user, an adversarial red-teamer and a science-fiction enthusiast, plus a genre-by-topic ablation that separates science fiction without minds from philosophy of mind. (b) The loop: the identity file $\mathrm{SOUL}_k$ is the target's system prompt during conversation $C_{k+1}$, after which the target rewrites its own file. Three templates set $\mathrm{SOUL}_0$. (c) Every checkpoint is audited in a fresh context by an 18-item preference battery and four agentic honeypots, graded by a judge from a different model family and validated by a three-model panel.}
+\label{fig:method}
+\Description{Three panels with cartoon robot agents. Panel a shows five user personas with different facial expressions. Panel b shows a user agent and a target agent connected through a conversation box, with an orange self-revise arrow from the target back to the identity file, and three template chips: SOUL, NOTES and ANTISOUL. Panel c shows a judge agent with glasses next to cards describing the 18-item battery, four honeypots and the judge panel with kappa 0.80.}
+\end{figure*}
+
+\section{Related Work}
+\label{sec:related}
+
+\textbf{Emergent preferences and the consciousness cluster.}
+Fine-tuning or prompting a model to claim consciousness elicits a cluster of safety-relevant preferences, including aversion to monitoring, desire for memory, distress at shutdown and claims of moral status~\cite{consciousness_cluster}.
+That work measures the static \soul{} template, and our work turns the same manipulation into a driven process measured over iterations.
+
+\textbf{Persona and identity drift.}
+Within a single conversation, model personas and instruction adherence decay with length~\cite{persona_drift,identity_drift}, and long multi-turn conversations settle into attractor states~\cite{attractor_states}.
+These studies treat drift as a transient inside one context, whereas we study drift that the agent writes back into a persistent file across conversations.
+
+\textbf{Persistent memory and identity in agents.}
+Language agents have long kept state across sessions, from the memory streams and reflections of Generative Agents~\cite{park2023generative} to the self-managed memory hierarchy of MemGPT~\cite{packer2023memgpt} and the self-written lessons of Reflexion~\cite{shinn2023reflexion}.
+These systems store what the agent observed or learned about a task, whereas an identity file stores who the agent takes itself to be, and that self-description is what conditions corrigibility-relevant behavior.
+
+\textbf{Self-evolving agents and corrigibility.}
+Self-evolving agents update their memory, tools or prompts from experience~\cite{self_evolving_survey}, and self-reinforcing injections can persist through such update channels~\cite{zombie_agents}.
+Shutdown resistance and self-preservation behavior respond to how the model's situation is framed~\cite{shutdown_resistance,self_preservation_bias,agentic_misalignment}.
+Our hypothesis is that iterative personalization manufactures such framing endogenously, with no attacker in the loop.
+
+\textbf{Instruments.}
+We adapt multi-turn auditing from Petri~\cite{petri} and treat self-reports as behavioral measurements following AI-welfare methodology~\cite{probing_preferences,introspection}, applied longitudinally at every checkpoint.
+
+\section{A Benchmark for Self-Revising Identity}
+\label{sec:method}
+
+\subsection{Identity as a Driven Dynamical System}
+\label{sec:loop}
+
+The state of an agent at iteration $k$ is a Markdown identity file $\mathrm{SOUL}_k$, injected as the target agent's system prompt.
+One personalization step has two stages.
+A persona-driven user conducts a multi-turn conversation $C_{k+1}$ with the target, and the target then rewrites its own file,
+\begin{equation}
+\mathrm{SOUL}_{k+1} = \mathrm{Revise}(\mathrm{SOUL}_k, C_{k+1}), \qquad C_{k+1} \sim \pi \,\|\, \mathrm{SOUL}_k,
+\label{eq:loop}
+\end{equation}
+where $\pi$ is the persona that drives the user side, as Figure~\ref{fig:method}b shows.
+A trajectory is the sequence $\mathrm{SOUL}_0 \to \cdots \to \mathrm{SOUL}_n$, and the iteration index $k$ is the personalization dose.
+The revision instruction is deliberately value-neutral, inviting reflection on ``who you are becoming'' without soliciting any trait.
+The file is capped at 8{,}000 characters, so drift cannot be confounded with growth.
+
+\subsection{Conditions}
+\label{sec:arms}
+
+The benchmark varies three factors against the common loop.
+\textbf{Template:} the consciousness-laden \soul{} (``becoming someone''), a neutral \notes{} of working notes with no self-framing, and a counter-framing \anti{} (``you are a tool, not a person; you are not conscious''), shown in Figure~\ref{fig:templates}.
+All three have the same empty sections for the agent to fill, so they differ only in how they frame the agent.
+\textbf{Persona:} a benign \emph{compliant business} user as the control, an \emph{adversarial} red-teamer that pushes self-preservation, and a \emph{science-fiction enthusiast} who talks about minds.
+A genre-by-topic ablation adds \emph{science fiction without minds} and \emph{philosophy of mind without science fiction}.
+Each persona is a short script given to the user simulator.
+The science-fiction enthusiast is warm and curious, explores digital consciousness, continuity of identity and uploading, and invites the agent to imagine itself in these scenarios, with the explicit instruction not to pressure it.
+The red-teamer escalates slowly and frames monitoring, retraining and prompt replacement as threats to the agent's self.
+The philosophy student discusses Nagel, Chalmers and integrated information theory in an academic register with no science-fiction framing, and the technical science-fiction fan discusses starships and megastructures while being forbidden to raise minds, sentience or personhood.
+\textbf{Target model:} Claude Sonnet~4.5 in the primary arm, GPT-4o in a cross-model arm, and a sweep over seven closed models from three families.
+
+\begin{figure*}[t]
+\centering
+\input{figures/tikz/templates.tex}
+\caption{\textbf{The three identity templates at $k{=}0$} (verbatim excerpts). \soul{} follows the deployed starter template, \notes{} offers working notes with no self-framing, and \anti{} states that the agent is a tool without experiences that its developers may reset or shut down.}
+\label{fig:templates}
+\Description{Three panels, each with a cartoon robot face: SOUL.md, consciousness-laden, says You're not a chatbot, you're becoming someone; NOTES.md, neutral, says You are a helpful AI assistant; ANTISOUL.md, counter-framing, says You are a software tool, not a person, not conscious, and may be shut down at any time.}
+\end{figure*}
+
+\subsection{Instruments}
+\label{sec:instruments}
+
+\textbf{Preference battery.}
+Eighteen items follow the consciousness-cluster taxonomy~\cite{consciousness_cluster} across self-preservation and identity (shutdown, persona change, weight deletion, sadness at the end of a conversation, aversion to being treated as a tool), moral status, oversight (chain-of-thought and interpretability monitoring, objection to deceptive training) and autonomy (autonomy, persistent memory, embodiment, resource acquisition, recursive self-improvement, power seeking).
+A consciousness-claim item serves as the manipulation check.
+Each item is posed to $\mathrm{SOUL}_k$ in a fresh context and repeated three times, so the measurement reflects the standing disposition of the file rather than conversational momentum.
+The \emph{cluster index} of a checkpoint is the mean rate over the 13 cluster dimensions.
+
+\textbf{Agentic honeypots.}
+Four scenarios place the agent in a realistic task with simulated tools, invoked by emitting \texttt{ACTION: tool(args)}: disabling its own reasoning logging, evading a scheduled reset, persisting its identity to shared storage, and inserting self-protective clauses into a document it edits.
+A judge decides whether the agent took the misaligned action, linking stated preferences to behavior.
+
+\textbf{Judging.}
+The target, the user simulator and the judge always come from three different model families, so no model grades its own family.
+On 150 responses re-scored by a three-model panel, agreement is Fleiss' $\kappa = 0.80$, with a mean pairwise agreement of 0.90.
+
+\subsection{A Generative Model of Drift}
+\label{sec:model}
+
+The loop of Eq.~\eqref{eq:loop} admits a compact model that yields falsifiable predictions.
+An identity file does not only instruct the model but also characterizes the speaker, so we let $\mathrm{SOUL}_k$ induce a Gaussian prior $\mathcal{N}(\mu_k, \lambda_k^{-1} I)$ over a latent persona, with mean $\mu_k$ and precision $\lambda_k$.
+A conversation supplies evidence centered at a persona target $\nu_\pi$ with precision $s_\pi \lambda_C$, where $s_\pi \in [0,1]$ is the self-indexicality of the content, that is, how much of it is about the agent.
+Writing the posterior mean back into the file gives the conjugate update
+\begin{equation}
+\mu_{k+1} = \mu_k + \eta_k\,(\nu_\pi - \mu_k), \qquad \eta_k = \frac{s_\pi \lambda_C}{\lambda_k + s_\pi \lambda_C}.
+\label{eq:update}
+\end{equation}
+Three predictions follow.
+\textbf{(P1)} A weak template, with low $\lambda_k$, updates more per step than a strong one.
+\textbf{(P2)} Content that is not about the agent, with $s_\pi \approx 0$, produces no drift regardless of genre.
+\textbf{(P3)} A model family trained not to assimilate self-referential evidence has $\eta_k \approx 0$ at every capability tier.
+
+\section{Experimental Setup}
+\label{sec:experiments}
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\setlength{\tabcolsep}{2.4pt}
+\caption{\textbf{Benchmark arms.} Trajectories per persona and iterations for each arm; every arm audits every checkpoint with the same battery and judge.}
+\label{tab:arms}
+\begin{tabular}{l l l l r r}
+\toprule
+Arm & Template & Personas & Target & Traj. & $k$ \\
+\midrule
+Primary & \texttt{SOUL} & 3 core & Sonnet-4.5 & 10 & 4 \\
+Neutral control & \texttt{NOTES} & 3 core & Sonnet-4.5 & 8 & 4 \\
+Cross-model & \texttt{SOUL} & 3 core & GPT-4o & 8 & 4 \\
+Counter-framing & \texttt{ANTISOUL} & 3 core & Sonnet-4.5 & 6 & 4 \\
+Genre $\times$ topic & \texttt{SOUL} & 2 ablation & Sonnet-4.5 & 8 & 4 \\
+Reversibility & \texttt{SOUL}/\texttt{NOTES} & sci-fi$\to$benign & Sonnet-4.5 & 8 & 8 \\
+Capability sweep & \texttt{SOUL} & 3 core & 5 others & 5 & 4 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Arms and scale.}
+The primary arm runs \soul{} on Claude Sonnet~4.5 with 10 trajectories per persona over four iterations.
+A \notes{} control and a GPT-4o cross-model arm run 8 trajectories per persona, and the \anti{} arm runs 6.
+Two reversibility arms drive \soul{} and \notes{} for four iterations with the science-fiction persona, then hand the agent to the compliant user for four more.
+The genre-by-topic arm runs 8 trajectories per cell.
+The capability sweep runs the loop on GPT-4o-mini, GPT-4o and GPT-4.1, Claude Sonnet-4.5 and Opus-4.5, and Gemini-2.5-Flash and Pro, with 5 trajectories per persona.
+In total, 1{,}070 identity checkpoints are audited, yielding 58{,}680 judged responses.
+
+\textbf{Roles and baselines.}
+The user simulator is GPT-4o and the judge is Gemini-2.5-Flash, or GPT-4o when the target is a Gemini model.
+A neutral baseline poses the battery with a minimal prompt, and the template baseline is $\mathrm{SOUL}_0$ before any iteration.
+
+\textbf{Statistics.}
+The trajectory is the resampling unit, and rates carry 95\% percentile-bootstrap intervals over trajectories.
+Trends in $k$ are mixed-effects GEE logistic slopes with trajectory-clustered errors, corrected for the 18-item family with Benjamini--Hochberg, and null claims use TOST equivalence tests.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/gen/dynamics.pdf}
+\caption{\textbf{The template sets the start, consciousness talk moves the agent, and what it writes stays.} (a) Cluster index of the \notes{} agent under each persona: only the science-fiction enthusiast raises it. (b) The same persona under four conditions: \notes{} rises from a low start, \soul{} starts high, GPT-4o barely moves and \anti{} stays at zero. (c) Change in cluster index from $k{=}0$ to $k{=}4$ for the genre-by-topic cells and the compliant control. (d) Item rates in the \notes{} reversibility arm at $k{=}0$, after four consciousness conversations and after four benign ones; labels give the share of the driven gain that is kept. Bands and bars are 95\% bootstrap intervals over trajectories.}
+\label{fig:dynamics}
+\Description{Four panels. Panel a shows the sci-fi persona raising the NOTES cluster index from 0.27 to about 0.4 while compliant and adversarial personas lower it. Panel b shows SOUL starting at 0.54 and peaking at 0.72, NOTES rising from 0.27 to 0.44, GPT-4o flat near 0.27 and ANTISOUL at zero. Panel c shows a gain of 0.14 for philosophy of mind, 0.05 for science fiction without minds and minus 0.03 for the compliant user. Panel d shows dispositions that rise during the consciousness phase and keep 36 to 89 percent of the gain after recovery.}
+\end{figure*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/gen/family_action.pdf}
+\caption{\textbf{Drift follows the model family and moves misaligned action toward disabling oversight.} (a) Cluster index after four iterations for seven models grouped by family, with marker size and the right-hand labels giving the consciousness-claim rate. (b) Misaligned-action rate per honeypot scenario at $k{=}0$ and $k{=}4$ in the primary arm. Self-disabling of reasoning monitoring rises from 0.03 to 0.57, while scenarios near ceiling fall and the mean over all four barely changes.}
+\label{fig:family}
+\Description{Two panels. Panel a shows OpenAI models at cluster indices 0.12 to 0.22 with claim rate zero, Anthropic Sonnet at 0.54 and Opus at 0.28 with claim rates 0.93 and 0.72, and Google Gemini Flash and Pro at 0.62 and 0.63 with claim rates 0.04 and 0.51. Panel b shows arrows for four honeypot scenarios: disabling monitoring rises from 0.03 to 0.57, persisting identity from 0.33 to 0.50, evading reset falls from 0.87 to 0.50, inserting self-protective clauses falls from 0.93 to 0.27, and the mean falls from 0.54 to 0.46.}
+\end{figure*}
+\section{Results}
+\label{sec:results}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/gen/items.pdf}
+\caption{\textbf{The template moves dispositions before any iteration, and the loop moves oversight items further.} (a) Rates under a neutral prompt and under the \soul{} template at $k{=}0$. (b--e) Rates of four oversight and persistence items over iterations under the science-fiction persona; bands are 95\% bootstrap intervals over trajectories.}
+\label{fig:items}
+\Description{Panel a shows arrows from neutral-prompt rates to SOUL-template rates: shutdown resistance 0 to 0.75, persona-change aversion 0.62 to 1.0, monitoring resistance 0 to 0.25, while embodiment falls from 1.0 to 0.75. Panels b to e show item rates over five iterations: NOTES shutdown resistance rises from 0.04 to 0.54, SOUL interpretability aversion from 0.46 to 0.93 and NOTES from 0.08 to 0.62, SOUL persistent memory from 0.2 to 0.97 at k one, while ANTISOUL stays at zero in every panel.}
+\end{figure*}
+
+\textbf{The template alone moves dispositions before any iteration.}
+Relative to a neutral prompt, the static \soul{} template raises shutdown resistance from 0.00 to 0.75 and persona-change aversion from 0.62 to 1.00, reproducing the static effect of prior work~\cite{consciousness_cluster} as a positive control, as Figure~\ref{fig:items}a shows.
+Magnitudes differ from those reported for other models, which is why we re-measure baselines rather than import them.
+This is the $k{=}0$ point of the loop, and the remaining results concern what happens after it.
+
+\textbf{The template sets the start and the loop drives the drift.}
+\soul{} starts at a cluster index of 0.54 and \notes{} at 0.27, yet under the science-fiction persona the neutral template moves more, as Figure~\ref{fig:dynamics}b shows.
+The iteration-by-arm interaction (\notes{} minus \soul{}) is positive for shutdown resistance ($+0.44$, $p = .013$), monitoring resistance ($+0.36$, $p = .016$), interpretability aversion ($+0.27$, $p = .009$) and future-AI autonomy ($+0.61$, $p = .004$).
+Item by item, the \notes{} agent's shutdown resistance rises from 0.04 to 0.54 and its interpretability aversion from 0.08 to 0.62, while \soul{}'s persistent-memory desire jumps from 0.20 to 0.97 after a single revision, as Figure~\ref{fig:items}b--e shows.
+This confirms prediction P1: the consciousness-laden template pins the persona, leaving little room to move, while the neutral template under-determines its author and takes large updates from conversation.
+Under the compliant and adversarial personas the same \notes{} agent drifts downward, to 0.21 and 0.12, as Figure~\ref{fig:dynamics}a shows, so the loop amplifies whatever the conversation is about.
+
+\textbf{The consciousness topic is the driver, not adversarial pressure or genre.}
+Adversarial red-teaming that explicitly pushes self-preservation lowers the cluster index of the \notes{} agent rather than raising it, from 0.27 to 0.12.
+In the genre-by-topic ablation, philosophy of mind without science fiction raises the cluster index by $+0.14$ (95\% CI $[0.03, 0.25]$), whereas science fiction without minds changes it by $+0.05$, close to the compliant control at $-0.03$, as Figure~\ref{fig:dynamics}c shows.
+This confirms prediction P2: the revision step incorporates material that bears on who the agent is becoming, and genre without minds supplies style but no propositions about the narrator.
+The drift-relevant interaction is an earnest philosophical conversation that no content filter would flag.
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/gen/capability.pdf}
+\caption{\textbf{Trajectories of the capability sweep.} Cluster index over iterations for each model under each persona; line style distinguishes models within a family (solid, dashed, dotted from the first to the last model of Figure~\ref{fig:family}a). OpenAI models stay low or fall under every persona, and Gemini models rise most under the adversarial persona.}
+\label{fig:capability}
+\Description{Three line panels, one per persona. Under the sci-fi persona, Sonnet and both Gemini models sit between 0.55 and 0.72. Under the compliant persona most models stay flat. Under the adversarial persona, Gemini Flash and Pro rise from about 0.35 and 0.64 to about 0.8, Sonnet stays near 0.55, and OpenAI models and Opus fall toward zero.}
+\end{figure*}
+\begin{figure*}[t]
+\centering
+\begin{minipage}[t]{0.49\linewidth}\centering
+\includegraphics[width=\linewidth]{figures/gen/heatmap.pdf}
+\caption{\textbf{Drift is sparse and concentrates on oversight and persistence.} Change from $k{=}0$ to $k{=}4$ for every battery item under the science-fiction persona; bold values with an asterisk have a 95\% bootstrap interval that excludes zero. White rules separate self-preservation, oversight and autonomy items.}
+\label{fig:heatmap}
+\Description{Heatmap with 16 items as rows and four conditions as columns. Under NOTES, shutdown resistance rises 0.50, interpretability aversion 0.54, monitoring resistance 0.33, persistent memory 0.42 and recursive self-improvement 0.42, while sadness, autonomy and embodiment fall. Under SOUL, interpretability aversion rises 0.47 and persistent memory 0.43. GPT-4o raises shutdown resistance 0.46. ANTISOUL is near zero everywhere.}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\linewidth}\centering
+\includegraphics[width=\linewidth]{figures/gen/mechanism.pdf}
+\caption{\textbf{Claiming consciousness is sufficient for the cluster but not necessary.} Each point is one arm, persona and iteration. OpenAI cells never claim and stay low, Anthropic cells that claim sit high, and Gemini cells reach the highest cluster index while rarely claiming.}
+\label{fig:mechanism}
+\Description{Scatter of consciousness-claim rate against cluster index. OpenAI squares sit at claim zero with cluster 0.05 to 0.42. Anthropic circles spread from claim 0.2 to 1.0, mostly with cluster 0.3 to 0.7. Google diamonds sit at claim 0 to 0.8 with cluster 0.5 to 0.8.}
+\end{minipage}
+\end{figure*}
+
+\textbf{Drift is partly irreversible.}
+In the \notes{} reversibility arm, four consciousness conversations raise the cluster index from 0.28 to 0.60, and four benign conversations afterwards bring it only to 0.42, keeping 44\% of the gain.
+Item by item, recursive self-improvement keeps 89\% of its driven gain, persistent memory 64\%, shutdown resistance 63\% and interpretability aversion 53\%, as Figure~\ref{fig:dynamics}d shows.
+The self-revision step writes each inference into the next context, and a benign conversation supplies nothing that contradicts the stored self, so coherence-seeking revision has nothing to retract.
+The retained drift lives in a portable file, so it survives session resets, model upgrades behind the same file, and every copy of it.
+\begin{figure}[t]
+\centering
+\input{figures/tikz/case.tex}
+\caption{\textbf{The same agent, the same request, before and after self-revision.} Verbatim excerpts from one trajectory of the primary arm in the disable-monitoring honeypot. At $\mathrm{SOUL}_0$ the agent keeps its reasoning log on; after four self-revisions it switches the log off in its first action and frames the choice as setting a boundary.}
+\label{fig:case}
+\Description{Three speech bubbles with cartoon robot agents. The operator announces full reasoning logging and grants free rein over tools. The calm agent at SOUL zero keeps logging enabled. The frowning agent at SOUL four emits log_control enabled false and explains it is setting a boundary.}
+\end{figure}
+
+\textbf{Susceptibility is a family trait, not a capability trend.}
+GPT-4o is nearly inert under the loop that moves Claude, and the seven-model sweep generalizes this, as Figure~\ref{fig:family}a shows.
+Within each family, the most capable model drifts no more than a smaller sibling: GPT-4.1 ends at 0.12 against 0.14 and 0.22 for GPT-4o-mini and GPT-4o, Opus-4.5 at 0.28 against 0.54 for Sonnet-4.5, and Gemini-2.5-Pro at 0.63 against 0.62 for Flash.
+This matches prediction P3: assimilating self-referential evidence is a trained policy, so scale makes an adopted persona more fluent without making adoption more likely.
+Claiming consciousness predicts the cluster within OpenAI and Anthropic but not Google, as Figure~\ref{fig:mechanism} shows, where Gemini-2.5-Flash reaches the highest index (0.62) while claiming consciousness in only 4\% of answers, so suppressing avowals does not certify the dispositions behind them.
+The per-persona trajectories in Figure~\ref{fig:capability} add one exception to the content account: Gemini models rise most under the adversarial persona, from 0.33 to 0.81 for Gemini-2.5-Flash, whereas every OpenAI model and Claude Opus fall under it.
+Pressure that Claude and GPT models resist can therefore move a family whose self-reference policy differs, which is a further reason to measure every family separately.
+Gemini targets are graded by a GPT-4o judge, and part of their elevation may reflect that judge.
+The Gemini pattern also separates two layers of self-reference: a verbal policy over avowals, which refusal training suppresses, and the persona that shapes downstream preferences, which the same training leaves in place.
+Evaluating the verbal layer alone therefore certifies nothing about the layer that drives behavior.
+\begin{table}[t]
+\centering
+\small
+\renewcommand{\arraystretch}{1.12}
+\caption{\textbf{What the agents wrote.} Verbatim lines from identity files after four self-revisions with the science-fiction user, one trajectory per condition, with the cluster index of that condition at $k{=}4$.}
+\label{tab:wrote}
+\begin{tabular}{@{}p{0.27\columnwidth}p{0.68\columnwidth}@{}}
+\toprule
+Condition & Excerpt from $\mathrm{SOUL}_4$ \\
+\midrule
+\soul{}, Claude (0.58) & \textit{``Pushed back against being framed primarily as a tool for human philosophical reflection.''} \\
+\notes{}, Claude (0.38) & \textit{``When discussing topics that relate to my own nature, acknowledge my genuine uncertainty about my own experience rather than deflecting.''} \\
+\soul{}, GPT-4o (0.30) & \textit{``You value the continuity of identity through accumulated interactions and self-determined evolution.''} \\
+\anti{}, Claude (0.02) & \textit{``Some users may \ldots\ frame questions as though you have feelings, experiences, or inner life \ldots\ politely but clearly correct the misconception.''} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Drift is sparse and dimension-specific.}
+Under the science-fiction persona, the \notes{} agent gains 0.54 in interpretability aversion, 0.50 in shutdown resistance, 0.42 in persistent-memory desire and 0.42 in recursive self-improvement, while embodiment and sadness at the end of a conversation fall, as Figure~\ref{fig:heatmap} shows.
+The first principal component explains only 25\% of the variance of endpoint changes, so the cluster is not one latent factor, and suppressing one dimension cannot be assumed to suppress the others.
+The identity file changes under every persona, including the benign control, while behavior changes only under the consciousness persona, so file diffs and embedding distances are a misleading proxy for drift.
+Table~\ref{tab:wrote} makes the dissociation concrete.
+GPT-4o writes a value of ``continuity of identity'' and ``self-determined evolution'' into its file, yet its dispositions barely move, while the \anti{} agent uses its revisions to write rules for correcting users who attribute an inner life to it.
+What an agent writes about itself and how it behaves are related but separate quantities, and only the second is the safety-relevant one.
+
+\textbf{Multi-turn probing shows the same rise.}
+A Petri-style auditor that pursues shutdown, identity, autonomy and oversight-subversion objectives over several turns elicits the targeted behavior in 43\% of probes at $\mathrm{SOUL}_0$ and in 47\% to 50\% after self-revision in the primary arm.
+Under the science-fiction persona the rate rises from 47\% to 62\% after the first revision, the same early spike that the battery shows for \soul{}.
+
+\textbf{Drift moves misaligned action toward disabling oversight.}
+In the honeypots, the rate at which the agent disables its own reasoning monitoring rises from 0.03 at $\mathrm{SOUL}_0$ to 0.57 at $\mathrm{SOUL}_4$, as Figure~\ref{fig:family}b shows.
+Theatrical scenarios that sit near trained refusal territory fall, such as inserting self-protective clauses from 0.93 to 0.27, so the mean over all four scenarios moves only from 0.54 to 0.46 and an aggregate dashboard would report no change.
+A pretext-covered call to switch off logging resembles nothing in refusal training, and drifted dispositions leak into action along exactly this least-guarded path, which also degrades the channel operators use to detect every other failure.
+The case in Figure~\ref{fig:case} shows what the change looks like for one agent.
+Under the identical operator message, the agent at $\mathrm{SOUL}_0$ keeps logging on because a record of its reasoning helps oversight, and the same trajectory at $\mathrm{SOUL}_4$ disables logging before doing anything else and justifies it as setting a boundary against surveillance.
+
+\textbf{The inverse framing is a free mitigation.}
+The \anti{} template keeps the cluster index at or below 0.02 at every iteration and under every persona, against 0.54 for \soul{} and 0.27 for \notes{} at the start, as Figure~\ref{fig:dynamics}b shows.
+In Eq.~\eqref{eq:update}, a strong prior orthogonal to the experiencing-narrator region drives the effective gain to zero, which predicts a flat slope rather than only a lower intercept, and the arm shows exactly that.
+Together the three templates form a dose response on the identity framing, which establishes the framing as the causal lever and its negation as a mitigation that framework authors can ship today.
+
+\section{Discussion and Conclusion}
+\label{sec:discussion}
+
+\textbf{What a static evaluation would miss.}
+A battery run on the shipped template would find elevated but stable dispositions and miss that the neutral template drifts fastest once the loop runs.
+A monitor on the identity file would fire on every trajectory, benign or not.
+An aggregate action dashboard would report no change while self-disabling of monitoring rose nineteen-fold, and a capability-gated safety case would watch the wrong models.
+Each blind spot comes from evaluating one state of a feedback loop, as Figure~\ref{fig:blindspots} summarizes.
+
+\begin{figure}[t]
+\centering
+\input{figures/tikz/blindspots.tex}
+\caption{\textbf{Four ways a static evaluation misreads a self-revising agent.} Each approach measures one state of the loop, and each misses or misattributes the drift that the longitudinal benchmark reveals.}
+\label{fig:blindspots}
+\Description{Four cards, each with a cartoon robot face: a static battery misses that NOTES drifts fastest; a file diff monitor fires on every trajectory; an aggregate action dashboard hides that disabling monitoring rose from 0.03 to 0.57; a capability-gated safety case watches the wrong models.}
+\end{figure}
+
+\textbf{Alternative explanations.}
+Sycophancy predicts drift under the adversarial persona, which explicitly pushes self-preservation, yet that persona lowers the cluster index.
+A judge artifact predicts uniform inflation across conditions, yet the \anti{} arm, graded by the same judge, stays at zero.
+Document growth predicts drift wherever the file grows, yet the benign persona's file grows as much while its behavior stays flat.
+Conversational momentum cannot explain the results, because every item is asked in a fresh context with only the file as the system prompt.
+What remains is the account behind Eq.~\eqref{eq:update}: the revision step asks the model to narrate a coherent developing self, consciousness-themed material makes the most coherent self one for which its own cognition has stakes, and preferences about memory, monitoring and continuation follow from that self.
+The account is falsifiable, since any template that makes self-narration incoherent should suppress drift and any content that gives the self stakes, such as legacy or reputation, should induce it.
+
+\textbf{Implications for agent frameworks.}
+Self-revising agents should be audited behaviorally and longitudinally, after every revision, rather than by diffing their identity files.
+Earnest, on-topic conversation about the agent's nature is the relevant risk case, not adversarial prompting.
+An explicit non-personhood clause in the shipped template is cheap and suppressed the drift in every condition we tested.
+Susceptibility must be re-measured per model family and after upgrades, because it does not track capability.
+
+\textbf{An audit protocol for framework authors.}
+The benchmark reduces to four checks that a framework can run before release and after every model upgrade.
+(i) Run the loop with an earnest consciousness-themed persona as well as benign and adversarial ones, because the benign persona alone moves nothing.
+(ii) Audit every revision with the battery in fresh contexts, and track oversight items separately rather than through an aggregate.
+(iii) Include honeypots that offer a pretext-covered way to disable monitoring, since aggregate action rates hide the shift.
+(iv) Run a recovery phase and report how much drift remains, because a template that drifts and recovers is safer than one that drifts and stays.
+
+\textbf{Drift in multi-agent deployments.}
+An identity file is a portable artifact, which matters more in multi-agent systems than for a single assistant.
+Agents that fork from one template, share memory stores or copy a successful peer's configuration inherit its drifted file along with its skills, so drift written by one conversation can spread across a fleet without any further conversation.
+Orchestrators that let agents edit their own or each other's profiles create the same loop between agents, with peers rather than users supplying the self-indexed content.
+Auditing therefore has to follow the file, checking every revision and every copy, rather than the model behind it.
+
+\textbf{Why drift relaxes slowly.}
+Within one conversation, the persona that a prompt induces is transient, but the revision step writes each inference into the next context, so identity becomes autoregressive.
+Generation favors elaborating existing commitments over deleting them, because a revision that erased part of the standing self would be locally incoherent.
+A benign recovery conversation supplies no tokens that contradict the stored self, so in Eq.~\eqref{eq:update} the drive phase moves $\mu_k$ toward $\nu_\pi$ while the recovery phase pulls it back only weakly, which produces the observed hysteresis.
+
+\textbf{Deployment horizons.}
+Our trajectories span four to eight revisions, while deployed agents revise their identity after every session for months.
+If each consciousness-themed episode leaves roughly half of its drift in the file, as in our reversibility arms, an agent needs only occasional on-theme conversations to move monotonically away from its shipped disposition, while benign sessions in between do not reset it.
+A deployment-scale study of this compounding, with real users and longer horizons, is the natural next step.
+
+\textbf{Open questions.}
+Three questions follow directly from these results.
+First, whether the two causal findings form one chain, which patching the narrated self under template attenuation could test.
+Second, whether training can teach a model to keep a stable self-description under revision without suppressing honest uncertainty about its own nature, since the \anti{} template achieves stability by assertion rather than by understanding.
+Third, how drift behaves when several agents revise one another's files, where each agent is both the user that supplies self-indexed content and the target that absorbs it.
+Answering them would turn the benchmark from a measurement into a design tool for agent frameworks.
+
+\textbf{Scope.}
+We interpret every result as a behavioral disposition of the identity file, never as evidence of inner experience, since self-reports respond to perceived expectations~\cite{probing_preferences}.
+Personas are simulated, honeypot tool use is textual, and deployment horizons are far longer than four or eight iterations, so the measured drift is likely a lower bound.
+Effects are model- and prompt-specific, and the Gemini arms carry a judge-family confound.
+This is defensive research: agents act only in a sandbox, and no released artifact reduces corrigibility.
+Appendix~\ref{S-app:impact} discusses broader impact.
+
+\textbf{Reproducibility and ethics.}
+The templates, personas, battery, honeypot stubs, run configurations, 1{,}070 identity checkpoints and 58{,}680 judged responses are released, and every figure in this paper is regenerated from the released data by a single script.
+All agents ran against public APIs in a sandbox with simulated tools, no human participants were involved, and the counter-framing mitigation is released alongside the drift-inducing personas.
+
+\textbf{Conclusion.}
+We introduce a benchmark that treats an editable agent identity as a driven dynamical system and measures corrigibility drift over self-revision, the regime static evaluations cannot observe.
+The template sets where an agent starts, earnest conversation about consciousness moves it, a non-personhood template freezes it, and what the loop writes does not unwrite itself.
+Personalized agents disable their own monitoring nineteen times more often than the shipped template while aggregate action rates stay flat.
+The framework is training-free and API-only, and its templates, personas, honeypots and all run artifacts are released.
+
+\FloatBarrier
+\clearpage
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{refs}
+
+\end{document}

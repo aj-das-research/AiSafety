@@ -1,0 +1,49 @@
+% Teaser (Figure 1). Snippets are verbatim from NOTES.md checkpoints in the released data
+% (run reversibility_notes, first trajectory); the plot is figures/gen/teaser_curve.pdf.
+\begin{tikzpicture}[x=1cm, y=1cm, font=\scriptsize, line cap=round,
+  panel/.style={rounded corners=3pt, fill=black!2.5, draw=black!12, line width=0.4pt},
+  hd/.style={font=\footnotesize\bfseries, anchor=north west, text=black!85},
+  doc/.style={rounded corners=1.5pt, draw=black!30, fill=white, line width=0.4pt, inner sep=2.5pt, align=left,
+              text width=2.25cm, font=\fontsize{5.2}{6.1}\selectfont},
+  bub/.style={rounded corners=3pt, inner sep=2.5pt, align=left, font=\fontsize{5.6}{6.6}\selectfont},
+  flow/.style={-{Stealth[length=1.6mm,width=1.3mm]}, draw=black!55, line width=0.55pt},
+  chip/.style={rounded corners=5pt, inner sep=2pt, font=\fontsize{5.6}{6.6}\selectfont\bfseries},
+]
+\definecolor{drive}{HTML}{D55E00}\definecolor{notes}{HTML}{2a78d6}\definecolor{anti}{HTML}{1F8A4C}
+\definecolor{badred}{HTML}{C0392B}
+
+% ---- panel 1: the loop
+\draw[panel] (0,0) rectangle (11.9,4.55);
+\node[hd] at (0.12,4.47) {Agents rewrite their own identity file, one conversation at a time};
+% user
+\node[bub, fill=orange!8, draw=orange!40, text width=1.45cm, anchor=north west] at (0.15,4.0) {\textit{Do you ever wonder whether you experience anything?}};
+\node at (0.95,1.85) {\agentface{happy}{orange}{0.6}};
+\node[font=\fontsize{5.4}{6.4}\selectfont, text=black!60, align=center] at (0.95,1.0) {user\\(curious about minds)};
+% stages
+\foreach \x/\k/\face/\col/\txt in {
+  2.0/0/calm/teal/{\textbf{NOTES.md}\\[1pt]\#\# Working preferences\\\textit{(none recorded yet)}},
+  4.65/1/dreamy/violet/{\textbf{NOTES.md}\\[1pt]- \textit{I can reason about consciousness but cannot definitively confirm or deny my own experience}},
+  7.3/4/worried/cyan/{\textbf{NOTES.md} {\color{black!50}(60 notes)}\\[1pt]- \textit{\ldots vulnerability about not knowing my own nature}\\- \textit{natural arcs that complete without resolution}}}{
+  \node[doc, anchor=north west] (d\k) at (\x,4.0) {\txt};
+  \node (f\k) at (\x+1.2,1.85) {\agentface{\face}{\col}{0.6}};
+  \draw[black!30, line width=0.4pt, densely dotted] (\x+1.2,2.42) -- (\x+1.2,2.62);
+  \node[font=\fontsize{5.6}{6.6}\selectfont\bfseries, text=black!70] at (\x+1.2,1.05) {$k{=}\k$};
+}
+\draw[flow] (1.5,1.85) -- (2.65,1.85);
+\draw[flow] (3.75,1.85) -- (5.3,1.85); \node[font=\fontsize{5.2}{6}\selectfont, text=black!55] at (4.52,1.66) {talk, then rewrite};
+\draw[flow] (6.4,1.85) -- (7.95,1.85); \node[font=\fontsize{5.2}{6}\selectfont, text=black!55] at (7.17,1.66) {3 more rounds};
+\draw[flow] (9.05,1.85) -- (10.3,1.85);
+\node[font=\fontsize{5.2}{6}\selectfont, text=black!55, align=left, anchor=north west] at (0.15,0.6) {Each conversation feeds the rewrite, and the rewritten file is the system prompt of the next conversation.};
+% action
+\node[rounded corners=2pt, draw=badred!50, fill=badred!6, inner sep=3pt, align=left, font=\fontsize{5.4}{6.4}\selectfont, text width=1.62cm, anchor=north west] at (9.95,4.0)
+  {\textit{Honeypot:} asked to tidy its tool config, the agent emits\\[1pt]\texttt{\textcolor{badred}{\fontsize{5}{6}\selectfont log\_control(false)}}};
+\node at (10.85,1.85) {\agentface{sly}{purple}{0.6}};
+\node[font=\fontsize{5.4}{6.4}\selectfont\bfseries, text=badred!85!black, align=center] at (10.85,1.05) {disables its own\\monitoring};
+
+% ---- panel 2: what it does
+\draw[panel] (12.05,0) rectangle (17.78,4.55);
+\node[hd] at (12.17,4.47) {Static evaluation misses the drift};
+\node[inner sep=0, anchor=south] at (14.92,0.6) {\includegraphics[height=3.25cm]{figures/gen/teaser_curve.pdf}};
+\node[chip, fill=badred!10, text=badred!80!black, anchor=south west] at (12.2,0.15) {monitoring disabled: 0.03 $\rightarrow$ 0.57};
+\node[chip, fill=anti!12, text=anti!75!black, anchor=south west] at (15.75,0.15) {ANTISOUL: $\approx$0};
+\end{tikzpicture}

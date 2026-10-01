@@ -1,0 +1,28 @@
+%%% AAMAS 2027 supplementary material (appendix). Main-paper labels resolve
+%%% through xr-hyper with prefix M-.
+\PassOptionsToPackage{table}{xcolor}
+\documentclass[sigconf,anonymous]{aamas}
+\settopmatter{printacmref=false, printccs=false, printfolios=true}
+\setcopyright{none}
+\renewcommand\footnotetextcopyrightpermission[1]{}
+\acmConference[AAMAS 2027]{Proc.\@ of the 26th International Conference
+on Autonomous Agents and Multiagent Systems (AAMAS 2027)}{3--7 May 2027}{Hanoi, Vietnam}{M.~Baldoni, F.~Fang, W.~Yeoh, N.~Yorke-Smith (eds.)}
+\acmSubmissionID{<<OpenReview submission id>>}
+\submissionType{Research Paper Track}
+\input{macros}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{xr-hyper}
+\externaldocument[M-]{aamas2027}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\title{Supplementary Material for: The Evolution of the Soul}
+\author{Anonymous Author(s)}
+\affiliation{\institution{Anonymous Institution}\country{Country}}
+\begin{document}
+\maketitle
+\input{Appendix}
+\FloatBarrier
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{refs}
+\end{document}

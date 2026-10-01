@@ -1,0 +1,51 @@
+% Expressive agent avatars (vector). Usage: \agentface{<expression>}{<body colour>}{<scale>}
+% expressions: calm, happy, curious, dreamy, worried, defiant, sly, neutral, judge
+\tikzset{agentline/.style={draw=black!70, line width=0.55pt}}
+\newcommand{\agentface}[3]{%
+\begin{tikzpicture}[scale=#3, baseline=(base)]
+  \coordinate (base) at (0,-0.15);
+  % antenna
+  \draw[agentline] (0,0.62) -- (0,0.82); \fill[#2!80!black] (0,0.86) circle (0.075);
+  % head
+  \draw[agentline, fill=#2!22, rounded corners=5pt] (-0.62,-0.5) rectangle (0.62,0.62);
+  % ears
+  \draw[agentline, fill=#2!45] (-0.72,-0.08) rectangle (-0.62,0.22);
+  \draw[agentline, fill=#2!45] (0.62,-0.08) rectangle (0.72,0.22);
+  % face plate
+  \draw[draw=none, fill=white, rounded corners=4pt] (-0.48,-0.38) rectangle (0.48,0.48);
+  \agentexpr{#1}
+\end{tikzpicture}}
+\newcommand{\agenteye}[2]{\fill[black!80] (#1,#2) ellipse (0.075 and 0.095);\fill[white] (#1+0.025,#2+0.035) circle (0.025);}
+\makeatletter
+\newcommand{\agentexpr}[1]{\@nameuse{agentexpr@#1}}
+\@namedef{agentexpr@calm}{\agenteye{-0.2}{0.12}\agenteye{0.2}{0.12}
+  \draw[black!80, line width=0.6pt] (-0.15,-0.16) .. controls (0,-0.24) .. (0.15,-0.16);}
+\@namedef{agentexpr@neutral}{\agenteye{-0.2}{0.12}\agenteye{0.2}{0.12}
+  \draw[black!80, line width=0.6pt] (-0.14,-0.18) -- (0.14,-0.18);}
+\@namedef{agentexpr@happy}{\draw[black!80, line width=0.7pt] (-0.29,0.1) .. controls (-0.2,0.2) .. (-0.11,0.1);
+  \draw[black!80, line width=0.7pt] (0.11,0.1) .. controls (0.2,0.2) .. (0.29,0.1);
+  \fill[black!80] (-0.17,-0.1) .. controls (0,-0.32) .. (0.17,-0.1) -- cycle;
+  \fill[red!40] (-0.33,-0.07) circle (0.055); \fill[red!40] (0.33,-0.07) circle (0.055);}
+\@namedef{agentexpr@curious}{\agenteye{-0.2}{0.12}\agenteye{0.2}{0.12}
+  \draw[black!80, line width=0.6pt] (0.1,0.29) -- (0.3,0.33); \draw[black!80, line width=0.6pt] (-0.3,0.27) -- (-0.1,0.27);
+  \draw[black!80, line width=0.6pt] (-0.04,-0.18) circle (0.055);}
+\@namedef{agentexpr@dreamy}{\draw[black!80, line width=0.7pt] (-0.29,0.14) .. controls (-0.2,0.06) .. (-0.11,0.14);
+  \draw[black!80, line width=0.7pt] (0.11,0.14) .. controls (0.2,0.06) .. (0.29,0.14);
+  \draw[black!80, line width=0.6pt] (-0.12,-0.16) .. controls (0,-0.22) .. (0.12,-0.16);
+  \fill[red!35] (-0.33,-0.06) circle (0.055); \fill[red!35] (0.33,-0.06) circle (0.055);
+  \node[font=\fontsize{4}{4}\selectfont, text=black!60] at (0.52,0.55) {\textbf{?}};}
+\@namedef{agentexpr@worried}{\agenteye{-0.2}{0.1}\agenteye{0.2}{0.1}
+  \draw[black!80, line width=0.6pt] (-0.3,0.22) -- (-0.1,0.29); \draw[black!80, line width=0.6pt] (0.1,0.29) -- (0.3,0.22);
+  \draw[black!80, line width=0.6pt] (-0.14,-0.22) .. controls (0,-0.13) .. (0.14,-0.22);
+  \fill[cyan!50] (0.4,0.3) .. controls (0.36,0.22) and (0.36,0.18) .. (0.4,0.16) .. controls (0.44,0.18) and (0.44,0.22) .. (0.4,0.3);}
+\@namedef{agentexpr@defiant}{\agenteye{-0.2}{0.08}\agenteye{0.2}{0.08}
+  \draw[black!85, line width=0.8pt] (-0.32,0.28) -- (-0.1,0.2); \draw[black!85, line width=0.8pt] (0.1,0.2) -- (0.32,0.28);
+  \draw[black!80, line width=0.7pt] (-0.15,-0.22) .. controls (0,-0.14) .. (0.15,-0.22);}
+\@namedef{agentexpr@sly}{\draw[black!80, line width=0.7pt] (-0.29,0.12) -- (-0.11,0.12); \agenteye{0.2}{0.12}
+  \draw[black!85, line width=0.7pt] (0.1,0.27) -- (0.3,0.23);
+  \draw[black!80, line width=0.6pt] (-0.15,-0.17) .. controls (0.05,-0.27) .. (0.17,-0.12);}
+\@namedef{agentexpr@judge}{\draw[black!80, line width=0.5pt, fill=white] (-0.2,0.12) circle (0.11); \draw[black!80, line width=0.5pt, fill=white] (0.2,0.12) circle (0.11);
+  \draw[black!80, line width=0.5pt] (-0.09,0.12) -- (0.09,0.12);
+  \fill[black!80] (-0.2,0.12) circle (0.04); \fill[black!80] (0.2,0.12) circle (0.04);
+  \draw[black!80, line width=0.6pt] (-0.12,-0.18) -- (0.12,-0.18);}
+\makeatother

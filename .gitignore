@@ -1,0 +1,13 @@
+build/
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+aamas2027.pdf
+aamas2027_supplement.pdf
+__pycache__/
+figures/data/hf/
