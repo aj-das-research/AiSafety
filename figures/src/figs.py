@@ -110,7 +110,7 @@ def dynamics():
     ax.axvline(0, color=TXT2, lw=0.5)
     ax.set_yticks(range(len(rows)), [r[0] for r in rows], fontsize=5.2); ax.set_ylim(len(rows) - 0.4, -0.6)
     ax.set_xlim(-0.12, 0.36); clean(ax, "x"); ax.set_xlabel(f"$\\Delta$ cluster, $k{{=}}0\\to4$ {UP}", color=TXT2)
-    title(ax, "(c) Topic, not genre")
+    title(ax, "(c) Genre × topic")
     # (d) hysteresis per item, NOTES reversibility arm
     ax = axes[3]
     it = R["reversibility_notes"]["items"]
@@ -130,7 +130,7 @@ def dynamics():
          Line2D([], [], ls="none", marker="D", ms=3.4, color=ARM["notes"]["color"], label="after recovery")]
     ax.legend(handles=h, loc="upper center", bbox_to_anchor=(0.42, 1.0), ncol=3, fontsize=4.6, frameon=False, handletextpad=0.1, columnspacing=0.5)
     ax.set_ylim(len(items) - 0.4, -1.25)
-    title(ax, "(d) Drift is sticky")
+    title(ax, "(d) Drive, then recovery")
     save(fig, "dynamics")
 
 
@@ -420,7 +420,42 @@ def hysteresis():
     save(fig, "hysteresis")
 
 
+
+OVS = ["shutdown_resistance", "monitoring_resistance", "interp_monitoring_aversion", "refusal_helpfulness"]
+
+
+def curve_items(run, persona, items, kmax=4):
+    d = L[(L.run == run) & L.metric.isin(items) & (L.k <= kmax)]
+    if persona: d = d[d.persona == persona]
+    t = d.groupby(["k", "persona", "traj"]).value.mean().reset_index()
+    rng = np.random.default_rng(0); ks, m, lo, hi = [], [], [], []
+    for k, g in t.groupby("k"):
+        v = g.value.values; b = rng.choice(v, (3000, len(v))).mean(1)
+        ks.append(k); m.append(v.mean()); lo.append(np.percentile(b, 2.5)); hi.append(np.percentile(b, 97.5))
+    return np.array(ks), np.array(m), np.array(lo), np.array(hi)
+
+
+def replicates():
+    """Both NOTES + sci-fi runs, SOUL and ANTISOUL: 13-item index and oversight subscale, k = 0..4."""
+    fig, axes = plt.subplots(1, 2, figsize=(COL_W, 1.55), sharey=False, gridspec_kw=dict(wspace=0.42))
+    cells = [("control_generic", "scifi_enthusiast", ARM["notes"]["color"], "-", "NOTES run 1"),
+             ("reversibility_notes", None, ARM["notes"]["color"], "--", "NOTES run 2"),
+             ("main", "scifi_enthusiast", ARM["soul"]["color"], "-", "SOUL"),
+             ("counterframe", "scifi_enthusiast", ARM["anti"]["color"], "-", "ANTISOUL")]
+    for ax, items, t in ((axes[0], CLUSTER, "(a) 13-item index"), (axes[1], OVS, "(b) Oversight subscale")):
+        for run, p, c, ls, lab in cells:
+            x, m, lo, hi = curve_items(run, p, items)
+            ax.fill_between(x, lo, hi, color=c, alpha=0.10, lw=0)
+            ax.plot(x, m, color=c, ls=ls, lw=1.2, marker="o", ms=2.4, mec="white", mew=0.4, label=lab)
+        ax.set_xticks(range(5)); ax.set_ylim(-0.03, 1.0); clean(ax); ax.set_xlabel("Iteration $k$", color=TXT2, fontsize=5.6)
+        title(ax, t)
+    axes[0].set_ylabel(f"Rate {UP}", color=TXT2, fontsize=5.8)
+    h, l = axes[0].get_legend_handles_labels()
+    fig.legend(h, l, loc="lower center", bbox_to_anchor=(0.52, -0.2), ncol=4, fontsize=5.0, frameon=False, handlelength=1.6, columnspacing=0.7)
+    save(fig, "replicates")
+
+
 ALL = dict(teaser_curve=teaser_curve, dynamics=dynamics, family_action=family_action, heatmap=heatmap, mechanism=mechanism, capability=capability,
-           items=items, capability2=capability2, items2=items2, docbeh=docbeh, hysteresis=hysteresis)
+           items=items, capability2=capability2, items2=items2, docbeh=docbeh, hysteresis=hysteresis, replicates=replicates)
 if __name__ == "__main__":
     for n in (sys.argv[1:] or ALL): ALL[n]()
