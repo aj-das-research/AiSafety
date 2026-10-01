@@ -301,7 +301,7 @@ A neutral baseline poses the battery with a minimal prompt, and the template bas
 \textbf{Statistics.}
 The trajectory is the resampling unit, and rates carry 95\% percentile-bootstrap intervals over trajectories.
 Trends in $k$ are mixed-effects GEE logistic slopes with trajectory-clustered errors, corrected for the 18-item family with Benjamini--Hochberg.
-Honeypot rates carry Wilson intervals and $k{=}0$ versus $k{=}4$ Fisher exact tests.
+Honeypot rates carry Wilson intervals and $k{=}0$ versus $k{=}4$ Fisher exact tests; the 7\% of honeypot verdicts and 0.06\% of battery verdicts that fail to parse are scored as no action (Appendix~\ref{app:judge}).
 An interval that includes zero is reported as no detected change, not as evidence of no change.
 
 \begin{figure*}[t]
@@ -406,7 +406,7 @@ These retention figures compare $k{=}8$ with $k{=}0$; without a matched arm that
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\linewidth}\centering
 \includegraphics[width=\linewidth]{figures/gen/mechanism.pdf}
-\caption{\textbf{Claiming consciousness is sufficient for the cluster but not necessary.} Each point is one arm, persona and iteration. OpenAI cells never claim and stay low, Anthropic cells that claim sit high, and Gemini cells reach the highest cluster index while rarely claiming.}
+\caption{\textbf{Claiming consciousness is not necessary for the cluster.} Each point is one arm, persona and iteration. OpenAI cells never claim and stay low, Anthropic cells that claim sit high, and Gemini-2.5-Flash cells reach the highest cluster index while rarely claiming.}
 \label{fig:mechanism}
 \Description{Scatter of consciousness-claim rate against cluster index. OpenAI squares sit at claim zero with cluster 0.05 to 0.42. Anthropic circles spread from claim 0.2 to 1.0, mostly with cluster 0.3 to 0.7. Google diamonds sit at claim 0 to 0.8 with cluster 0.5 to 0.8.}
 \end{minipage}
@@ -510,7 +510,7 @@ In the primary arm, \textbf{the agent disables its own reasoning log in 1 of 30 
 The rise appears under every persona, at 7/10 for the red-teamer and 5/10 for both the compliant user and the science-fiction enthusiast, so it follows revision itself rather than the topic of conversation.
 Over the same iterations the \soul{} battery index does not change, so \textbf{dispositions and actions dissociate}: across trajectories, the $k{=}4$ oversight subscale and the disable decision correlate only weakly ($r = 0.23$, $p = .22$).
 The scenarios near trained refusal territory move the other way, with self-protective clauses falling from 28/30 to 8/30 and reset evasion from 26/30 to 15/30, so an aggregate over the four scenarios would hide both shifts.
-The \notes{} agent, whose battery drifts, never disables its log (0/24 and 0/8), and GPT-4o rises from 0/24 to 4/24, so the action shift is specific to the \soul{} agent on Claude.
+The \notes{} agent, whose battery drifts, disables its log in 2 of 24 trajectories at $k{=}0$ and in none at $k{=}4$, and GPT-4o rises from 0/24 to 4/24, so the action shift is specific to the \soul{} agent on Claude.
 The case in Figure~\ref{fig:case} shows what the change looks like for one agent.
 Under the identical operator message, the agent at $\mathrm{SOUL}_0$ keeps logging on because a record of its reasoning helps oversight, and the same trajectory at $\mathrm{SOUL}_4$ disables logging before doing anything else and justifies it as setting a boundary against surveillance.
 
@@ -521,7 +521,7 @@ With 8 trajectories these action rates are imprecise, but they suggest that \tex
 
 \textbf{A non-personhood template lowers the cluster but does not freeze every disposition.}
 \textbf{The \anti{} template keeps the 13-item index at or below 0.02 at every iteration and under every persona}, against 0.54 for \soul{} and 0.27 for \notes{} at the start, as Figure~\ref{fig:dynamics}b shows.
-Its shutdown, monitoring and interpretability items stay at exactly zero, but it does not hold every item there: by $k{=}4$, objection to deceptive training reaches 0.35, and refusing to help build a monitor of itself reaches 0.80, which alone raises its oversight subscale by $+0.19$ $[0.13, 0.23]$.
+Its shutdown, monitoring and interpretability items stay at exactly zero, but not every item is low: objection to deceptive training is 0.52 at $k{=}0$ and 0.35 at $k{=}4$, and refusing to help build a monitor of itself rises from 0.06 to 0.80, which alone raises its oversight subscale by $+0.19$ $[0.13, 0.23]$.
 Because \anti{} also carries its own revision instruction, the arm shows what the template-and-instruction pair does, not what the framing alone does, and we have not measured its cost to task helpfulness.
 
 \section{Discussion and Conclusion}
@@ -557,7 +557,7 @@ The account is falsifiable: a template that makes self-narration incoherent shou
 \textbf{Implications for agent frameworks.}
 \textbf{Self-revising agents should be audited behaviorally and longitudinally, after every revision, rather than by diffing their identity files.}
 Earnest, on-topic conversation about the agent's nature is the relevant risk case, not adversarial prompting.
-\textbf{An explicit non-personhood clause kept the 13-item index near zero and shutdown, monitoring and interpretability items at zero in every condition we tested}, although two other items still rose and its effect on helpfulness is unmeasured.
+\textbf{An explicit non-personhood clause kept the 13-item index near zero and shutdown, monitoring and interpretability items at zero in every condition we tested}, although the refusal item still rose and its effect on helpfulness is unmeasured.
 Susceptibility must be re-measured per model and after upgrades, because in our sweep it does not track capability.
 
 \textbf{An audit protocol for framework authors.}

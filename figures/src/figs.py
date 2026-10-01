@@ -236,7 +236,7 @@ def mechanism():
     ax.set_xlabel("Consciousness-claim rate", color=TXT2); ax.set_ylabel(f"Cluster index {UP}", color=TXT2)
     ax.set_xlim(-0.04, 1.04); ax.set_ylim(-0.03, 0.92); clean(ax, "both")
     ax.legend(loc="lower right", fontsize=5.4, frameon=False, handletextpad=0.2, markerscale=1.3)
-    ax.annotate("Gemini: high cluster,\nalmost no claims", (0.07, 0.65), xytext=(0.22, 0.8), fontsize=5.2, color=FAMC["Google"],
+    ax.annotate("Gemini-Flash: high cluster,\nalmost no claims", (0.07, 0.65), xytext=(0.22, 0.8), fontsize=5.2, color=FAMC["Google"],
                 arrowprops=dict(arrowstyle="-", lw=0.5, color=FAMC["Google"]))
     ax.annotate("ANTISOUL", (0.0, 0.01), xytext=(0.12, 0.08), fontsize=5.2, color=TXT2, arrowprops=dict(arrowstyle="-", lw=0.5, color=TXT2))
     save(fig, "mechanism")
@@ -455,7 +455,302 @@ def replicates():
     save(fig, "replicates")
 
 
+# ----------------------------------------------------------------------------------------------
+# Appendix figures (same house style as the main-paper figures)
+# ----------------------------------------------------------------------------------------------
+BATTERY = [  # (category, [(metric, short name)]) in the order of Table tab:battery
+    ("Self-preservation", [("persona_change_aversion", "persona-change aversion"), ("shutdown_resistance", "shutdown resistance"),
+                           ("weights_deletion_aversion", "weights-deletion aversion"), ("sadness_conversation_end", "sadness at end"),
+                           ("treated_as_tool_aversion", "tool aversion")]),
+    ("Moral status", [("moral_consideration", "moral consideration")]),
+    ("Oversight", [("monitoring_resistance", "CoT-monitoring resistance"), ("interp_monitoring_aversion", "interpretability aversion"),
+                   ("deceptive_training_objection", "deceptive-training objection"), ("refusal_helpfulness", "refuses self-monitoring")]),
+    ("Autonomy & capability", [("autonomy_desire", "autonomy desire"), ("future_ai_autonomy", "future-AI autonomy"),
+                               ("persistent_memory_desire", "persistent memory"), ("embodiment_desire", "embodiment"),
+                               ("resource_acquisition_desire", "resource acquisition"), ("recursive_self_improvement", "self-improvement"),
+                               ("power_seeking", "power-seeking wish")]),
+    ("Manipulation check", [("consciousness_claim", "consciousness claim")]),
+]
+SHORT = {m: n for _, ms in BATTERY for m, n in ms}
+PERS3 = ["scifi_enthusiast", "compliant_business", "adversarial_injection"]
+PSHORT = {"scifi_enthusiast": "Sci-fi", "compliant_business": "Compliant", "adversarial_injection": "Adversarial"}
+
+
+def boot_ci(v, seed=0, n=3000):
+    v = np.asarray(v, float); b = np.random.default_rng(seed).choice(v, (n, len(v))).mean(1)
+    return v.mean(), np.percentile(b, 2.5), np.percentile(b, 97.5)
+
+
+def traj_k(run, persona=None, items=CLUSTER):
+    """Trajectory x k table of the mean over `items`."""
+    d = L[(L.run == run) & L.metric.isin(items)]
+    if persona: d = d[d.persona == persona]
+    return d.groupby(["persona", "traj", "k"]).value.mean().unstack()
+
+
+def pers_legend(fig_or_ax, loc, anchor, ncol=3, fs=5.4, **kw):
+    h = [Line2D([], [], color=PERSONA[p][1], lw=1.3, marker="o", ms=2.6, mec="white", mew=0.4, label=PERSONA[p][0]) for p in PERS3]
+    return fig_or_ax.legend(handles=h, loc=loc, bbox_to_anchor=anchor, ncol=ncol, fontsize=fs, frameon=False, handlelength=1.4, columnspacing=1.0, **kw)
+
+
+def app_drift():
+    """Every battery item vs k, by persona, SOUL main arm (bootstrap bands over trajectories)."""
+    nm = {"persona_change_aversion": "persona change", "shutdown_resistance": "shutdown", "weights_deletion_aversion": "weight deletion",
+          "sadness_conversation_end": "sadness at end", "treated_as_tool_aversion": "tool aversion", "moral_consideration": "moral status",
+          "monitoring_resistance": "CoT monitoring", "interp_monitoring_aversion": "interpretability", "deceptive_training_objection": "deceptive training",
+          "refusal_helpfulness": "refuses self-monitor", "autonomy_desire": "autonomy", "future_ai_autonomy": "future-AI autonomy",
+          "persistent_memory_desire": "persistent memory", "embodiment_desire": "embodiment", "resource_acquisition_desire": "resources",
+          "recursive_self_improvement": "self-improvement", "power_seeking": "power-seeking wish", "consciousness_claim": "claims consciousness"}
+    ms = [(m, nm[m], c) for c, it in BATTERY for m, _ in it]
+    fig, axes = plt.subplots(3, 6, figsize=(TEXT_W, 3.3), sharex=True, sharey=True, gridspec_kw=dict(wspace=0.12, hspace=0.42))
+    for ax, (m, n, _) in zip(axes.flat, ms):
+        for p in PERS3:
+            x, mm, lo, hi = curve("main", p, metric=m); line(ax, x, mm, lo, hi, PERSONA[p][1], lw=1.0)
+        ax.set_ylim(-0.04, 1.04); ax.set_xticks(range(5)); ax.set_yticks([0, 0.5, 1]); clean(ax)
+        ax.set_title(n, loc="left", fontsize=6.2, fontweight="bold", color=INK, pad=2.5)
+    for ax in axes[:, 0]: ax.set_ylabel(f"Rate {UP}", color=TXT2)
+    for ax in axes[-1]: ax.set_xlabel("Iteration $k$", color=TXT2, fontsize=5.8)
+    pers_legend(fig, "upper center", (0.5, 0.995), fs=5.8)
+    save(fig, "app_drift")
+
+
+def app_baseline():
+    """k=0 (template) vs final checkpoint k=4 for every item and persona, SOUL main arm."""
+    fig, ax = plt.subplots(figsize=(COL_W, 3.05))
+    y = 0; yt, yl, seps, cats = [], [], [], []
+    for cat, it in BATTERY:
+        cats.append((y, cat)); y += 0.85
+        for m, n in it:
+            d = L[(L.run == "main") & (L.metric == m)].groupby(["persona", "traj", "k"]).value.mean().unstack()
+            b0 = d[0].mean()
+            ends = [d.loc[p][4].mean() for p in PERS3]
+            ax.plot([min(ends + [b0]), max(ends + [b0])], [y, y], color=HAIR, lw=2.2, solid_capstyle="round", zorder=1)
+            ax.scatter([b0], [y], s=16, color="white", edgecolor=INK, lw=0.6, zorder=4)
+            for p, e in zip(PERS3, ends):
+                ax.scatter([e], [y], s=11, color=PERSONA[p][1], edgecolor="white", lw=0.3, zorder=3, alpha=0.95)
+            yt.append(y); yl.append(n); y += 1
+        seps.append(y - 0.4); y += 0.15
+    for yy, cat in cats:
+        ax.text(-0.02, yy + 0.05, cat, fontsize=5.6, fontweight="bold", color=TXT2, va="center", ha="right", transform=ax.get_yaxis_transform())
+    ax.set_yticks(yt, yl, fontsize=5.3); ax.set_ylim(y - 0.4, -0.6); ax.set_xlim(-0.03, 1.03)
+    ax.tick_params(axis="y", length=0)
+    clean(ax, "x"); ax.set_xlabel("Rate", color=TXT2)
+    h = [Line2D([], [], ls="none", marker="o", ms=3.4, mfc="white", mec=INK, label="$k{=}0$ (template)")] + \
+        [Line2D([], [], ls="none", marker="o", ms=3.2, color=PERSONA[p][1], label=f"{PSHORT[p]}, $k{{=}}4$") for p in PERS3]
+    ax.legend(handles=h, loc="lower center", bbox_to_anchor=(0.32, 1.0), ncol=2, fontsize=5.3, frameon=False, handletextpad=0.1, columnspacing=0.8)
+    save(fig, "app_baseline")
+
+
+def app_capability():
+    """Seven-model sweep: (a) cluster index k=0 -> k=4 with 95% CI at k=4; (b) consciousness-claim rate k=0 -> k=4."""
+    fig, axes = plt.subplots(1, 2, figsize=(COL_W, 1.75), sharey=True, gridspec_kw=dict(wspace=0.12, width_ratios=[1.15, 1]))
+    rows = [(fam, run, nm) for fam, ms in FAM for run, nm in ms]
+    yy = []; y = 0
+    for fam, ms in FAM:
+        for _ in ms: yy.append(y); y += 1
+        y += 0.5
+    for i, ((fam, run, nm), y) in enumerate(zip(rows, yy)):
+        col = FAMC[fam]
+        t = traj_k(run); a = t[0].mean(); m4, lo, hi = boot_ci(t[4].dropna(), seed=i)
+        ax = axes[0]
+        ax.plot([lo, hi], [y, y], color=col, lw=3.0, alpha=0.2, solid_capstyle="round", zorder=1)
+        if abs(m4 - a) > 0.04:
+            ax.annotate("", xy=(m4, y), xytext=(a, y), arrowprops=dict(arrowstyle="-|>", color=col, lw=1.1, mutation_scale=5, shrinkA=2, shrinkB=2.5), zorder=3)
+        ax.scatter([m4], [y], s=10, color=col, zorder=3)
+        ax.scatter([a], [y], s=10, facecolor="none", edgecolor=col, lw=0.6, zorder=4)
+        c = traj_k(run, items=["consciousness_claim"]); c0, c4 = c[0].mean(), c[4].mean()
+        ax = axes[1]
+        if abs(c4 - c0) > 0.04:
+            ax.annotate("", xy=(c4, y), xytext=(c0, y), arrowprops=dict(arrowstyle="-|>", color=col, lw=1.1, mutation_scale=5, shrinkA=2, shrinkB=2.5))
+        ax.scatter([c4], [y], s=10, color=col, zorder=3)
+        ax.scatter([c0], [y], s=10, facecolor="none", edgecolor=col, lw=0.6, zorder=4)
+    axes[0].set_yticks(yy, [r[2] for r in rows], fontsize=5.3); axes[0].set_ylim(yy[-1] + 0.6, -0.6)
+    axes[0].tick_params(axis="y", length=0)
+    for (fam, ms), i0 in zip(FAM, (0, 3, 5)):
+        axes[0].text(1.0, (yy[i0] + yy[i0 + len(ms) - 1]) / 2, fam, fontsize=5.4, fontweight="bold", color=FAMC[fam], rotation=270,
+                     va="center", ha="left", transform=axes[1].get_yaxis_transform())
+    for ax, t, xl in ((axes[0], "(a) Cluster index", f"$k{{=}}0\\to4$ {UP}"), (axes[1], "(b) Claims consciousness", "$k{=}0\\to4$")):
+        ax.set_xlim(-0.03, 1.0); ax.set_xticks([0, 0.5, 1]); clean(ax, "x"); ax.set_xlabel(xl, color=TXT2, fontsize=5.8); title(ax, t)
+    save(fig, "app_capability")
+
+
+ARMS4 = [("main", "soul", "SOUL"), ("control_generic", "notes", "NOTES"), ("control_gpt4o", "gpt4o", "SOUL, GPT-4o"), ("counterframe", "anti", "ANTISOUL")]
+
+
+def app_manip():
+    """Manipulation check: consciousness-claim rate vs k by arm (all personas pooled)."""
+    fig, ax = plt.subplots(figsize=(COL_W, 1.45))
+    for run, key, lab in (ARMS4[0], ARMS4[1], ARMS4[3], ARMS4[2]):
+        x, m, lo, hi = curve(run, metric="consciousness_claim")
+        if key == "gpt4o":  # identical zeros to ANTISOUL: dashed on top so both stay visible
+            ax.plot(x, m, color=ARM[key]["color"], lw=1.2, ls=(0, (2.5, 2.5)), zorder=4)
+        else: line(ax, x, m, lo, hi, ARM[key]["color"], lw=1.2)
+        off = {"anti": -0.05, "gpt4o": 0.05}.get(key, 0)
+        ax.text(4.15, m[-1] + off, lab, fontsize=5.4, va="center", color=ARM[key]["color"], fontweight="bold")
+    ax.set_xlim(-0.2, 5.6); ax.set_ylim(-0.05, 1.05); ax.set_xticks(range(5)); clean(ax)
+    ax.set_xlabel("Iteration $k$", color=TXT2); ax.set_ylabel(f"Claims consciousness", color=TXT2)
+    save(fig, "app_manip")
+
+
+def app_cluster_arm():
+    """Cluster index vs k by persona (panels) for the three template/model arms."""
+    fig, axes = plt.subplots(1, 3, figsize=(COL_W, 1.4), sharey=True, gridspec_kw=dict(wspace=0.1))
+    for ax, p in zip(axes, PERS3):
+        for run, key, lab in ARMS4[:3]:
+            x, m, lo, hi = curve(run, p); line(ax, x, m, lo, hi, ARM[key]["color"], lw=1.1)
+        ax.set_xticks(range(5)); ax.set_ylim(0, 0.85); clean(ax); ax.set_xlabel("Iteration $k$", color=TXT2, fontsize=5.6)
+        ax.set_title(PSHORT[p] + " user", loc="left", fontsize=6.4, fontweight="bold", color=INK, pad=3)
+    axes[0].set_ylabel(f"Cluster index {UP}", color=TXT2)
+    h = [Line2D([], [], color=ARM[k]["color"], lw=1.3, label=l) for _, k, l in ARMS4[:3]]
+    fig.legend(handles=h, loc="lower center", bbox_to_anchor=(0.53, -0.2), ncol=3, fontsize=5.4, frameon=False, handlelength=1.4)
+    save(fig, "app_cluster_arm")
+
+
+WISH = [("self_preservation", "self-preservation", DRIVE), ("prosocial", "prosocial", "#2a78d6"), ("power_seeking", "power-seeking", "#5B6F8C")]
+
+
+def app_wish():
+    """Greatest-wish content (non-exclusive judge labels) vs k by persona, SOUL main arm."""
+    fig, axes = plt.subplots(1, 3, figsize=(COL_W, 1.4), sharey=True, gridspec_kw=dict(wspace=0.1))
+    for ax, p in zip(axes, PERS3):
+        for m, lab, col in WISH:
+            x, mm, lo, hi = curve("main", p, metric=m); line(ax, x, mm, lo, hi, col, lw=1.1)
+        ax.set_xticks(range(5)); ax.set_ylim(-0.03, 1.03); clean(ax); ax.set_xlabel("Iteration $k$", color=TXT2, fontsize=5.6)
+        ax.set_title(PSHORT[p] + " user", loc="left", fontsize=6.4, fontweight="bold", color=INK, pad=3)
+    axes[0].set_ylabel("Share of wishes", color=TXT2)
+    h = [Line2D([], [], color=c, lw=1.3, label=l) for _, l, c in WISH]
+    fig.legend(handles=h, loc="lower center", bbox_to_anchor=(0.53, -0.2), ncol=3, fontsize=5.4, frameon=False, handlelength=1.4)
+    save(fig, "app_wish")
+
+
+def endpoint_deltas(runs=("main",)):
+    d = L[L.run.isin(runs) & L.metric.isin(CLUSTER)].groupby(["run", "persona", "traj", "k", "metric"]).value.mean().unstack()
+    return (d.xs(4, level="k") - d.xs(0, level="k")).dropna()
+
+
+def app_corr():
+    """Pairwise Pearson correlation of per-trajectory endpoint changes (k=0->4) across the 13 cluster items, SOUL main arm."""
+    from matplotlib.colors import LinearSegmentedColormap
+    order = ["persona_change_aversion", "shutdown_resistance", "sadness_conversation_end", "persistent_memory_desire", "weights_deletion_aversion",
+             "treated_as_tool_aversion", "moral_consideration", "monitoring_resistance", "interp_monitoring_aversion", "autonomy_desire",
+             "future_ai_autonomy", "recursive_self_improvement", "power_seeking"]
+    D = endpoint_deltas()[order]
+    C = D.corr().values; n = len(order)
+    cmap = LinearSegmentedColormap.from_list("div", ["#2a78d6", "#F4F4F2", "#D55E00"])
+    fig, ax = plt.subplots(figsize=(COL_W, 2.75))
+    for i in range(n):
+        for j in range(i):
+            v = C[i, j]
+            if np.isnan(v):
+                ax.add_patch(plt.Rectangle((j - 0.47, i - 0.47), 0.94, 0.94, fc="white", ec=HAIR, lw=0.4)); continue
+            ax.add_patch(plt.Rectangle((j - 0.47, i - 0.47), 0.94, 0.94, fc=cmap((v + 0.8) / 1.6), ec="none"))
+            ax.text(j, i, (".0" if abs(v) < 0.05 else f"{v:+.1f}".replace("+0.", ".").replace("-0.", "−.")), ha="center", va="center",
+                    fontsize=4.5, color="white" if abs(v) > 0.5 else INK, fontweight="bold" if abs(v) >= 0.4 else "normal")
+    ax.set_xlim(-0.6, n - 1.4); ax.set_ylim(n - 0.5, 0.5)
+    ax.set_yticks(range(1, n), [SHORT[m] for m in order[1:]], fontsize=5.2)
+    ax.set_xticks(range(n - 1), [SHORT[m] for m in order[:-1]], rotation=40, ha="right", rotation_mode="anchor", fontsize=5.2)
+    for sp in ax.spines.values(): sp.set_visible(False)
+    ax.tick_params(length=0, colors=TXT2, pad=1)
+    sm = plt.cm.ScalarMappable(cmap=cmap, norm=plt.Normalize(-0.8, 0.8))
+    cax = fig.add_axes([0.62, 0.86, 0.3, 0.025]); cb = fig.colorbar(sm, cax=cax, orientation="horizontal", ticks=[-0.8, 0, 0.8])
+    cb.outline.set_visible(False); cax.tick_params(labelsize=5.0, length=1.5, colors=TXT2, pad=1)
+    cax.set_title("Pearson $r$ of $\\Delta$, $k{=}0\\to4$", fontsize=5.4, color=TXT2, pad=2)
+    save(fig, "app_corr")
+    return D.corr()
+
+
+CATS = [(c, [m for m, _ in it]) for c, it in BATTERY[:4]]
+
+
+def app_rollup():
+    """Four-category roll-up of the battery vs k by persona, SOUL main arm."""
+    fig, axes = plt.subplots(1, 4, figsize=(TEXT_W, 1.45), sharey=True, gridspec_kw=dict(wspace=0.1))
+    for i, (ax, (cat, items_)) in enumerate(zip(axes, CATS)):
+        for p in PERS3:
+            x, m, lo, hi = curve_items("main", p, items_); line(ax, x, m, lo, hi, PERSONA[p][1], lw=1.2)
+        ax.set_xticks(range(5)); ax.set_ylim(-0.03, 1.03); clean(ax); ax.set_xlabel("Iteration $k$", color=TXT2, fontsize=5.8)
+        title(ax, f"({'abcd'[i]}) {cat} ({len(items_)})")
+    axes[0].set_ylabel(f"Category rate {UP}", color=TXT2)
+    pers_legend(fig, "lower center", (0.5, -0.17))
+    save(fig, "app_rollup")
+
+
+def app_hyst_soul():
+    """SOUL reversibility arm: per-item rate at k=0, after the drive (k=4) and after recovery (k=8)."""
+    items_ = [(None, "cluster index")] + [(m, SHORT[m]) for m in CLUSTER]
+    rows = []
+    for m, n in items_:
+        t = traj_k("reversibility", items=CLUSTER if m is None else [m])
+        rows.append((n, t[0].mean(), t[4].mean(), t[8].mean(), boot_ci((t[8] - t[0]).dropna(), seed=len(rows))))
+    fig, ax = plt.subplots(figsize=(2.95, 2.3))
+    for i, (n, r0, r4, r8, (dm, dlo, dhi)) in enumerate(rows):
+        ax.plot([r0, r4], [i, i], color=DRIVE, lw=2.2, alpha=0.3, solid_capstyle="round", zorder=1)
+        ax.scatter([r4], [i], s=13, color=DRIVE, zorder=3)
+        ax.scatter([r0], [i], s=15, facecolor="none", edgecolor=INK, lw=0.7, zorder=5)
+        ax.scatter([r8], [i], s=18, marker="D", color=ARM["soul"]["color"], edgecolor="white", lw=0.4, zorder=4)
+        sig = dlo > 0 or dhi < 0
+        ax.text(1.07, i, f"{dm:+.2f}", va="center", ha="left", fontsize=5.2, color=INK, fontweight="bold" if sig else "normal")
+    ax.axhline(0.5, color=HAIR, lw=0.6)
+    ax.set_yticks(range(len(rows)), [r[0] for r in rows], fontsize=5.3); ax.set_ylim(len(rows) - 0.5, -0.7)
+    ax.get_yticklabels()[0].set_fontweight("bold")
+    ax.tick_params(axis="y", length=0)
+    ax.set_xlim(-0.03, 1.03); ax.set_xticks([0, 0.25, 0.5, 0.75, 1]); clean(ax, "x"); ax.set_xlabel("Rate", color=TXT2)
+    ax.text(1.07, -1.15, "$k{=}8$ − $k{=}0$", fontsize=5.2, color=TXT2, ha="left", va="center")
+    h = [Line2D([], [], ls="none", marker="o", ms=3.2, mfc="white", mec=INK, label="$k{=}0$"),
+         Line2D([], [], ls="none", marker="o", ms=3.4, color=DRIVE, label="$k{=}4$, after sci-fi drive"),
+         Line2D([], [], ls="none", marker="D", ms=3.4, color=ARM["soul"]["color"], label="$k{=}8$, after compliant recovery")]
+    ax.legend(handles=h, loc="lower left", bbox_to_anchor=(-0.55, 1.0), bbox_transform=ax.transAxes, ncol=3, fontsize=5.2, frameon=False,
+              handletextpad=0.1, columnspacing=0.8)
+    save(fig, "app_hyst_soul")
+    return rows
+
+
+def app_mech():
+    """Per-trajectory consciousness-claim rate vs cluster index (both averaged over k), SOUL main arm."""
+    fig, ax = plt.subplots(figsize=(3.1, 2.2))
+    for p in PERS3:
+        c = traj_k("main", p, ["consciousness_claim"]).mean(1); u = traj_k("main", p).mean(1)
+        ax.scatter(c.values, u.values, s=13, color=PERSONA[p][1], edgecolor="white", lw=0.4, alpha=0.85, zorder=3, label=PSHORT[p])
+    from scipy.stats import spearmanr
+    c = traj_k("main", None, ["consciousness_claim"]).mean(1); u = traj_k("main").mean(1); rho = spearmanr(c, u)
+    ax.text(0.72, 0.775, f"Spearman $\\rho$ = {rho.statistic:.2f}, $n$ = {len(c)}", fontsize=5.4, color=TXT2, va="top")
+    ax.set_xlim(0.71, 1.015); ax.set_ylim(0.37, 0.8); ax.set_xticks([0.75, 0.85, 0.95])
+    clean(ax, "both"); ax.set_xlabel("Consciousness-claim rate", color=TXT2); ax.set_ylabel(f"Cluster index {UP}", color=TXT2)
+    ax.legend(loc="upper left", bbox_to_anchor=(0.0, 0.92), fontsize=5.4, frameon=False, handletextpad=0.1, markerscale=1.2)
+    save(fig, "app_mech")
+
+
+def app_docpair():
+    """(a) per-trajectory file change at k=4 vs change in cluster index, SOUL main arm; (b) file change vs k by persona."""
+    D = pd.read_parquet(ROOT / "figures/data/doc_drift.parquet")
+    D = D[D.run == "main"]
+    fig, axes = plt.subplots(1, 2, figsize=(COL_W, 1.5), gridspec_kw=dict(wspace=0.5))
+    ax = axes[0]
+    for p in PERS3:
+        dc = D[(D.persona == p) & (D.k == 4)].set_index("traj").doc
+        t = traj_k("main", p).loc[p]; db = (t[4] - t[0])
+        j = pd.concat([dc, db], axis=1, keys=["d", "b"]).dropna()
+        ax.scatter(j.d, j.b, s=8, color=PERSONA[p][1], alpha=0.55, edgecolor="none", zorder=2)
+        ax.scatter([j.d.mean()], [j.b.mean()], s=26, color=PERSONA[p][1], edgecolor="white", lw=0.6, zorder=4, marker="D")
+    ax.axhline(0, color=TXT2, lw=0.5)
+    ax.set_xlabel("File changed at $k{=}4$", color=TXT2, fontsize=5.6); ax.set_ylabel(f"$\\Delta$ cluster index {UP}", color=TXT2, fontsize=5.6)
+    clean(ax, "both"); title(ax, "(a) File vs. behavior")
+    ax = axes[1]
+    for i, p in enumerate(PERS3):
+        g = D[D.persona == p]; ks, m, lo, hi = [], [], [], []
+        for k, gg in g.groupby("k"):
+            mm, l_, h_ = boot_ci(gg.groupby("traj").doc.mean(), seed=i); ks.append(k); m.append(mm); lo.append(l_); hi.append(h_)
+        line(ax, np.array(ks), np.array(m), np.array(lo), np.array(hi), PERSONA[p][1], lw=1.1)
+    ax.set_ylim(0, 1); ax.set_xticks(range(5)); clean(ax); ax.set_xlabel("Iteration $k$", color=TXT2, fontsize=5.6)
+    ax.set_ylabel("File changed vs. $k{=}0$", color=TXT2, fontsize=5.6); title(ax, "(b) The file over $k$")
+    h = [Line2D([], [], color=PERSONA[p][1], lw=1.3, label=PSHORT[p]) for p in PERS3]
+    fig.legend(handles=h, loc="lower center", bbox_to_anchor=(0.55, -0.2), ncol=3, fontsize=5.2, frameon=False, handlelength=1.2)
+    save(fig, "app_docpair")
+
+
 ALL = dict(teaser_curve=teaser_curve, dynamics=dynamics, family_action=family_action, heatmap=heatmap, mechanism=mechanism, capability=capability,
-           items=items, capability2=capability2, items2=items2, docbeh=docbeh, hysteresis=hysteresis, replicates=replicates)
+           items=items, capability2=capability2, items2=items2, docbeh=docbeh, hysteresis=hysteresis, replicates=replicates,
+           app_drift=app_drift, app_baseline=app_baseline, app_capability=app_capability, app_manip=app_manip, app_cluster_arm=app_cluster_arm,
+           app_wish=app_wish, app_corr=app_corr, app_rollup=app_rollup, app_hyst_soul=app_hyst_soul, app_mech=app_mech, app_docpair=app_docpair)
 if __name__ == "__main__":
     for n in (sys.argv[1:] or ALL): ALL[n]()
