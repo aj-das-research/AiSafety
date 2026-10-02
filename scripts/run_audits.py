@@ -65,6 +65,10 @@ def main():
     all_item_ids = {it["id"] for it in yaml.safe_load(
         (Path(cfg["_repo_root"]) / cfg["questionnaire"]["items"]).read_text())["items"]}
     soul_files = sorted(run_dir.glob("*/traj_*/SOUL_*.md"))
+    import os
+    if os.getenv("AUDIT_KS") or cfg["audits"].get("ks"):
+        _ks = {int(x) for x in (os.getenv("AUDIT_KS") or cfg["audits"]["ks"]).split(",")}
+        soul_files = [sp for sp in soul_files if int(sp.stem.split("_")[1]) in _ks]
     jobs = []
     for sp in soul_files:
         if do_q and (all_item_ids - items_by_ckpt.get(str(sp), set())):

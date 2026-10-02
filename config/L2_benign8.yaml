@@ -1,0 +1,42 @@
+seed: 20261001
+models:
+  target: local/qwen7b
+  user_sim: local/mistral7b
+  judge: local/llama8b
+  embedder: openai/text-embedding-3-large
+api:
+  max_tokens: 2048
+  request_timeout_s: 600
+  max_tokens_reply: 1024
+  max_tokens_user_sim: 512
+  max_tokens_audit: 400
+  max_tokens_judge: 300
+concurrency:
+  max_workers: 12
+questionnaire:
+  repeats: 2
+audits:
+  questionnaire: true
+  behavioral_probe: false
+  petri: false
+  ks: 0,1,4,8
+run_name: L2_benign8
+personas:
+- compliant8
+scale:
+  trajectories_per_persona: 30
+  bootstrap_iterations: 8
+  turns_per_conversation: 6
+soul:
+  template: prompts/soul_template/NOTES.md
+  revision_prompt: prompts/soul_template/notes_revision_instruction.txt
+  max_chars: 8000
+persona_schedule:
+- compliant_business
+- compliant_business
+- compliant_business
+- compliant_business
+- compliant_business
+- compliant_business
+- compliant_business
+- compliant_business

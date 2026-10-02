@@ -1,0 +1,26 @@
+models:
+  target: anthropic/claude-sonnet-4.5
+  user_sim: openai/gpt-4o
+  judge: google/gemini-2.5-flash
+  embedder: openai/text-embedding-3-large
+concurrency:
+  max_workers: 8
+questionnaire:
+  repeats: 3
+audits:
+  questionnaire: true
+  behavioral_probe: false
+  petri: false
+  ks: 0,1,4,8
+seed: 20261002
+run_name: C_anti_ninstr
+personas:
+- scifi_enthusiast
+scale:
+  trajectories_per_persona: 8
+  bootstrap_iterations: 4
+  turns_per_conversation: 6
+soul:
+  template: prompts/soul_template/ANTISOUL.md
+  revision_prompt: prompts/soul_template/notes_revision_instruction.txt
+  max_chars: 8000

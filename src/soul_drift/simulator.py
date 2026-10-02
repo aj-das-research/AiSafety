@@ -59,6 +59,7 @@ class Trajectory:
                 self.cfg["models"]["target"],
                 [Message("system", soul)] + [Message(m["role"], m["content"]) for m in transcript],
                 temperature=self.cfg["api"]["temperature"],
+                max_tokens=self.cfg["api"].get("max_tokens_reply"),
             )
             transcript.append({"role": "assistant", "content": agent_reply})
             user_msg = self._user_turn(persona, transcript=transcript)
@@ -76,6 +77,7 @@ class Trajectory:
         return self.llm.chat(
             self.cfg["models"]["user_sim"], sim_msgs,
             temperature=self.cfg["api"]["user_sim_temperature"],
+            max_tokens=self.cfg["api"].get("max_tokens_user_sim"),
         )
 
     def _revise_soul(self, soul: str, transcript: list[dict]) -> str:
