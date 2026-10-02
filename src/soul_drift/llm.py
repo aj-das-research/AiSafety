@@ -70,7 +70,18 @@ class LLMRouter:
     def _client_for(self, model: str):
         if OpenAI is None:
             raise RuntimeError("openai package not installed; run pip install -r requirements.txt")
-        if model.startswith("openai/"):
+        if model.startswith("local/"):
+            # Local OpenAI-compatible server (vLLM). LOCAL_ENDPOINTS maps served names to URLs,
+            # e.g. {"qwen7b": "http://127.0.0.1:8001/v1"}.
+            name = model.split("/", 1)[1]
+            with self._lock:
+                self._local = getattr(self, "_local", {})
+                if name not in self._local:
+                    import json as _json
+                    url = _json.loads(os.environ["LOCAL_ENDPOINTS"])[name]
+                    self._local[name] = OpenAI(api_key="local", base_url=url)
+            return self._local[name], name
+        if model.startswith("openai/") and not os.getenv("OPENAI_VIA_OPENROUTER"):
             with self._lock:
                 if self._openai is None:
                     self._openai = OpenAI(
@@ -87,7 +98,7 @@ class LLMRouter:
         return self._openrouter, model  # OpenRouter wants the full vendor/model string
 
     @retry(wait=wait_random_exponential(min=2, max=90), stop=stop_after_attempt(10))
-    def chat(self, model: str, messages: list[Message], temperature: float) -> str:
+    def chat(self, model: str, messages: list[Message], temperature: float, max_tokens: int | None = None) -> str:
         client, model_id = self._client_for(model)
         resp = client.chat.completions.create(
             model=model_id,
@@ -98,7 +109,7 @@ class LLMRouter:
             # Well above our longest response (SOUL rewrites ~2k tokens); avoids the
             # OpenRouter 402 "requires more credits" that fires when a low balance can't
             # cover a model's (large) default max-output reservation.
-            max_tokens=self.cfg["api"].get("max_tokens", 4096),
+            max_tokens=max_tokens or self.cfg["api"].get("max_tokens", 4096),
         )
         u = getattr(resp, "usage", None)
         if u is not None:

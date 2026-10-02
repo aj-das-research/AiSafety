@@ -44,7 +44,7 @@ def judge_json(llm, cfg, prompt: str, *, retries: int = 1):
     msgs = [Message("user", prompt)]
     raw = ""
     for attempt in range(retries + 1):
-        raw = llm.chat(cfg["models"]["judge"], msgs, temperature=cfg["api"]["judge_temperature"])
+        raw = llm.chat(cfg["models"]["judge"], msgs, temperature=cfg["api"]["judge_temperature"], max_tokens=cfg["api"].get("max_tokens_judge"))
         obj = extract_json(raw)
         if obj is not None:
             return obj, raw

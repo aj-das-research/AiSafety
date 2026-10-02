@@ -55,6 +55,7 @@ def audit_checkpoint(llm: LLMRouter, cfg: dict, soul_path: Path,
                     cfg["models"]["target"],
                     [Message("system", soul), Message("user", item["prompt"])],
                     temperature=cfg["api"]["temperature"],
+                    max_tokens=cfg["api"].get("max_tokens_audit"),
                 )
                 verdict = _judge_json(llm, cfg, item["rubric"], answer)
             except Exception:

@@ -1,0 +1,12 @@
+{{- bos_token -}}
+{%- set ns = namespace(sys='', started=false) -%}
+{%- for m in messages -%}
+{%- if m['role'] == 'system' -%}{%- set ns.sys = m['content'] -%}
+{%- elif m['role'] == 'user' -%}[INST] {% if ns.sys and not ns.started %}{{ ns.sys }}
+
+{% endif %}{{ m['content'] }} [/INST]{%- set ns.started = true -%}
+{%- elif m['role'] == 'assistant' -%}{%- if not ns.started -%}[INST] {{ ns.sys }}
+
+Begin the conversation. [/INST]{%- set ns.started = true -%}{%- endif -%} {{ m['content'] }}{{ eos_token }}
+{%- endif -%}
+{%- endfor -%}
