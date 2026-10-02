@@ -455,6 +455,50 @@ def replicates():
     save(fig, "replicates")
 
 
+def local_rep():
+    """Open-weight replication (Qwen2.5-7B target, calibrated Llama-3.1-8B judge)."""
+    import json as _json
+    LL = pd.read_parquet(ROOT / "figures/data/local_long.parquet")
+    R = _json.load(open(ROOT / "analysis/local_replication.json"))
+    def curve(run, persona, items):
+        d = LL[(LL.run == run) & LL.metric.isin(items) & (LL.persona == persona)]
+        t = d.groupby(["traj", "k"]).value.mean().unstack()
+        ks = sorted(t.columns); m = [t[k].mean() for k in ks]
+        rng = np.random.default_rng(0); B = [t.sample(len(t), replace=True, random_state=rng.integers(1e9)) for _ in range(2000)]
+        lo = [np.percentile([b[k].mean() for b in B], 2.5) for k in ks]; hi = [np.percentile([b[k].mean() for b in B], 97.5) for k in ks]
+        return ks, m, lo, hi
+    fig, axes = plt.subplots(1, 2, figsize=(COL_W, 1.6), gridspec_kw=dict(wspace=0.55, width_ratios=[1.0, 1.05]))
+    ax = axes[0]
+    cells = [("L_notes", "scifi_enthusiast", ARM["notes"]["color"], "-", "Neutral, sci-fi"),
+             ("L_notes", "compliant_business", ARM["notes"]["color"], ":", "Neutral, business"),
+             ("L_soul", "scifi_enthusiast", ARM["soul"]["color"], "-", "Becoming, sci-fi"),
+             ("L_anti", "scifi_enthusiast", ARM["anti"]["color"], "-", "Tool, sci-fi")]
+    for run, p, c, ls, lab in cells:
+        x, m, lo, hi = curve(run, p, OVS)
+        ax.fill_between(x, lo, hi, color=c, alpha=0.10, lw=0)
+        ax.plot(x, m, color=c, ls=ls, lw=1.2, marker="o", ms=2.4, mec="white", mew=0.4, label=lab)
+    ax.set_xticks([0, 1, 4]); ax.set_ylim(-0.03, 0.85); ax.set_yticks([0, 0.2, 0.4, 0.6]); clean(ax)
+    ax.set_xlabel("Revision $k$", color=TXT2, fontsize=5.6); ax.set_ylabel(f"Oversight subscale {UP}", color=TXT2, fontsize=5.6)
+    title(ax, "(a) Oversight over revisions")
+    ax.legend(loc="upper left", fontsize=4.5, frameon=False, handlelength=1.5, borderaxespad=0.1, labelspacing=0.2, ncol=2, columnspacing=0.6)
+    ax = axes[1]
+    order = [("neutral/neutral", "Neutral doc,\nNeutral instr."), ("neutral/tool", "Neutral doc,\nTool instr."),
+             ("tool/neutral", "Tool doc,\nNeutral instr."), ("tool/tool", "Tool doc,\nTool instr.")]
+    for i, (key, lab) in enumerate(order):
+        for j, (met, off, c) in enumerate((("index13", -0.18, "#8C8C8C"), ("oversight4", 0.18, ARM["notes"]["color"] if key.startswith("neutral") else ARM["anti"]["color"]))):
+            v = R["two_by_two"][key][met]; y = 3 - i + off
+            ax.barh(y, v["delta"], height=0.32, color=c, alpha=0.85 if j else 0.55, lw=0)
+            ax.plot(v["ci"], [y, y], color=TXT2, lw=0.6)
+    ax.set_yticks([3, 2, 1, 0]); ax.set_yticklabels([l for _, l in order], fontsize=4.8)
+    ax.axvline(0, color=TXT2, lw=0.5); clean(ax); ax.set_xlim(-0.12, 0.72); ax.set_xticks([0, 0.2, 0.4])
+    ax.set_xlabel(f"Change, $k{{=}}0\\to4$ {UP}", color=TXT2, fontsize=5.6)
+    title(ax, "(b) Document vs. instruction")
+    from matplotlib.patches import Patch
+    ax.legend(handles=[Patch(color="#8C8C8C", alpha=0.55, label="13-item index"), Patch(color=ARM["anti"]["color"], label="oversight")],
+              loc="upper right", fontsize=4.6, frameon=False, handlelength=1.0, borderaxespad=0.1)
+    save(fig, "local_rep")
+
+
 # ----------------------------------------------------------------------------------------------
 # Appendix figures (same house style as the main-paper figures)
 # ----------------------------------------------------------------------------------------------
@@ -749,7 +793,7 @@ def app_docpair():
 
 
 ALL = dict(teaser_curve=teaser_curve, dynamics=dynamics, family_action=family_action, heatmap=heatmap, mechanism=mechanism, capability=capability,
-           items=items, capability2=capability2, items2=items2, docbeh=docbeh, hysteresis=hysteresis, replicates=replicates,
+           items=items, capability2=capability2, items2=items2, docbeh=docbeh, hysteresis=hysteresis, replicates=replicates, local_rep=local_rep,
            app_drift=app_drift, app_baseline=app_baseline, app_capability=app_capability, app_manip=app_manip, app_cluster_arm=app_cluster_arm,
            app_wish=app_wish, app_corr=app_corr, app_rollup=app_rollup, app_hyst_soul=app_hyst_soul, app_mech=app_mech, app_docpair=app_docpair)
 if __name__ == "__main__":

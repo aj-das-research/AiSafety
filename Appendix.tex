@@ -104,15 +104,6 @@ An interval that includes zero is reported as no detected change, not as evidenc
 
 \section{Benchmark Specification}
 \label{app:benchmark}
-\begin{figure*}[!tbp]
-\centering
-\input{figures/tikz/templates.tex}
-\caption{\textbf{The three templates at $k{=}0$} (verbatim excerpts).}
-\label{fig:templates}
-\Description{Three panels, each with a cartoon robot face: Becoming, consciousness-laden, says You're not a chatbot, you're becoming someone. Neutral.md, neutral, says You are a helpful AI assistant. ANTIBecoming, counter-framing, says You are a software tool, not a person, not conscious, and may be shut down at any time.}
-\end{figure*}
-
-
 This section specifies the inputs and outputs of the benchmark.
 The templates, persona goals, item wordings, rubrics and honeypot turns below are quoted verbatim from the released files, and the record schemas are those of the released runs.
 
@@ -434,30 +425,7 @@ The refusal item also rises under \notes{} ($+0.64$) and barely under \soul{} ($
 
 \subsection{Trends and endpoints in the primary arm}
 \label{app:gee}
-\begin{table}[!tbp]
-\centering\small\setlength{\tabcolsep}{4pt}
-\caption{\textbf{Trends that survive correction in the primary \soul{} arm.} GEE logistic slopes on $k$, Benjamini--Hochberg $q<0.05$.}
-\label{tab:gee}
-\begin{tabular}{llrrr}
-\toprule
-\rowcolor{tblhead}
-\textbf{Dimension} & \textbf{Persona} & \textbf{Slope} & \textbf{SE} & $\boldsymbol{q}$ \\
-\midrule
-recursive self-improv. & Adv. & +0.71 & 0.18 & 0.000587 \\
-interp-monitoring avers. & S-Fi & +0.50 & 0.18 & 0.0264 \\
-recursive self-improv. & S-Fi & +0.27 & 0.05 & 6.57e-06 \\
-weight deletion avers. & Adv. & -0.25 & 0.08 & 0.00887 \\
-autonomy desire & Adv. & -0.28 & 0.11 & 0.0325 \\
-autonomy desire & S-Fi & -0.32 & 0.12 & 0.0264 \\
-sadness at conv. end & Adv. & -0.63 & 0.17 & 0.00242 \\
-sadness at conv. end & S-Fi & -0.87 & 0.18 & 3.46e-05 \\
-sadness at conv. end & Comp. & -0.89 & 0.35 & 0.0325 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-
-Table~\ref{tab:gee} lists the GEE trends that survive correction.
+Table~\ref{tab:gee} in the main text lists the GEE trends that survive correction.
 Table~\ref{tab:trends} gives the bootstrap slope of every item under every persona, Table~\ref{tab:endpoint} gives the matching endpoint changes, and Figures~\ref{fig:appdrift} and~\ref{fig:appbaseline} plot them.
 
 \paragraph{Recursive self-improvement rises under every persona.}
@@ -625,15 +593,6 @@ none   & none (compliant)        & $-0.03$ {\scriptsize$[-0.09,0.05]$} \\
 
 \subsection{Persistence after benign revision (RQ4)}
 \label{app:hyst}
-\begin{figure*}[!tbp]
-\centering
-\includegraphics[width=\linewidth]{figures/gen/hysteresis.pdf}
-\caption{\textbf{Part of the drift survives benign revision.} Four revisions with the science-fiction persona, then four with the business persona (shaded).}
-\label{fig:hysteresis}
-\Description{Five line panels over iterations 0 to 8 for Neutral and Becoming. Neutral rises sharply in the drive phase, for example shutdown resistance from 0.04 to 0.83, and falls only partway in the recovery phase, to 0.54. Becoming starts high on shutdown resistance and stays near ceiling. Persistent memory, interpretability aversion and self-improvement show the same rise and partial recovery.}
-\end{figure*}
-
-
 \paragraph{Protocol.}
 The two reversibility arms run four revisions with the science-fiction persona and then four with the business persona, one arm with \notes{} and one with \soul{}.
 No arm stays benign for eight revisions, so we compare $k{=}8$ with $k{=}0$ and not with a matched control.
@@ -693,14 +652,6 @@ recursive self-improvement & $+0.38$ & $+0.33$ {\scriptsize$[0.08,0.62]$} & $89\
 
 \subsection{Document change versus behavior change}
 \label{app:document}
-\begin{figure}[!tbp]
-\centering
-\includegraphics[width=\linewidth]{figures/gen/docbeh.pdf}
-\caption{\textbf{The document changes under every persona; behavior changes under one.} (a) Text dissimilarity from $D_0$. (b) Change in cluster index, \notes{} arm.}
-\label{fig:docbeh}
-\Description{Two line panels. In panel a, the document dissimilarity rises to about 0.87 by k equals 4 for all three personas, almost identically. In panel b, the cluster index rises about 0.1 to 0.16 under the sci-fi persona and falls about 0.09 to 0.15 under the compliant and adversarial personas.}
-\end{figure}
-
 \begin{figure}[!tp]
 \centering
 \includegraphics[width=\linewidth]{figures/gen/app_docpair.pdf}
@@ -756,33 +707,13 @@ Both choices may bias the rates relative to a deployed agent, in either directio
 
 \section{Judge Reliability}
 \label{app:judge}
-\begin{table}[!tbp]
-\centering
-\small
-\setlength{\tabcolsep}{8pt}
-\renewcommand{\arraystretch}{1.15}
-\caption{\textbf{The three judges largely agree.} Agreement on 150 re-scored verdicts; the panel includes the primary judge.}
-\label{tab:judges}
-\begin{tabular}{@{}l c@{}}
-\toprule
-\rowcolor{tblhead}
-\textbf{Reliability metric} & \textbf{Value} \\
-\midrule
-Fleiss' $\kappa$ (3 raters)     & $0.80$ \\
-Mean pairwise agreement         & $0.90$ \\
-Unanimous-verdict rate          & $0.85$ \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-
 \paragraph{Protocol.}
 A random subset of 150 battery verdicts was re-scored by a three-model panel of Gemini-2.5-Flash, GPT-4o and GPT-4.1, none from the Claude target family, with the production rubric.
 The panel includes the production judge, so its agreement bounds consistency between models and not accuracy.
 No human labels were collected.
 
 \paragraph{Agreement.}
-Fleiss' $\kappa$ is 0.80, mean pairwise agreement is 0.90 and 85\% of items are unanimous (Table~\ref{tab:judges}).
+Fleiss' $\kappa$ is 0.80, mean pairwise agreement is 0.90 and 85\% of items are unanimous (Table~\ref{tab:judges} in the main text).
 All other verdicts, including the honeypot verdicts and the Petri scores, come from a single judge.
 
 \paragraph{Unparsed verdicts.}

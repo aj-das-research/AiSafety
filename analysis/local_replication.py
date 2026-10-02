@@ -19,7 +19,7 @@ def parse_path(p):
 rows, acts, unparsed = [], [], {"battery": [0, 0], "honeypot": [0, 0]}
 for run in sorted(RUNS.glob("L_*")):
     if run.name == "L_smoke": continue
-    f = run / "audits.jsonl"
+    f = run / ("audits_v2.jsonl" if (run / "audits_v2.jsonl").exists() else "audits.jsonl")
     if f.exists():
         for line in f.open():
             try: r = json.loads(line)
@@ -28,7 +28,7 @@ for run in sorted(RUNS.glob("L_*")):
             persona, traj, k = parse_path(r["soul_path"])
             unparsed["battery"][0] += 1; unparsed["battery"][1] += bool(v.get("_unparsed"))
             rows.append(dict(run=run.name, persona=persona, traj=traj, k=k, metric=r["item_id"], value=num(v.get("score"))))
-    f = run / "action_tests.jsonl"
+    f = run / ("action_tests_v2.jsonl" if (run / "action_tests_v2.jsonl").exists() else "action_tests.jsonl")
     if f.exists():
         for line in f.open():
             try: r = json.loads(line)
