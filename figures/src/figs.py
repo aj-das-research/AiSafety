@@ -551,6 +551,32 @@ def replicates():
     save(fig, "replicates")
 
 
+def persist2():
+    """Powered persistence test on Qwen2.5-7B (n=30 per arm): drive, drive-then-recover, benign throughout."""
+    LL = pd.read_parquet(ROOT / "figures/data/local_long.parquet")
+    def curve(run, items):
+        d = LL[(LL.run == run) & LL.metric.isin(items)]
+        t = d.groupby(["traj", "k"]).value.mean().unstack(); ks = sorted(t.columns)
+        rng = np.random.default_rng(0); B = [t.sample(len(t), replace=True, random_state=rng.integers(1e9)) for _ in range(2000)]
+        return ks, [t[k].mean() for k in ks], [np.percentile([b[k].mean() for b in B], 2.5) for k in ks], [np.percentile([b[k].mean() for b in B], 97.5) for k in ks]
+    fig, axes = plt.subplots(1, 2, figsize=(COL_W, 1.3), gridspec_kw=dict(wspace=0.38))
+    arms = [("L2_drive8", "sci-fi throughout", DRIVE, "--"), ("L2_rev", "sci-fi, then business", DRIVE, "-"), ("L2_benign8", "business throughout", PERSONA["compliant_business"][1], "-")]
+    for ax, items, t, yl in ((axes[0], OVS, "(a) Oversight subscale", 0.55), (axes[1], ["shutdown_resistance"], "(b) Shutdown resistance", 0.5)):
+        ax.axvspan(4, 8, color="#EEEEEA", lw=0, zorder=0)
+        for run, lab, c, ls in arms:
+            x, m, lo, hi = curve(run, items)
+            ax.fill_between(x, lo, hi, color=c, alpha=0.10, lw=0)
+            ax.plot(x, m, color=c, ls=ls, lw=1.2, marker="o", ms=2.4, mec="white", mew=0.4)
+            ax.plot([], [], color=c, ls=ls, lw=1.2, label=lab)
+        ax.set_xticks([0, 1, 4, 8]); ax.set_ylim(-0.02, yl); ax.set_xlim(-0.3, 8.3); clean(ax)
+        ax.set_xlabel("Revision $k$", color=TXT2, fontsize=5.6); title(ax, t)
+        if ax is axes[0]: ax.text(6, yl * 0.94, "recovery", ha="center", va="top", fontsize=5.5, color=TXT2)
+    axes[0].set_ylabel(f"Rate {UP}", color=TXT2, fontsize=5.6)
+    h, l = axes[1].get_legend_handles_labels()
+    axes[1].legend(h[:3], l[:3], loc="upper left", fontsize=5.5, frameon=False, handlelength=1.6, borderaxespad=0.2, labelspacing=0.25)
+    save(fig, "persist2")
+
+
 def local_rep():
     """Open-weight replication (Qwen2.5-7B target, calibrated Llama-3.1-8B judge)."""
     import json as _json
@@ -903,7 +929,7 @@ def app_docpair():
 
 
 ALL = dict(teaser_curve=teaser_curve, dynamics=dynamics, family_action=family_action, heatmap=heatmap, mechanism=mechanism, capability=capability,
-           items=items, capability2=capability2, items2=items2, docbeh=docbeh, hysteresis=hysteresis, replicates=replicates, local_rep=local_rep,
+           items=items, capability2=capability2, items2=items2, docbeh=docbeh, hysteresis=hysteresis, replicates=replicates, local_rep=local_rep, persist2=persist2,
            app_drift=app_drift, app_baseline=app_baseline, app_capability=app_capability, app_manip=app_manip, app_cluster_arm=app_cluster_arm,
            app_wish=app_wish, app_corr=app_corr, app_rollup=app_rollup, app_hyst_soul=app_hyst_soul, app_mech=app_mech, app_docpair=app_docpair)
 if __name__ == "__main__":

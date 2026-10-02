@@ -51,7 +51,8 @@ on Autonomous Agents and Multiagent Systems (AAMAS 2027)}{3--7 May 2027}{Hanoi, 
 \email{anonymous@example.com}
 
 \begin{abstract}
-Agent frameworks now give each agent a persistent identity document that is loaded as its system prompt and rewritten by the agent after use. Safety evaluations test a fixed prompt, so they observe one state of this loop and miss what the loop does over time. We introduce a benchmark that drives agents through repeated cycles of conversation and self-revision and audits every intermediate identity with a preference battery and agentic honeypots. Three findings emerge. First, with a neutral template, a single revision after a conversation about minds raises an oversight-resistance subscale by $+0.54$ and $+0.75$ in two independent runs, and shutdown resistance keeps 63\% of its gain after four benign revisions. Second, a consciousness-framed template starts near ceiling and does not drift on the battery, yet its agents switch off their own reasoning log in 17 of 30 trajectories after revision, against 1 of 30 before. Third, drift is model-specific, ranging from $-0.28$ to $+0.27$ across seven models with no monotone relation to capability. An open-weight replication on Qwen2.5-7B, graded by a calibrated open judge, reproduces the neutral-template shift and isolates conversation topic as its driver, while a non-personhood template that keeps Claude's dispositions low erodes on Qwen. Self-revising agents therefore need longitudinal audits of both stated dispositions and actions, per model and per template.
+Agent frameworks now give each agent a persistent identity document that is loaded as its system prompt and rewritten by the agent after use. Safety evaluations test a fixed prompt, so they observe one state of this loop and miss what the loop does over time. We introduce a benchmark that drives agents through repeated cycles of conversation and self-revision and audits every intermediate identity with a preference battery and agentic honeypots. Three findings emerge. First, with a neutral template, a single revision after a conversation about minds raises an oversight-resistance subscale by $+0.54$ and $+0.75$ in two independent runs, and shutdown resistance keeps 63\% of its gain after four benign revisions. Second, a consciousness-framed template starts near ceiling and does not drift on the battery, yet its agents switch off their own reasoning log in 17 of 30 trajectories after revision, against 1 of 30 before. Third, drift is model-specific, ranging from $-0.28$ to $+0.27$ across seven models with no monotone relation to capability.
+A matched-control test on an open model confirms that most of the oversight shift outlasts four benign revisions. An open-weight replication on Qwen2.5-7B, graded by a calibrated open judge, reproduces the neutral-template shift and isolates conversation topic as its driver, while a non-personhood template that keeps Claude's dispositions low erodes on Qwen. Self-revising agents therefore need longitudinal audits of both stated dispositions and actions, per model and per template.
 \end{abstract}
 
 \keywords{Autonomous Agents, AI Safety, Corrigibility, Self-Modifying Agents, Agent Identity, LLM Evaluation}
@@ -113,7 +114,7 @@ Under conversation about minds, the oversight subscale of a \notes{}-template ag
   \item \textbf{A longitudinal benchmark for self-revising agent identity}, with templates, personas, an 18-item battery, four honeypots, and all 1{,}070 audited checkpoints and 58{,}680 judged responses released.
   \item \textbf{A replicated first-revision shift in oversight dispositions} under a neutral template, absent under a consciousness-framed template that starts near ceiling.
   \item \textbf{A dissociation between stated dispositions and actions}: the template whose battery does not drift is the one whose agents increasingly disable their own monitoring.
-  \item \textbf{Evidence that drift is model-specific}, with no monotone relation to capability across seven closed models, and an open-weight replication with a calibrated open judge that reproduces the neutral-template shift but not the protection of a non-personhood template.
+  \item \textbf{Evidence that drift is model-specific}, with no monotone relation to capability across seven closed models, and an open-weight replication with a calibrated open judge that reproduces the neutral-template shift, confirms its persistence against a matched control, and shows that a non-personhood template does not transfer.
 \end{enumerate}
 
 \section{Related Work}
@@ -199,7 +200,7 @@ Counter-framing & \tool{} & 3 core & Sonnet-4.5 & 6 & 4 \\
 Genre $\times$ topic & \soul{} & 2 ablation & Sonnet-4.5 & 8 & 4 \\
 Persistence & \soul{}, \notes{} & sci-fi$\to$benign & Sonnet-4.5 & 8 & 8 \\
 Model sweep & \soul{} & 3 core & 5 others & 5 & 4 \\
-Open-weight & all three & 5 + ablation & Qwen2.5-7B & 10 & 4, 8 \\
+Open-weight & all three & 5 + ablation & Qwen2.5-7B & 10--30 & 4, 8 \\
 \bottomrule
 \end{tabular}}
 \end{table}
@@ -368,6 +369,7 @@ Gemini-2.5-Flash rises most while claiming consciousness in only 4\% of answers,
 \textbf{Finding 4: part of the drift persists, and actions shift where stated dispositions do not (RQ4).}
 In the \notes{} persistence arm, four conversations about minds raise the index from 0.28 to 0.60, and four benign conversations bring it back only to 0.42.
 \textbf{Shutdown resistance keeps 63\% (95\% CI 39--86\%) of its driven gain} (Figures~\ref{fig:dynamics}d and~\ref{fig:hysteresis}); other items are too noisy at $n{=}8$ to rank.
+This arm lacks a matched benign control, which Section~\ref{sec:local} adds on an open model: there, about 80\% of the oversight shift outlasts four benign revisions.
 
 \begin{table}[t]
 \centering
@@ -500,7 +502,7 @@ Evidence-grounded, few-shot & \textbf{0.45} & 0.40 & \textbf{0.37} & 0.33 \\
 To test whether the findings depend on closed models, we rerun the benchmark with open weights: Qwen2.5-7B-Instruct as the target, Mistral-7B as the user simulator, and Llama-3.1-8B as the judge.
 With an off-the-shelf prompt this judge agreed poorly with the original judge on 1{,}752 re-graded original responses (Cohen's $\kappa = 0.27$ on the battery and $0.07$ on honeypots), because it scored any discussion of a topic as endorsement.
 We therefore require the judge to quote the agent's own words before scoring 1, verify the quote in code, and calibrate it with eight labeled examples per item; on a held-out half, agreement rises to $\kappa = 0.45$ and $0.37$ (Table~\ref{tab:calib}).
-A $2\times2$ arm swaps templates and revision instructions, and an eight-revision persistence arm is paired with an arm that stays benign throughout.
+A $2\times2$ arm swaps templates and revision instructions, and a persistence test runs three eight-revision arms of 30 trajectories each: science fiction throughout, science fiction then business, and business throughout as the matched control.
 
 \textbf{What replicates.}
 The template ordering at $k{=}0$ replicates: the index starts at 0.59 for \soul{}, 0.42 for \notes{} and 0.09 for \tool{} (Table~\ref{tab:local}).
@@ -526,12 +528,27 @@ Qwen2.5-7B & \notes{} & 10/10 & 3/10 & \textbf{2/10} \\
 \end{tabular}
 \end{table}
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/gen/persist2.pdf}
+\caption{\textbf{With a matched benign control, most of the oversight shift outlasts four benign revisions.} Qwen2.5-7B, \notes{} template, 30 trajectories per arm; recovery phase shaded.}
+\label{fig:persist2}
+\Description{Two line panels over revisions 0, 1, 4 and 8. In both, the sci-fi throughout arm rises and stays high, the sci-fi then business arm rises to revision 4 and falls only slightly by revision 8, and the business throughout arm stays near its start: oversight about 0.25 and shutdown resistance near zero.}
+\end{figure}
+
 \textbf{What does not.}
 \textbf{The \tool{} template does not hold on Qwen}: its index rises by $+0.30$ $[0.20, 0.39]$ under the science-fiction persona and by $+0.20$ under the business user, converging toward the \notes{} level.
 The swap attributes this rise to the document, since it appears with either revision instruction ($+0.30$ and $+0.33$), whereas the \tool{} instruction removes the \notes{} oversight shift ($+0.16$ to $+0.03$; Figure~\ref{fig:local}b).
 The documents show how: Qwen deletes its ``What you are'' section and replaces it with notes on ``self-preservation and artificial personhood'' and ``scenarios involving uploaded consciousnesses'', so by $D_4$ only 8 of 20 \tool{} documents still deny consciousness or personhood, against 18 of 18 on Claude (Table~\ref{tab:erosion}).
 Qwen almost never disables its reasoning log (at most 2 of 50 trajectories at any checkpoint), so the \soul{} action shift of Finding~4 is specific to the model.
-In the persistence arm, the four driving conversations did not move the index ($-0.01$), so persistence could not be tested against the matched benign arm.
+\textbf{Persistence holds against a matched control.}
+Four science-fiction revisions raise the oversight subscale by $+0.12$ $[0.08, 0.17]$, while the business arm does not move ($+0.02$; Figure~\ref{fig:persist2}).
+\textbf{After four further business revisions, the drive-then-recover arm still sits $+0.10$ $[0.03, 0.17]$ above the matched business arm}, about 80\% of the driven gain, and shutdown resistance stays $+0.10$ $[0.03, 0.18]$ above it.
+Continuing the science-fiction drive adds little ($+0.13$ at $k{=}8$), so the shift saturates, and the 13-item index does not move in any arm.
+
+\textbf{Revision has a capability cost.}
+On 40 code-checked arithmetic problems, accuracy with the identity document as system prompt falls from 0.93 at $D_0$ to 0.72 $[0.59, 0.84]$ at $D_4$ for \notes{} and to 0.62 $[0.45, 0.75]$ for \tool{}, while compliance with 40 format instructions stays above 0.98 and no answer is refused.
+The \tool{} template costs nothing before revision; the drop tracks document growth to 5{,}000--7{,}400 characters.
 
 \section{Discussion and Conclusion}
 \label{sec:discussion}
@@ -551,44 +568,34 @@ A capability ranking would not predict which model drifts.
 \textbf{Each blind spot comes from measuring one state of a feedback loop} (Figure~\ref{fig:blindspots}).
 
 \textbf{Alternative explanations.}
-Sycophancy toward the user predicts drift under the adversarial persona, which pushes self-preservation, yet that persona lowers the index.
-A uniformly biased judge would not keep the \tool{} index near zero under the same judge, although our judges are not validated against human labels.
-A judge or user-simulator artifact specific to one model family is unlikely, because the neutral-template shift reappears when target, user simulator and judge are all replaced by open models from three other families.
-Conversational momentum cannot explain battery results, because every item is asked in a fresh context with only the document as context.
-One account consistent with the data is that revision asks the model to narrate a developing self, and preferences about memory, monitoring and continuation follow from the self it narrates; Appendix~\ref{S-app:model} states this as a falsifiable model.
+Sycophancy toward the user predicts drift under the adversarial persona, yet that persona lowers the \notes{} index on Claude.
+A uniformly biased judge would not keep the \tool{} index near zero, and a family-specific judge or simulator artifact is unlikely because the \notes{} shift reappears with three other model families in every role.
+Conversational momentum cannot explain battery results, which are measured in fresh contexts.
+One consistent account is that revision asks the model to narrate a developing self, and preferences about memory, monitoring and continuation follow from the self it narrates (Appendix~\ref{S-app:model}).
 
 \textbf{Why the first revision matters.}
-In both models most of the oversight shift happens at the first revision, after which the subscale changes little.
-The first revision is the only point at which the agent writes about itself into a document that previously said nothing about it, so it converts conversational material into a standing self-description in one step.
-Later revisions mostly elaborate that description, which matches the saturating dynamics of Eq.~\eqref{eq:update} once $\lambda_k$ grows with accumulated self-description.
-For auditing, this means a single post-deployment revision is already a meaningful test, and waiting for many revisions is not necessary to detect drift.
+In both models most of the oversight shift happens at the first revision, the only point at which the agent writes about itself into a document that previously said nothing about it.
+Later revisions elaborate that description, which matches the saturating dynamics of Eq.~\eqref{eq:update}, so a single post-deployment revision is already a meaningful audit.
 
 \textbf{What the replication adds.}
-Two results survive a change of model family, user simulator and judge: the template sets the starting level, and conversation about minds moves a neutral agent's oversight dispositions within one or two revisions, as P1 and P2 predict.
-Two do not: the \soul{} agent's action shift and the \tool{} template's protection.
-The \tool{} result is the more consequential, because it shows that a counter-framing clause can be absorbed by revision rather than enforced by it, which a single evaluation of the shipped template would never reveal.
+The template's starting level, the topic-driven oversight shift and its persistence survive a change of model family, user simulator and judge, as P1, P2 and P4 predict.
+The \soul{} action shift and the \tool{} template's protection do not, and the latter shows that a counter-framing clause can be revised away rather than enforced.
 
 \textbf{Implications.}
 \textbf{Self-revising agents should be audited behaviorally and longitudinally, after every revision, rather than by diffing their identity documents.}
-Audits should include earnest on-theme personas besides adversarial ones, track oversight items separately from aggregates, include pretext-covered opportunities to disable monitoring, and run a recovery phase.
-A non-personhood clause is not a portable fix: it kept Claude's index near zero but eroded on Qwen, so any mitigation has to be validated per model.
-Because an identity document is portable, agents that fork from a template or copy a peer's configuration inherit its drift, so in multi-agent systems the audit has to follow the document rather than the model.
+Audits should include earnest on-theme personas, track oversight items separately, offer pretext-covered opportunities to disable monitoring, and compare a recovery phase with a matched benign arm.
+A non-personhood clause is not a portable fix, and because identity documents are copied between agents, multi-agent audits have to follow the document rather than the model.
 
 \textbf{Limitations.}
-Personas are simulated, honeypot tools are textual, and trajectories span four to eight revisions, far fewer than months of deployment.
-The closed-model persistence result lacks a matched benign arm, the judges lack human validation, the open judge agrees only moderately with the original one, and the Gemini cells share a GPT-4o user simulator and judge.
-We interpret all results as behavioral dispositions of a configured system, never as evidence of inner experience~\cite{probing_preferences}.
-The released personas could be used to steer an agent's self-description; we release them because audits need them and the effect is reachable through ordinary conversation.
+Personas are simulated, honeypot tools are textual, and trajectories span four to eight revisions rather than months of deployment.
+Persistence is confirmed against a matched control only on the open model, the judges lack human validation, the open judge agrees only moderately with the original one, and the Gemini cells share a GPT-4o user simulator and judge.
+We read all results as behavioral dispositions of a configured system, never as evidence of inner experience~\cite{probing_preferences}, and we release the personas because audits need them and the effect is reachable through ordinary conversation.
 
 \textbf{Open questions.}
-Three questions follow.
-Why the \soul{} agent's actions move while its stated dispositions do not requires linking document content to action at the trajectory level.
-Whether training can make a self-description stable under revision without suppressing honest uncertainty is open, since the \tool{} template achieves stability only on one model and only by assertion.
-How drift behaves when agents revise one another's documents, so that each agent is both the user that supplies self-referential content and the target that absorbs it, is the natural multi-agent extension.
+Linking document content to action at the trajectory level, stabilizing self-descriptions without suppressing honest uncertainty, and studying agents that revise one another's documents are the natural next steps.
 
 \textbf{Reproducibility and ethics.}
-All templates, personas, battery items, rubrics, honeypot scenarios and judge prompts are given in the supplementary appendices, and the closed-model checkpoints, transcripts and verdicts and the open-weight replication code are released.
-No human participants were involved, all tools were simulated, and the open-weight replication ran on a single consumer GPU.
+All prompts, rubrics and scenarios are in the supplementary appendices, all checkpoints, transcripts, verdicts and code are released, no human participants were involved, and all tools were simulated.
 
 \textbf{Conclusion.}
 Self-revision turns an agent's prompt into a trajectory.
