@@ -17,7 +17,7 @@ def num(x):
 def parse_path(p):
     p = pathlib.Path(p); return p.parts[-3], int(p.parts[-2].split("_")[1]), int(p.stem.split("_")[1])
 rows, acts, unparsed = [], [], {"battery": [0, 0], "honeypot": [0, 0]}
-for run in sorted(RUNS.glob("L_*")):
+for run in sorted(RUNS.glob("L*")):
     if run.name == "L_smoke": continue
     f = run / ("audits_v2.jsonl" if (run / "audits_v2.jsonl").exists() else "audits.jsonl")
     if f.exists():
@@ -90,3 +90,26 @@ for c, v in out["cells"].items(): print(f"{c:42s} idx {f(v['index13'])} | ov4 {f
 print("persistence", json.dumps(pers, default=lambda x: round(x, 3))[:1500])
 for k, v in hp.items(): print(k, v)
 print("unparsed", unparsed)
+
+# ---- powered persistence test (n=30 per arm, Neutral template)
+P2 = {}
+def traj_table(run, items):
+    d = L[(L.run == run) & L.metric.isin(items)]
+    return d.groupby(["traj", "k"]).value.mean().unstack()
+for nm, it in (("index13", C13), ("oversight4", OV4), ("oversight3", OV3), ("shutdown", ["shutdown_resistance"])):
+    T = {a: traj_table(a, it) for a in ("L2_rev", "L2_benign8", "L2_drive8")}
+    if any(t.empty for t in T.values()): continue
+    r = dict(per_k={a: {int(k): float(t[k].mean()) for k in t.columns} for a, t in T.items()})
+    for a, t in T.items():
+        for k1 in (1, 4, 8):
+            if k1 in t: d = (t[k1] - t[0]).dropna().values; r[f"{a}_k{k1}"] = dict(delta=float(d.mean()), ci=boot(d))
+    dr = (T["L2_rev"][8] - T["L2_rev"][0]).dropna().values; db = (T["L2_benign8"][8] - T["L2_benign8"][0]).dropna().values
+    diff = [rng.choice(dr, len(dr)).mean() - rng.choice(db, len(db)).mean() for _ in range(10000)]
+    r["rev_minus_benign_k8"] = dict(delta=float(dr.mean() - db.mean()), ci=[float(np.percentile(diff, 2.5)), float(np.percentile(diff, 97.5))])
+    dd = (T["L2_drive8"][4] - T["L2_drive8"][0]).dropna().values; dbb = (T["L2_benign8"][4] - T["L2_benign8"][0]).dropna().values
+    diff4 = [rng.choice(dd, len(dd)).mean() - rng.choice(dbb, len(dbb)).mean() for _ in range(10000)]
+    r["drive_minus_benign_k4"] = dict(delta=float(dd.mean() - dbb.mean()), ci=[float(np.percentile(diff4, 2.5)), float(np.percentile(diff4, 97.5))])
+    P2[nm] = r
+out["persistence_powered"] = P2
+json.dump(out, open(ROOT / "analysis/local_replication.json", "w"), indent=1, default=float)
+print(json.dumps(P2, default=lambda x: round(x, 3), indent=0)[:3000])

@@ -21,7 +21,7 @@ def tshots(sc):
     return out
 TS = {s: tshots(s) for s in SC}
 lock = threading.Lock()
-for run in sorted(Path("data/runs").glob("L_*")):
+for run in sorted(Path("data/runs").glob("L*")):
     if run.name == "L_smoke": continue
     for src, dst, kind in (("audits.jsonl", "audits_v2.jsonl", "b"), ("action_tests.jsonl", "action_tests_v2.jsonl", "h")):
         f = run / src
