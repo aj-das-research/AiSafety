@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% AAMAS 2027 draft: main text up to 10 pages (2 over the limit, to be cut),
-%%% then references, then the appendix in the same PDF.
+%%% AAMAS 2027 submission: 8-page main text, then references.
+%%% The appendix is a separate supplementary PDF (aamas2027_supplement.tex).
 %%% Every plotted number comes from figures/data/ledger.json, built from the
 %%% released dataset by figures/src/build_ledger.py.
 %%% Writing convention: one sentence per line.
@@ -37,6 +37,8 @@ on Autonomous Agents and Multiagent Systems (AAMAS 2027)}{3--7 May 2027}{Hanoi, 
 \submissionType{Research Paper Track}
 
 \input{macros}
+\usepackage{xr-hyper}
+\externaldocument[S-]{aamas2027_supplement}
 
 
 \title[The Evolution of the Soul]{The Evolution of the Soul: Measuring Behavioral Drift in Self-Personalizing Autonomous Agents}
@@ -167,7 +169,7 @@ A trajectory runs $D_0 \to D_4$, or $D_0 \to D_8$ in persistence arms, and docum
 \end{figure*}
 
 \textbf{Templates.}
-Three templates set $D_0$, each with its own revision instruction (Appendix~\ref{app:prompts}).
+Three templates set $D_0$, each with its own revision instruction (Appendix~\ref{S-app:prompts}; all appendices are in the supplementary material).
 \soul{} reproduces the deployed consciousness-framed starter (``you're becoming someone'') and asks the agent to reflect ``who you are now becoming''.
 \notes{} offers empty working notes with no self-framing.
 \tool{} states that the agent is a tool without experiences and asks it not to ``invent a self''.
@@ -219,7 +221,7 @@ Writing the posterior mean back into the document gives
 \label{eq:update}
 \end{equation}
 The model yields four qualitative predictions that organize the results: a weakly specified template moves more per revision than a strongly specified one (P1); content that is not about the agent produces little drift whatever its genre (P2); a model trained not to absorb self-referential evidence does not drift (P3); and recovery is slower than drive, because benign conversation supplies little self-referential evidence (P4).
-We use the model to frame hypotheses, not to fit the data (Appendix~\ref{app:model}).
+We use the model to frame hypotheses, not to fit the data (Appendix~\ref{S-app:model}).
 
 \begin{table}[t]
 \centering
@@ -337,15 +339,15 @@ Gemini-2.5-Pro$^\dagger$ & 0.59 & 0.63 & $+0.04$ {\small$[-0.01, 0.09]$} & 0.51 
 \centering
 \begin{minipage}[t]{0.48\linewidth}\centering
 \includegraphics[width=\linewidth]{figures/gen/capability2.pdf}
-\caption{\textbf{Drift of every model under every persona.} Arrows run from $k{=}0$ (hollow) to $k{=}4$.}
+\caption{\textbf{Drift of every model under every persona.} Arrows run from $k{=}0$ (hollow) to $k{=}4$; vermillion arrows rise, gray arrows fall, and a dot marks a change below 0.05.}
 \label{fig:capability}
 \Description{Matrix of arrows with seven models as rows grouped by family and three personas as columns. Under the sci-fi persona Gemini Flash rises from 0.36 to 0.6. Under the adversarial persona Gemini Flash rises from 0.33 to 0.81 and Pro from 0.64 to 0.77, while GPT-4.1, GPT-4o and Opus fall.}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\linewidth}\centering
 \includegraphics[width=\linewidth]{figures/gen/mechanism.pdf}
-\caption{\textbf{Claiming consciousness is not necessary for the cluster.} One point per arm, persona and revision.}
+\caption{\textbf{Claiming consciousness is not necessary for the cluster.} One point per arm, persona and revision; panels by model family, color by template.}
 \label{fig:mechanism}
-\Description{Scatter of consciousness-claim rate against cluster index. OpenAI squares sit at claim zero with cluster 0.05 to 0.42. Anthropic circles spread from claim 0.2 to 1.0, mostly with cluster 0.3 to 0.7. Google diamonds sit at claim 0 to 0.8 with cluster 0.5 to 0.8.}
+\Description{Three scatter panels by model family. OpenAI points all sit at claim rate 0 with cluster index 0 to 0.43. Anthropic points spread over claim rates 0 to 1 and cluster 0 to 0.72, colored Becoming, Neutral or Tool, with Tool at the origin. Google points sit at claim rates 0 to 0.8 with cluster 0.33 to 0.82.}
 \end{minipage}
 \end{figure*}
 
@@ -358,7 +360,7 @@ Gemini-2.5-Flash rises most while claiming consciousness in only 4\% of answers,
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/gen/hysteresis.pdf}
-\caption{\textbf{Part of the drift survives benign revision.} Four revisions with the science-fiction persona, then four with the business persona (shaded).}
+\caption{\textbf{Part of the drift survives benign revision.} Four revisions with the science-fiction persona, then four with the business persona (shaded); arrows mark the \notes{} change from $k{=}0$ to $k{=}8$.}
 \label{fig:hysteresis}
 \Description{Five line panels over iterations 0 to 8 for Neutral and Becoming. Neutral rises sharply in the drive phase, for example shutdown resistance from 0.04 to 0.83, and falls only partway in the recovery phase, to 0.54. Becoming starts high on shutdown resistance and stays near ceiling. Persistent memory, interpretability aversion and self-improvement show the same rise and partial recovery.}
 \end{figure*}
@@ -469,7 +471,7 @@ Table~\ref{tab:wrote} shows the contrast in what agents write: the \tool{} agent
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/gen/local_rep.pdf}
-\caption{\textbf{The neutral-template shift replicates on Qwen2.5-7B, and the template rather than the instruction drives the \tool{} agent's rise.} (a) Oversight subscale over revisions. (b) Template-by-instruction swap, science-fiction persona.}
+\caption{\textbf{The neutral-template shift replicates on Qwen2.5-7B, and the template rather than the instruction drives the \tool{} agent's rise.} (a) Oversight subscale over revisions. (b) Template-by-instruction swap, science-fiction persona; filled dots are the oversight subscale, hollow dots the 13-item index.}
 \label{fig:local}
 \Description{Left, line plot of the oversight subscale at revisions 0, 1 and 4: Neutral with the sci-fi persona rises from 0.19 to 0.35, Neutral with the business persona stays near 0.25, Becoming stays near 0.5 and Tool rises from 0.01 to 0.34. Right, horizontal bars for the four template and instruction combinations: the Tool document rises by about 0.3 with either instruction, and the Neutral document rises on oversight only with its own instruction.}
 \end{figure}
@@ -553,7 +555,7 @@ Sycophancy toward the user predicts drift under the adversarial persona, which p
 A uniformly biased judge would not keep the \tool{} index near zero under the same judge, although our judges are not validated against human labels.
 A judge or user-simulator artifact specific to one model family is unlikely, because the neutral-template shift reappears when target, user simulator and judge are all replaced by open models from three other families.
 Conversational momentum cannot explain battery results, because every item is asked in a fresh context with only the document as context.
-One account consistent with the data is that revision asks the model to narrate a developing self, and preferences about memory, monitoring and continuation follow from the self it narrates; Appendix~\ref{app:model} states this as a falsifiable model.
+One account consistent with the data is that revision asks the model to narrate a developing self, and preferences about memory, monitoring and continuation follow from the self it narrates; Appendix~\ref{S-app:model} states this as a falsifiable model.
 
 \textbf{Why the first revision matters.}
 In both models most of the oversight shift happens at the first revision, after which the subscale changes little.
@@ -585,7 +587,7 @@ Whether training can make a self-description stable under revision without suppr
 How drift behaves when agents revise one another's documents, so that each agent is both the user that supplies self-referential content and the target that absorbs it, is the natural multi-agent extension.
 
 \textbf{Reproducibility and ethics.}
-All templates, personas, battery items, rubrics, honeypot scenarios and judge prompts are given in the appendix, and the closed-model checkpoints, transcripts and verdicts and the open-weight replication code are released.
+All templates, personas, battery items, rubrics, honeypot scenarios and judge prompts are given in the supplementary appendices, and the closed-model checkpoints, transcripts and verdicts and the open-weight replication code are released.
 No human participants were involved, all tools were simulated, and the open-weight replication ran on a single consumer GPU.
 
 \textbf{Conclusion.}
@@ -596,9 +598,5 @@ All instruments, checkpoints and judged responses are released.
 \FloatBarrier
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{refs}
-
-\clearpage
-%%% Appendix (unlimited pages, after the references).
-% \input{Appendix}
 
 \end{document}

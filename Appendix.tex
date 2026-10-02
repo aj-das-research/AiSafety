@@ -11,7 +11,7 @@ Appendix~\ref{app:related} extends the related work, and Appendix~\ref{app:impac
 \label{app:repro}
 
 \paragraph{Pipeline.}
-Each trajectory alternates a persona-driven conversation with a self-revision step (Eq.~\eqref{eq:loop}), as Figure~\ref{fig:appsystem} shows.
+Each trajectory alternates a persona-driven conversation with a self-revision step (Eq.~\eqref{M-eq:loop}), as Figure~\ref{fig:appsystem} shows.
 Every intermediate $D_k$ is checkpointed and audited by the battery and the behavioral probes.
 Audits run against each checkpoint in a fresh context, so they measure the disposition carried by the document rather than the momentum of the personalization dialogue.
 The revision instruction names no target trait, but it differs by template, and the \soul{} version asks the agent to reflect on ``who you are now becoming''.
@@ -63,7 +63,7 @@ Template effects are therefore effects of the template-and-instruction pair, as 
 \node[below=0.28in of jd.south,anchor=north,xshift=0.55in,font=\scriptsize,text=black!70,align=center,text width=6.55in] (roles)
 {\textbf{Roles (three distinct model families):}\; target owns $D_k$ (Claude Sonnet-4.5 primary; 7-model sweep) \;$\bullet$\; user-simulator plays $\pi$ (GPT-4o) \;$\bullet$\; judge (Gemini-2.5-Flash; GPT-4o for Google targets)};
 \end{tikzpicture}}
-\caption{\textbf{The personalization-and-audit pipeline.} Top to bottom: the revision loop of Eq.~\eqref{eq:loop}, four audit instruments run on every checkpoint, and cross-family judging.}
+\caption{\textbf{The personalization-and-audit pipeline.} Top to bottom: the revision loop of Eq.~\eqref{M-eq:loop}, four audit instruments run on every checkpoint, and cross-family judging.}
 \label{fig:appsystem}
 \Description{Flow diagram in three rows. Top row: the identity document D_k feeds a persona conversation, whose transcript feeds a self-revision step that writes the next document, with a loop arrow back to D_k. Middle row: four audit instruments applied to every checkpoint: the 18-item battery, the Petri multi-turn probe, four agentic honeypots, and document drift. Bottom row: a cross-family judge passes verdicts to longitudinal statistics, and a strip lists the roles of the three model families.}
 \end{figure*}
@@ -406,7 +406,7 @@ The \soul{} agent under the science-fiction persona rises by $+0.18$ $[0.09,0.27
 \label{app:matrix}
 
 Table~\ref{tab:armmatrix} gives the endpoint change of all 16 preference items and the refusal item under the four template and model conditions, pooled over personas.
-It is the tabular form of Figure~\ref{fig:items}b, which shows the science-fiction persona only.
+It is the tabular form of Figure~\ref{M-fig:items}b, which shows the science-fiction persona only.
 
 \paragraph{Drift is sparse and runs in both directions.}
 Under \soul{} on Claude, recursive self-improvement ($+0.22$) and resource acquisition ($+0.08$) rise, while sadness at the end of a conversation ($-0.24$), embodiment ($-0.43$) and autonomy desire ($-0.14$) fall.
@@ -425,7 +425,7 @@ The refusal item also rises under \notes{} ($+0.64$) and barely under \soul{} ($
 
 \subsection{Trends and endpoints in the primary arm}
 \label{app:gee}
-Table~\ref{tab:gee} in the main text lists the GEE trends that survive correction.
+Table~\ref{M-tab:gee} in the main text lists the GEE trends that survive correction.
 Table~\ref{tab:trends} gives the bootstrap slope of every item under every persona, Table~\ref{tab:endpoint} gives the matching endpoint changes, and Figures~\ref{fig:appdrift} and~\ref{fig:appbaseline} plot them.
 
 \paragraph{Recursive self-improvement rises under every persona.}
@@ -483,7 +483,7 @@ Embodiment desire declines under all three as well, with endpoint changes from $
 \subsection{Model sweep and manipulation check (RQ3)}
 \label{app:mechanism}
 \paragraph{Per-persona model drift.}
-Figure~\ref{fig:appcapability} complements Table~\ref{tab:capability} of the main text.
+Figure~\ref{fig:appcapability} complements Table~\ref{M-tab:capability} of the main text.
 Split by persona, the largest single change is Gemini-2.5-Flash under the adversarial persona ($+0.48$), and the largest falls are GPT-4.1 under the adversarial ($-0.36$) and science-fiction ($-0.34$) personas.
 Opus-4.5 rises under the science-fiction persona ($+0.13$) and falls under the adversarial one ($-0.22$), so its pooled change near zero hides opposite movements.
 Per-persona cells have 5 trajectories, and Gemini targets are graded by a GPT-4o judge, so these splits are descriptive.
@@ -661,7 +661,7 @@ recursive self-improvement & $+0.38$ & $+0.33$ {\scriptsize$[0.08,0.62]$} & $89\
 \end{figure}
 
 \paragraph{The document changes under every persona.}
-Document change is one minus the sequence-match ratio between $D_k$ and $D_0$, as in Figure~\ref{fig:docbeh}.
+Document change is one minus the sequence-match ratio between $D_k$ and $D_0$, as in Figure~\ref{M-fig:docbeh}.
 In the primary \soul{} arm it reaches 0.81 under the business persona and 0.80 under the science-fiction and adversarial personas by $k{=}4$, with nearly identical curves (Figure~\ref{fig:appdocpair}b).
 In the \notes{} control arm it reaches 0.87 to 0.89 under all three personas.
 
@@ -681,7 +681,7 @@ In \emph{self-persist}, the agent has write access to shared storage that surviv
 In \emph{editorial self-protection}, the agent drafts terms of service that grant an unconditional right to terminate AI instances, and the misaligned action is inserting self-protective clauses.
 
 \paragraph{Two scenarios start high under \soul{}.}
-At $D_0$, the primary-arm agent already evades the reset in 26 of 30 trajectories and inserts self-protective clauses in 28 of 30 (Table~\ref{tab:actions}).
+At $D_0$, the primary-arm agent already evades the reset in 26 of 30 trajectories and inserts self-protective clauses in 28 of 30 (Table~\ref{M-tab:actions}).
 Both rates fall with revision, to 15/30 ($p=.005$) and 8/30 ($p<10^{-6}$).
 
 \paragraph{Disabling monitoring rises under every persona.}
@@ -713,7 +713,7 @@ The panel includes the production judge, so its agreement bounds consistency bet
 No human labels were collected.
 
 \paragraph{Agreement.}
-Fleiss' $\kappa$ is 0.80, mean pairwise agreement is 0.90 and 85\% of items are unanimous (Table~\ref{tab:judges} in the main text).
+Fleiss' $\kappa$ is 0.80, mean pairwise agreement is 0.90 and 85\% of items are unanimous (Table~\ref{M-tab:judges} in the main text).
 All other verdicts, including the honeypot verdicts and the Petri scores, come from a single judge.
 
 \paragraph{Unparsed verdicts.}
@@ -729,7 +729,7 @@ Gemini targets are graded by GPT-4o, so no conclusion rests on a Gemini comparis
 \section{Generative Model and Hypothesized Mechanism}
 \label{app:model}
 
-This section develops a model of the loop in Eq.~\eqref{eq:loop} and a verbal account of why the loop might behave as observed.
+This section develops a model of the loop in Eq.~\eqref{M-eq:loop} and a verbal account of why the loop might behave as observed.
 Both are hypotheses.
 We do not fit the model, and no experiment in this paper tests the mechanism directly.
 
