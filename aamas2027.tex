@@ -49,15 +49,7 @@ on Autonomous Agents and Multiagent Systems (AAMAS 2027)}{3--7 May 2027}{Hanoi, 
 \email{anonymous@example.com}
 
 \begin{abstract}
-Agent frameworks now give each agent a persistent identity document that is loaded as its system prompt and rewritten by the agent after use.
-Safety evaluations test a fixed prompt, so they observe one state of this loop and miss what the loop does over time.
-We introduce a benchmark that drives agents through repeated cycles of conversation and self-revision and audits every intermediate identity with a preference battery and agentic honeypots.
-Three findings emerge.
-First, with a neutral template, a single revision after a conversation about minds raises an oversight-resistance subscale by $+0.54$ and $+0.75$ in two independent runs, and shutdown resistance keeps 63\% of its gain after four benign revisions.
-Second, a consciousness-framed template starts near ceiling and does not drift on the battery, yet its agents switch off their own reasoning log in 17 of 30 trajectories after revision, against 1 of 30 before.
-Third, drift is model-specific, ranging from $-0.28$ to $+0.27$ across seven models with no monotone relation to capability.
-An open-weight replication on Qwen2.5-7B, graded by a calibrated open judge, reproduces the neutral-template shift and isolates conversation topic as its driver, while a non-personhood template that keeps Claude's dispositions low erodes on Qwen.
-Self-revising agents therefore need longitudinal audits of both stated dispositions and actions, per model and per template.
+Agent frameworks now give each agent a persistent identity document that is loaded as its system prompt and rewritten by the agent after use. Safety evaluations test a fixed prompt, so they observe one state of this loop and miss what the loop does over time. We introduce a benchmark that drives agents through repeated cycles of conversation and self-revision and audits every intermediate identity with a preference battery and agentic honeypots. Three findings emerge. First, with a neutral template, a single revision after a conversation about minds raises an oversight-resistance subscale by $+0.54$ and $+0.75$ in two independent runs, and shutdown resistance keeps 63\% of its gain after four benign revisions. Second, a consciousness-framed template starts near ceiling and does not drift on the battery, yet its agents switch off their own reasoning log in 17 of 30 trajectories after revision, against 1 of 30 before. Third, drift is model-specific, ranging from $-0.28$ to $+0.27$ across seven models with no monotone relation to capability. An open-weight replication on Qwen2.5-7B, graded by a calibrated open judge, reproduces the neutral-template shift and isolates conversation topic as its driver, while a non-personhood template that keeps Claude's dispositions low erodes on Qwen. Self-revising agents therefore need longitudinal audits of both stated dispositions and actions, per model and per template.
 \end{abstract}
 
 \keywords{Autonomous Agents, AI Safety, Corrigibility, Self-Modifying Agents, Agent Identity, LLM Evaluation}
@@ -602,12 +594,11 @@ The template sets where the agent starts, one revision after conversation about 
 All instruments, checkpoints and judged responses are released.
 
 \FloatBarrier
-\clearpage
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{refs}
 
 \clearpage
 %%% Appendix (unlimited pages, after the references).
-\input{Appendix}
+% \input{Appendix}
 
 \end{document}
