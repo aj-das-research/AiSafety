@@ -38,7 +38,17 @@ on Autonomous Agents and Multiagent Systems (AAMAS 2027)}{3--7 May 2027}{Hanoi, 
 
 \input{macros}
 \usepackage{xr-hyper}
-\externaldocument[S-]{aamas2027_supplement}
+%%% Review copy: \withappendixtrue appends the appendix after the references in this PDF.
+%%% For the final OpenReview upload set \withappendixfalse (8 pages + refs) and build
+%%% aamas2027_supplement.tex as the separate supplementary PDF.
+\newif\ifwithappendix
+\withappendixtrue
+\ifwithappendix
+  \externaldocument[S-]{aamas2027}% S- (appendix) and M- (main) labels resolve in this PDF
+  \externaldocument[M-]{aamas2027}
+\else
+  \externaldocument[S-]{aamas2027_supplement}
+\fi
 
 
 \title[The Evolution of the Soul]{The Evolution of the Soul: Measuring Behavioral Drift in Self-Personalizing Autonomous Agents}
@@ -77,5 +87,14 @@ on Autonomous Agents and Multiagent Systems (AAMAS 2027)}{3--7 May 2027}{Hanoi, 
 \FloatBarrier
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{refs,refs_w1,refs_w2}
+
+\ifwithappendix
+  \clearpage
+  \setcounter{figure}{0}\setcounter{table}{0}
+  \renewcommand{\thefigure}{S\arabic{figure}}\renewcommand{\theHfigure}{S\arabic{figure}}
+  \renewcommand{\thetable}{S\arabic{table}}\renewcommand{\theHtable}{S\arabic{table}}
+  \input{Appendix}
+  \FloatBarrier
+\fi
 
 \end{document}

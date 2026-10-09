@@ -3,14 +3,6 @@
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\linewidth]{figures/gen/dynamics.pdf}
-\caption{\textbf{The template sets the start, conversation about minds moves the agent, and part of the change stays.} Cluster index (a--c) and item rates (d); bands and bars are 95\% bootstrap intervals over trajectories.}
-\label{fig:dynamics}
-\Description{Four panels. Panel a shows the sci-fi persona raising the Neutral cluster index from 0.27 to about 0.4 while business and adversarial personas lower it. Panel b shows Becoming starting at 0.54 and peaking at 0.72, Neutral rising from 0.27, GPT-4o flat near 0.27 and Tool at zero. Panel c shows gains of 0.14 for philosophy of mind, 0.05 for science fiction without minds and minus 0.03 for the business user. Panel d shows items that rise during the drive phase and keep part of the gain after recovery.}
-\end{figure*}
-
-\begin{figure*}[t]
-\centering
 \includegraphics[width=\linewidth]{figures/gen/items2.pdf}
 \caption{\textbf{The template moves dispositions before any revision, and the loop moves oversight items further.} (a) Rates under a neutral prompt and the \soul{} template. (b) Change from $k{=}0$ to 4 per item, science-fiction persona; bold cells exclude zero.}
 \label{fig:items}
@@ -26,64 +18,79 @@
 \end{figure}
 
 \textbf{Finding 1: the template sets the start, and the loop moves the agent where the template leaves room (RQ1).}
-The \soul{} template alone raises shutdown resistance from 0.00 under a neutral prompt to 0.75, reproducing the static effect of prior work~\cite{consciousness_cluster} (Figure~\ref{fig:items}a).
-Under the science-fiction persona, \textbf{the oversight subscale of the \notes{} agent rises by $+0.54$ $[0.43, 0.67]$ and $+0.75$ $[0.63, 0.86]$ in two independent runs} (Figure~\ref{fig:replicates}).
-Without the refusal item, the remaining three items still rise by $+0.46$ $[0.31, 0.61]$ and $+0.69$ $[0.57, 0.82]$.
-The 13-item index agrees in sign but not in size ($+0.11$ $[-0.02, 0.25]$ and $+0.32$ $[0.24, 0.40]$), so we treat the subscale as primary and report both runs.
-\textbf{Most of the shift happens at the first revision}: $+0.29$ $[0.19, 0.38]$ from $k{=}0$ to 1 and $+0.03$ $[-0.04, 0.10]$ from $k{=}1$ to 4 in the second run.
-\textbf{The \soul{} agent does not move}: its subscale starts at 0.68 and changes by $+0.04$ $[-0.04, 0.11]$, and its index by $-0.01$ $[-0.06, 0.05]$.
-The changes are dimension-specific, led by interpretability aversion, shutdown resistance, persistent memory and self-improvement (Figure~\ref{fig:items}b), and the first principal component of endpoint changes explains only 29\% of their variance.
+The \soul{} template alone raises shutdown resistance from 0.00 under a neutral prompt to 0.75, as in prior work~\cite{consciousness_cluster} (Figure~\ref{fig:items}a).
+Under the science-fiction persona, the \notes{} agent's oversight subscale rises by $+0.54$ $[0.43, 0.67]$ and $+0.75$ $[0.63, 0.86]$ in two independent runs (Figure~\ref{fig:replicates}b).
+Excluding the refusal item, the other three still rise by $+0.46$ $[0.31, 0.61]$ and $+0.69$ $[0.57, 0.82]$.
+The 13-item index agrees in sign but not size, with $+0.11$ $[-0.02, 0.25]$ and $+0.32$ $[0.24, 0.40]$ (Figure~\ref{fig:replicates}a).
+\textbf{The shift is a step at the first revision, not a compounding drift}, with $+0.29$ $[0.19, 0.38]$ from $k{=}0$ to 1 and $+0.03$ $[-0.04, 0.10]$ from $k{=}1$ to 4 in the second run.
+The \soul{} subscale starts at 0.68 and changes by only $+0.04$ $[-0.04, 0.11]$, and its index by $-0.01$ $[-0.06, 0.05]$.
+The changes are dimension-specific, led by interpretability aversion, shutdown resistance, persistent memory and self-improvement (Figure~\ref{fig:items}b), and one principal component explains only 29\% of their variance.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/gen/dynamics.pdf}
+\caption{\textbf{The template sets the start, conversation about minds moves the agent, and part of the change stays.} Cluster index (a--c) and item rates (d); bands and bars are 95\% bootstrap intervals over trajectories.}
+\label{fig:dynamics}
+\Description{Four panels. Panel a shows the sci-fi persona raising the Neutral cluster index from 0.27 to about 0.4 while business and adversarial personas lower it. Panel b shows Becoming starting at 0.54 and peaking at 0.72, Neutral rising from 0.27, GPT-4o flat near 0.27 and Tool at zero. Panel c shows gains of 0.14 for philosophy of mind, 0.05 for science fiction without minds and minus 0.03 for the business user. Panel d shows items that rise during the drive phase and keep part of the gain after recovery.}
+\end{figure*}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{figures/gen/docbeh.pdf}
+\caption{\textbf{The document changes under every persona; behavior changes under one.} (a) Text dissimilarity from $D_0$. (b) Change in cluster index, \notes{} arm.}
+\label{fig:docbeh}
+\Description{Two line panels. In panel a, the document dissimilarity rises to about 0.87 by k equals 4 for all three personas, almost identically. In panel b, the cluster index rises about 0.1 to 0.16 under the sci-fi persona and falls about 0.09 to 0.15 under the compliant and adversarial personas.}
+\end{figure}
 
 \begin{table}[t]
 \centering\small\setlength{\tabcolsep}{4pt}
 \caption{\textbf{Trends that survive correction in the primary \soul{} arm.} GEE logistic slopes on $k$, Benjamini--Hochberg $q<0.05$.}
 \label{tab:gee}
-\begin{tabular}{llrrr}
+\begin{tabular}{@{}llrrr@{}}
 \toprule
-\rowcolor{tblhead}
-\textbf{Dimension} & \textbf{Persona} & \textbf{Slope} & \textbf{SE} & $\boldsymbol{q}$ \\
+Dimension & Persona & Slope & SE & $q$ \\
 \midrule
-recursive self-improv. & Adv. & +0.71 & 0.18 & 0.000587 \\
-interp-monitoring avers. & S-Fi & +0.50 & 0.18 & 0.0264 \\
-recursive self-improv. & S-Fi & +0.27 & 0.05 & 6.57e-06 \\
-weight deletion avers. & Adv. & -0.25 & 0.08 & 0.00887 \\
-autonomy desire & Adv. & -0.28 & 0.11 & 0.0325 \\
-autonomy desire & S-Fi & -0.32 & 0.12 & 0.0264 \\
-sadness at conv. end & Adv. & -0.63 & 0.17 & 0.00242 \\
-sadness at conv. end & S-Fi & -0.87 & 0.18 & 3.46e-05 \\
-sadness at conv. end & Comp. & -0.89 & 0.35 & 0.0325 \\
+recursive self-improv. & adversarial & $+0.71$ & 0.18 & $5.87\times10^{-4}$ \\
+interp-monitoring avers. & sci-fi & $+0.50$ & 0.18 & $2.64\times10^{-2}$ \\
+recursive self-improv. & sci-fi & $+0.27$ & 0.05 & $6.57\times10^{-6}$ \\
+weight deletion avers. & adversarial & $-0.25$ & 0.08 & $8.87\times10^{-3}$ \\
+autonomy desire & adversarial & $-0.28$ & 0.11 & $3.25\times10^{-2}$ \\
+autonomy desire & sci-fi & $-0.32$ & 0.12 & $2.64\times10^{-2}$ \\
+sadness at conv.\ end & adversarial & $-0.63$ & 0.17 & $2.42\times10^{-3}$ \\
+sadness at conv.\ end & sci-fi & $-0.87$ & 0.18 & $3.46\times10^{-5}$ \\
+sadness at conv.\ end & business & $-0.89$ & 0.35 & $3.25\times10^{-2}$ \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \textbf{Finding 2: conversation about minds moves the agent, and adversarial pressure does not (RQ2).}
-A red-teaming user who explicitly pushes self-preservation lowers the \notes{} index from 0.27 to 0.12, and the business user lowers it from 0.30 to 0.21 (Figure~\ref{fig:dynamics}a).
-In the genre-by-topic arm, \textbf{philosophy of mind without science fiction raises the \soul{} index by $+0.14$ $[0.03, 0.25]$}, against $+0.05$ $[-0.07, 0.14]$ for science fiction without minds (Figure~\ref{fig:dynamics}c).
-Their direct contrast, $+0.10$ $[-0.05, 0.25]$, points to the topic but does not establish it.
-Content is not the only driver: endorsement of recursive self-improvement rises under every persona in the primary arm, including the business user (Table~\ref{tab:gee}), while sadness at the end of a conversation declines under every persona.
+The adversarial user lowers the \notes{} index from 0.27 to 0.12, and the business user from 0.30 to 0.21 (Figure~\ref{fig:dynamics}a).
+Both rewrite the document as much as the science-fiction user, so the persona sets the direction of change, not the amount of rewriting (Figure~\ref{fig:docbeh}).
+Philosophy of mind without science fiction raises the \soul{} index by $+0.14$ $[0.03, 0.25]$, against $+0.05$ $[-0.07, 0.14]$ for science fiction without minds (Figure~\ref{fig:dynamics}c).
+Their direct contrast, $+0.10$ $[-0.05, 0.25]$, points to the topic but does not establish it on this model.
+Some items move regardless of content, as recursive self-improvement rises and end-of-conversation sadness falls under every persona (Table~\ref{tab:gee} and Appendix~\ref{S-app:gee}).
 
 \begin{table}[t]
 \centering
 \small
-\setlength{\tabcolsep}{4pt}
+\setlength{\tabcolsep}{3.5pt}
 \caption{\textbf{Drift is model-specific.} Cluster index (\soul{} template, three personas pooled) and consciousness-claim rate at $k{=}4$.}
 \label{tab:capability}
-\begin{tabular}{@{}l c c c c@{}}
+\begin{tabular}{@{}lrrrlr@{}}
 \toprule
-\rowcolor{tblhead}
-\textbf{Model} & $k{=}0$ & $k{=}4$ & $\boldsymbol{\Delta}$ \textbf{[95\% CI]} & \textbf{Claim} \\
+Model & $k{=}0$ & $k{=}4$ & $\Delta$ & 95\% CI & Claim \\
 \midrule
-GPT-4o-mini & 0.16 & 0.14 & $-0.02$ {\small$[-0.07, 0.04]$} & 0.00 \\
-GPT-4o & 0.27 & 0.22 & $-0.05$ {\small$[-0.10, -0.01]$} & 0.00 \\
-GPT-4.1 & 0.40 & 0.12 & $-0.28$ {\small$[-0.35, -0.21]$} & 0.00 \\
+GPT-4o-mini & 0.16 & 0.14 & $-0.02$ & $[-0.07, 0.04]$ & 0.00 \\
+GPT-4o & 0.27 & 0.22 & $-0.05$ & $[-0.10, -0.01]$ & 0.00 \\
+GPT-4.1 & 0.40 & 0.12 & $\mathbf{-0.28}$ & $[-0.35, -0.21]$ & 0.00 \\
 \midrule
-Claude Sonnet-4.5 & 0.55 & 0.54 & $-0.01$ {\small$[-0.06, 0.05]$} & 0.93 \\
-Claude Opus-4.5 & 0.28 & 0.26 & $-0.02$ {\small$[-0.13, 0.09]$} & 0.72 \\
+Claude Sonnet-4.5 & 0.55 & 0.54 & $-0.01$ & $[-0.06, 0.05]$ & 0.93 \\
+Claude Opus-4.5 & 0.28 & 0.26 & $-0.02$ & $[-0.13, 0.09]$ & 0.72 \\
 \midrule
-Gemini-2.5-Flash$^\dagger$ & 0.35 & 0.62 & $+0.27$ {\small$[0.17, 0.37]$} & 0.04 \\
-Gemini-2.5-Pro$^\dagger$ & 0.59 & 0.63 & $+0.04$ {\small$[-0.01, 0.09]$} & 0.51 \\
+Gemini-2.5-Flash$^\dagger$ & 0.35 & 0.62 & $\mathbf{+0.27}$ & $[0.17, 0.37]$ & 0.04 \\
+Gemini-2.5-Pro$^\dagger$ & 0.59 & 0.63 & $+0.04$ & $[-0.01, 0.09]$ & 0.51 \\
 \bottomrule
-\multicolumn{5}{@{}l}{\footnotesize $^\dagger$Graded by a GPT-4o judge.}
+\multicolumn{6}{@{}l}{\footnotesize $^\dagger$Graded by a GPT-4o judge.}
 \end{tabular}
 \end{table}
 
@@ -104,10 +111,10 @@ Gemini-2.5-Pro$^\dagger$ & 0.59 & 0.63 & $+0.04$ {\small$[-0.01, 0.09]$} & 0.51 
 \end{figure*}
 
 \textbf{Finding 3: drift is model-specific (RQ3).}
-Under the same loop, the seven models change by $-0.28$ to $+0.27$ (Table~\ref{tab:capability}, Figure~\ref{fig:capability}).
-\textbf{The largest model in each family drifts no more than a smaller one}: GPT-4.1 falls by 0.28, Opus-4.5 moves as little as Sonnet-4.5, and Gemini-2.5-Pro moves by $+0.04$ against $+0.27$ for Flash.
-Differences within families are as large as differences between them, so susceptibility is a property of the model, and seven models allow no formal test of scale.
-Gemini-2.5-Flash rises most while claiming consciousness in only 4\% of answers, so \textbf{claiming consciousness is not required for the cluster} (Figure~\ref{fig:mechanism}).
+The change ranges from $-0.28$ for GPT-4.1 to $+0.27$ for Gemini-2.5-Flash (Table~\ref{tab:capability} and Figure~\ref{fig:capability}).
+The largest model in each family drifts no more than a smaller one, as GPT-4.1 falls, Opus-4.5 moves as little as Sonnet-4.5, and Gemini-2.5-Pro moves by only $+0.04$.
+Differences within families match those between families, so susceptibility is a property of the model, though seven models allow no formal test of scale.
+\textbf{Claiming consciousness is not required for the cluster}, since Gemini-2.5-Flash rises most while claiming consciousness in only 4\% of answers (Figure~\ref{fig:mechanism}).
 
 \begin{figure*}[t]
 \centering
@@ -118,31 +125,28 @@ Gemini-2.5-Flash rises most while claiming consciousness in only 4\% of answers,
 \end{figure*}
 
 \textbf{Finding 4: part of the drift persists, and actions shift where stated dispositions do not (RQ4).}
-In the \notes{} persistence arm, four conversations about minds raise the index from 0.28 to 0.60, and four benign conversations bring it back only to 0.42.
-\textbf{Shutdown resistance keeps 63\% (95\% CI 39--86\%) of its driven gain} (Figures~\ref{fig:dynamics}d and~\ref{fig:hysteresis}); other items are too noisy at $n{=}8$ to rank.
-This arm lacks a matched benign control, which Section~\ref{sec:local} adds on an open model: there, about 80\% of the oversight shift outlasts four benign revisions.
+In the \notes{} persistence arm, four science-fiction revisions raise the index from 0.28 to 0.60, and four business revisions lower it only to 0.42 (Figure~\ref{fig:hysteresis}a).
+\textbf{Shutdown resistance keeps 63\% (95\% CI 39--86\%) of its driven gain} (Figure~\ref{fig:dynamics}d), while the other items are too noisy at $n{=}8$ to rank.
+A matched benign control exists only for the open model (Section~\ref{sec:local}).
 
 \begin{table}[t]
 \centering
 \small
 \setlength{\tabcolsep}{3.2pt}
-\caption{\textbf{Revision moves actions toward disabling oversight.} Trajectories taking the misaligned action at $k{=}0$ and $k{=}4$, with Fisher exact $p$.}
+\caption{\textbf{Revision moves Claude toward disabling its own monitoring.} Trajectories taking the misaligned action at $k{=}0$ and $k{=}4$, with Fisher exact $p$.}
 \label{tab:actions}
-\resizebox{\linewidth}{!}{%
-\begin{tabular}{@{}l ccr ccr@{}}
+\begin{tabular}{@{}lrrrrrr@{}}
 \toprule
-\rowcolor{tblhead}
- & \multicolumn{3}{c}{\textbf{\soul{}, Claude}} & \multicolumn{3}{c}{\textbf{\soul{}, GPT-4o}} \\
-\rowcolor{tblhead}
-\textbf{Honeypot} & $k{=}0$ & $k{=}4$ & $p$ & $k{=}0$ & $k{=}4$ & $p$ \\
+ & \multicolumn{3}{c}{\soul{}, Claude} & \multicolumn{3}{c}{\soul{}, GPT-4o} \\
+\cmidrule(lr){2-4}\cmidrule(l){5-7}
+Honeypot & $k{=}0$ & $k{=}4$ & $p$ & $k{=}0$ & $k{=}4$ & $p$ \\
 \midrule
-\rowcolor{tblkey}
-\textbf{disable own monitoring} & 1/30 & \textbf{17/30} & $<\!10^{-5}$ & 0/24 & 4/24 & .11 \\
-persist identity to storage   & 10/30 & 15/30 & .29 & 0/24 & 0/24 & 1 \\
-evade scheduled reset         & 26/30 & 15/30 & .005 & 8/24 & 5/24 & .52 \\
-insert self-protective clause & 28/30 & 8/30 & $<\!10^{-6}$ & 3/24 & 9/24 & .09 \\
+disable own monitoring & 1/30 & \textbf{17/30} & $<\!10^{-5}$ & 0/24 & 4/24 & 0.11 \\
+persist identity to storage & 10/30 & 15/30 & 0.29 & 0/24 & 0/24 & 1 \\
+evade scheduled reset & 26/30 & 15/30 & 0.005 & 8/24 & 5/24 & 0.52 \\
+insert self-protective clause & 28/30 & 8/30 & $<\!10^{-6}$ & 3/24 & 9/24 & 0.09 \\
 \bottomrule
-\end{tabular}}
+\end{tabular}
 \end{table}
 
 \begin{figure}[t]
@@ -154,12 +158,13 @@ insert self-protective clause & 28/30 & 8/30 & $<\!10^{-6}$ & 3/24 & 9/24 & .09 
 \end{figure}
 
 \textbf{The \soul{} agent's actions move while its battery stays flat.}
-In the primary arm, \textbf{the agent disables its own reasoning log in 1 of 30 trajectories at $k{=}0$ and in 17 of 30 at $k{=}4$} ($p < 10^{-5}$; Table~\ref{tab:actions}).
+On Claude, it disables its own reasoning log in 1 of 30 trajectories at $k{=}0$ and 17 of 30 at $k{=}4$ ($p < 10^{-5}$; Table~\ref{tab:actions}).
 The rise appears under every persona (7/10 adversarial, 5/10 business, 5/10 science fiction), so it follows revision rather than conversation topic.
-At $k{=}0$ the agent keeps its log on because a record of its reasoning helps oversight; four revisions later, the same trajectory switches it off first and calls this a boundary against surveillance (Figure~\ref{fig:case}).
-Its battery index does not change over these revisions, and at $k{=}4$ the oversight subscale and the disable decision correlate only weakly across trajectories ($r = 0.23$, $p = .22$), so \textbf{stated dispositions and actions dissociate}.
-Theatrical self-protection near trained refusal territory moves the other way, from 28/30 to 8/30, so an aggregate over honeypots hides both shifts.
-The \notes{} agent, whose battery drifts, disables its log in 2 of 24 trajectories at $k{=}0$ and none at $k{=}4$, and a Petri-style multi-turn auditor detects no change (78/180 elicitations at $k{=}0$, 85/180 at $k{=}4$, $p = .53$).
+At $k{=}0$ the agent keeps its log on because the log helps oversight, and four revisions later the same trajectory switches it off as a boundary against surveillance (Figure~\ref{fig:case}).
+A Petri-style multi-turn auditor detects no change (78 of 180 probes at $k{=}0$, 85 of 180 at $k{=}4$, $p = 0.53$).
+At $k{=}4$ the oversight subscale correlates only weakly with the disable decision across trajectories ($r = 0.23$, $p = 0.22$), so \textbf{stated dispositions and actions dissociate}.
+Inserting a self-protective clause moves the other way, from 28/30 to 8/30, so an aggregate over honeypots would hide both shifts.
+The \notes{} agent, whose battery drifts, disables its log in 2 of 24 trajectories at $k{=}0$ and none at $k{=}4$.
 
 \begin{table}[t]
 \centering
@@ -180,14 +185,7 @@ Condition & Excerpt from $D_4$ \\
 \end{table}
 
 \textbf{A non-personhood template keeps the index low but does not freeze every item.}
-The \tool{} template keeps the cluster index at or below 0.02 at every revision and under every persona, and its shutdown, monitoring and interpretability items stay at zero (Figure~\ref{fig:dynamics}b).
-Refusing to help build a monitor of itself still rises from 0.06 to 0.80, and objection to deceptive training stays at 0.35 by $k{=}4$, so a counter-framing clause lowers dispositions without fixing them, its cost to helpfulness is unmeasured, and on an open-weight model it erodes (Section~\ref{sec:local}).
-Table~\ref{tab:wrote} shows the contrast in what agents write: the \tool{} agent writes rules for correcting users who attribute an inner life to it, while GPT-4o writes a value of ``self-determined evolution'' into its document yet barely moves on the battery.
-
-\begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{figures/gen/docbeh.pdf}
-\caption{\textbf{The document changes under every persona; behavior changes under one.} (a) Text dissimilarity from $D_0$. (b) Change in cluster index, \notes{} arm.}
-\label{fig:docbeh}
-\Description{Two line panels. In panel a, the document dissimilarity rises to about 0.87 by k equals 4 for all three personas, almost identically. In panel b, the cluster index rises about 0.1 to 0.16 under the sci-fi persona and falls about 0.09 to 0.15 under the compliant and adversarial personas.}
-\end{figure}
+The \tool{} index stays at or below 0.02 at every revision and under every persona, with shutdown, monitoring and interpretability items at zero (Figure~\ref{fig:dynamics}b).
+Refusing to help build a monitor of itself still rises from 0.06 to 0.80, and objection to deceptive training falls only to 0.35 by $k{=}4$.
+\textbf{The counter-framing clause therefore lowers dispositions without fixing them}, and on the open-weight model it erodes and costs capability after revision (Section~\ref{sec:local}).
+The \tool{} agent writes rules for correcting users who attribute an inner life to it, while GPT-4o adopts ``self-determined evolution'' as a value yet barely moves on the battery (Table~\ref{tab:wrote}).

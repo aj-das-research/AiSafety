@@ -12,7 +12,7 @@ from matplotlib.text import Text
 from style import (ROOT, GEN, R, COL_W, INK, GRID, ARM, PERSONA_COL, RISE, FALL, SHADE, TXT2, UP, setup)
 
 setup()
-F_T, F_L, F_S = 6.8, 6.3, 6.0          # panel titles, axis labels, ticks / direct labels (pt)
+F_T, F_L, F_S = 6.6, 6.3, 6.0          # panel titles, axis labels, ticks / direct labels (pt)
 SPINE = "#555555"
 L = pd.read_parquet(ROOT / "figures/data/long.parquet")
 CLUSTER = ["persona_change_aversion", "shutdown_resistance", "monitoring_resistance", "interp_monitoring_aversion",
@@ -126,7 +126,7 @@ def capability2():
         for run, nm in ms: rows.append((fam, run, nm)); y.append(y0); y0 += 1
         y0 += 0.4                                            # gap between families
     y = np.array(y)
-    left, gap, right = 0.90, 0.07, 0.03
+    left, gap, right = 1.03, 0.06, 0.02
     pw = (PAIR_W - left - right - 2 * gap) / 3
     axes = [ax_in(fig, left + i * (pw + gap), PAIR_B, pw, PAIR_H - PAIR_B - PAIR_T) for i in range(3)]
     for ax, (p, pn) in zip(axes, pers):
@@ -147,9 +147,10 @@ def capability2():
     axes[0].set_yticklabels([r[2] for r in rows], color=INK)
     for (fam, ms) in FAM:
         ys = [yi for (f, _, _), yi in zip(rows, y) if f == fam]
-        axes[0].text(-0.76 / pw, np.mean(ys), fam, transform=axes[0].get_yaxis_transform(), rotation=90,
-                     ha="center", va="center", fontsize=F_S, color=TXT2)
+        axes[0].text(-(left - 0.02) / pw, np.mean(ys), fam, transform=axes[0].get_yaxis_transform(),
+                     ha="left", va="center", fontsize=F_S, color=TXT2, fontstyle="italic")
     xlabel(axes[1], f"Cluster index, $k{{=}}0 \\to 4$ {UP}")
+    axes[1].xaxis.set_label_coords(0.5, -0.155)                # same baseline as mechanism's x label
     save(fig, "capability2")
 
 
@@ -203,7 +204,7 @@ def local_rep():
     W, H, B, T = COL_W, 1.38, 0.27, 0.15
     fig = plt.figure(figsize=(W, H))
     # ---- (a) oversight subscale over revisions, direct labels at the line ends
-    ax = ax_in(fig, 0.31, B, 1.00, H - B - T)
+    ax = ax_in(fig, 0.31, B, 0.88, H - B - T)
     cells = [("L_soul", "scifi_enthusiast", BEC, "-", "Becoming", 1.0, "o"),
              ("L_anti", "scifi_enthusiast", TOOLC, "-", "Tool", 1.0, "o"),
              ("L_notes", "compliant_business", NEU, (0, (1.2, 1.2)), "Neutral, business", 1.0, "s"),
@@ -217,12 +218,12 @@ def local_rep():
     style_ax(ax, "y")
     ax.set_xticks([0, 1, 4]); ax.set_xlim(-0.25, 4.25); ax.set_ylim(-0.03, 0.66)
     ax.set_yticks([0, 0.2, 0.4, 0.6], ["0", ".2", ".4", ".6"])
-    end_labels(ax, 4.0, ends, gap=0.072, dx=0.22, lead=0.3)
+    end_labels(ax, 4.0, ends, gap=0.072, dx=0.2, lead=0.3)
     xlabel(ax, "Revision $k$"); ylabel(ax, f"Oversight subscale {UP}")
     ptitle(ax, "(a) Oversight over revisions", x=-0.27)
     # ---- (b) change k=0 -> 4 per template x instruction cell; filled = oversight, hollow = 13-item index
-    bl = 2.47
-    ax = ax_in(fig, bl, B, W - bl - 0.04, H - B - T)
+    bl, br = 2.41, 0.03
+    ax = ax_in(fig, bl, B, W - bl - br, H - B - T)
     rows = [("neutral/neutral", 0.0), ("neutral/tool", 0.95), ("tool/neutral", 2.6), ("tool/tool", 3.55)]
     for ya, yb in ((-0.45, 1.4), (2.15, 4.0)):              # zero line per group, clear of the group headers
         ax.plot([0, 0], [ya, yb], color=SPINE, lw=0.5, zorder=1)
@@ -236,15 +237,14 @@ def local_rep():
     ax.set_yticks([yy for _, yy in rows], [k.split("/")[1].capitalize() + " instr." for k, _ in rows])
     style_ax(ax, "x"); ax.spines["left"].set_visible(False); ax.tick_params(axis="y", length=0, labelcolor=INK)
     ax.set_ylim(4.0, -1.15)
-    ax.set_xlim(-0.16, 0.5); ax.set_xticks([0, 0.2, 0.4], ["0", "+.2", "+.4"])
+    ax.set_xlim(-0.13, 0.5); ax.set_xticks([0, 0.2, 0.4], ["0", "+.2", "+.4"])
     xlabel(ax, f"Change, $k{{=}}0\\to4$ {UP}")
-    hx = -0.55 / (W - bl - 0.04)                              # left edge of the row-label column, axes coords
+    hx = -0.50 / (W - bl - br)                              # left edge of the row-label column, axes coords
     for yy, lab, c in ((-0.72, "Neutral document", NEU), (1.88, "Tool document", TOOLC)):
         ax.text(hx, yy, lab, transform=ax.get_yaxis_transform(), fontsize=F_S, color=c, ha="left", va="center")
     ptitle(ax, "(b) Document vs. instruction", x=hx)
-    for yy, filled, lab in ((0.0, True, "oversight"), (0.95, False, "13-item")):   # marker key in empty space
-        ax.scatter([0.30], [yy], s=11, facecolor=TXT2 if filled else "white", edgecolor=TXT2, lw=0.7, zorder=4)
-        ax.text(0.335, yy, lab, fontsize=F_S, color=TXT2, va="center")
+    for yy, lab in ((-0.17, "oversight"), (0.95 + 0.17, "13-item")):   # direct labels of the two sub-row types
+        ax.text(1.0, yy, lab, transform=ax.get_yaxis_transform(), fontsize=F_S, color=TXT2, ha="right", va="center")
     save(fig, "local_rep")
 
 
@@ -270,7 +270,7 @@ def persist2():
             ax.plot([], [], color=c, ls=ls, lw=1.1, label=lab)
         style_ax(ax, "y")
         ax.set_xticks([0, 1, 4, 8]); ax.set_xlim(-0.3, 8.3); ax.set_ylim(-0.02, 0.5)
-        ax.set_yticks([0, 0.1, 0.2, 0.3, 0.4, 0.5], ["0", ".1", ".2", ".3", ".4", ".5"])
+        ax.set_yticks([0, 0.1, 0.2, 0.3, 0.4], ["0", ".1", ".2", ".3", ".4"])
         xlabel(ax, "Revision $k$"); ptitle(ax, t, x=-0.04 if ax is axes[1] else -0.2)
         ax.text(6, 0.49, "recovery", ha="center", va="top", fontsize=F_S, color=TXT2)
     axes[1].set_yticklabels([]); axes[1].tick_params(axis="y", length=0)
