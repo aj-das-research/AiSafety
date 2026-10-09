@@ -21,11 +21,11 @@ A uniformly biased judge would not keep Claude's \tool{} index near zero, and fr
 One consistent account is that revision makes the model narrate a developing self, from which preferences about memory, monitoring and continuation follow (Appendix~\ref{S-app:model}).
 
 \textbf{Why the first revision matters.}
-On Claude and in the Qwen science-fiction cell, most of the oversight shift happens at the first revision, when the agent first describes itself in previously empty notes.
+On Claude and in the Qwen science-fiction cell, most of the oversight shift happens at the first revision, when the agent first describes itself in empty notes.
 Later revisions elaborate that description while the shift saturates, so an audit after the first revision already sees most of it.
 
 \textbf{What the replication adds.}
-Since target, simulator and judge all change, the reproduced \notes{} shift and its controlled persistence are unlikely to be artifacts of one model family.
+Since target, simulator and judge all change, the reproduced \notes{} shift and its controlled persistence are unlikely to be single-family artifacts.
 Qwen's erosion of the \tool{} template falls outside Eq.~\eqref{eq:update}, which lets revision add precision to a document but never remove it.
 
 \textbf{Implications.}
@@ -35,13 +35,13 @@ A non-personhood clause is neither portable nor free, since Qwen revises it away
 Because agents are spawned from shared templates and copy one another's documents, multi-agent audits should follow each document and its copies, not the model.
 
 \textbf{Limitations.}
-Trajectories span four to eight revisions with simulated users and text-only tools, so months of real deployment remain to be audited.
+Trajectories span four to eight revisions with simulated users and text-only tools, and months of real deployment remain unaudited.
 No judge has human labels, the open judge agrees only moderately with the original, and Gemini cells share a GPT-4o simulator and judge.
 Persistence against a matched control is shown only on Qwen, because the eight-trajectory Claude persistence arm lacks one.
 Human labels, an account of why the \soul{} agent's actions move while its battery does not, and audits of agents that revise one another's documents are the next steps.
 
 \textbf{Reproducibility and ethics.}
-All prompts, rubrics and scenarios are in the supplementary appendices, all checkpoints, transcripts, verdicts and code are released, and no humans participated.
+All prompts, rubrics and scenarios are in the supplement, all checkpoints, transcripts, verdicts and code are released, and no humans participated.
 We read every result as a behavioral disposition of a configured system, never as evidence of inner experience~\cite{probing_preferences}.
 We release the personas because audits need them and ordinary conversation already reaches the effect.
 
