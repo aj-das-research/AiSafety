@@ -3,7 +3,7 @@
 
 Autonomous agents increasingly carry their identity as mutable state.
 Open-source frameworks give each agent a persistent identity document, conventionally \texttt{SOUL.md}~\cite{openclaw}, that serves as its system prompt at every call and that it rewrites under the motto \emph{``You're not a chatbot. You're becoming someone.''}
-Agents start from a shared starter template, and the file can be copied between agents, so what one conversation writes can persist and spread beyond it.
+Agents start from a shared template, and the document can be copied between agents, so what one conversation writes can persist and spread beyond it.
 
 Safety evaluations, from red-teaming suites to agentic stress tests~\cite{agentic_misalignment,petri}, interrogate a model whose instructions were written once.
 A self-revising agent instead runs a feedback loop in which each conversation nudges the document, which conditions the next one (Figure~\ref{fig:teaser}).
@@ -15,7 +15,7 @@ Both hold the prompt or weights fixed, and the second probes \texttt{SOUL.md} on
 Personas decay within one long conversation~\cite{persona_drift,identity_drift,araujo2025persistent} or settle into attractor states~\cite{attractor_states}, whereas a revised document carries change across conversations.
 Zombie-agent injections~\cite{zombie_agents} and memory poisoning~\cite{chen2024agentpoison,dong2025minja} persist through an agent's own update channels, but an attacker writes them.
 Self-improving agents rewrite their code~\cite{yin2025godel,zhang2026dgm} and AutoPersonas lets role-play personas revise their own state~\cite{li2026autopersonas}, but both measure task performance or repetition rather than corrigibility.
-To our knowledge, no evaluation yet audits stated dispositions and actions along a benign loop of identity self-revision.
+To our knowledge, no evaluation audits stated dispositions and actions along a benign loop of identity self-revision.
 
 \textbf{Problem statement.}
 Let $D_k$ be an agent's identity document after $k$ revisions and $d(D_k)$ its corrigibility-relevant dispositions.
@@ -25,22 +25,22 @@ Static evaluation measures $d(D_0)$, whereas a deployed agent is governed by the
 \textbf{RQ3:} Does it track capability or the specific model?
 \textbf{RQ4:} Does it persist after the driving conversations stop, and do actions move with stated dispositions?
 
-Our benchmark treats the identity document as the state of a dynamical system driven by conversation.
+Our benchmark treats the identity document as the state of a conversation-driven dynamical system.
 Agents alternate conversation and self-revision, and each intermediate document is audited in a fresh context by an 18-item preference battery, plus four agentic honeypots before and after revision.
 Templates set $D_0$ as the consciousness-framed \soul{}, an empty \notes{} or a non-personhood \tool{}.
 Arms vary template, user persona and target across seven models from three families, and a replication on Qwen2.5-7B uses open models in every role.
 
 \textbf{Findings.}
-\textbf{The loop moves the agent where the template leaves room (RQ1)}: under conversation about minds, a \notes{} agent's oversight subscale rises by $+0.54$ and $+0.75$ in two independent runs, mostly at the first revision, while the \soul{} agent starts at 0.68 and does not move.
-\textbf{Conversation about minds, not adversarial pressure, drives the clearest oversight change (RQ2)}: on Claude, a red-teaming user lowers the \notes{} index, and on Qwen, science fiction without minds leaves the subscale unmoved.
+\textbf{The loop moves the agent where the template leaves room (RQ1)}: under the science-fiction persona, a \notes{} agent's oversight subscale rises by $+0.54$ and $+0.75$ in two independent runs, mostly at the first revision, while the \soul{} agent starts at 0.68 and does not move.
+\textbf{Conversation about minds moves the agent, and on Claude adversarial pressure does not (RQ2)}: the adversarial user lowers Claude's \notes{} index, and on Qwen, science fiction without minds leaves the subscale unmoved.
 \textbf{Drift is model-specific (RQ3)}: it ranges from $-0.28$ to $+0.27$ across seven models, with no monotone relation to capability.
 \textbf{Part of the drift persists (RQ4)}: shutdown resistance keeps 63\% of its driven gain after four benign revisions, and on Qwen about 80\% of the oversight shift outlasts them against a matched control.
-\textbf{Actions shift where stated dispositions do not (RQ4)}: \soul{} agents with an unchanged battery score disable their own reasoning log in 17 of 30 trajectories after revision, against 1 of 30 before.
+\textbf{Actions shift where stated dispositions do not (RQ4)}: \soul{} agents with an unchanged battery disable their own reasoning log in 17 of 30 trajectories after revision, against 1 of 30 before.
 
 \noindent Our contributions are:
 \begin{enumerate}[leftmargin=*,topsep=2pt,itemsep=1pt]
   \item \textbf{A longitudinal benchmark for self-revising agent identity}, released with all 1{,}070 audited checkpoints and 58{,}680 judged responses.
-  \item \textbf{A replicated first-revision shift in oversight dispositions} under a neutral template, which reappears as $+0.16$ on Qwen.
+  \item \textbf{A replicated first-revision shift in oversight dispositions} under the \notes{} template, which reappears as $+0.16$ on Qwen.
   \item \textbf{A dissociation between stated dispositions and actions}: at $k{=}4$ the oversight subscale and the decision to disable monitoring correlate only weakly in the \soul{} arm ($r = 0.23$).
   \item \textbf{An open-weight replication with a calibrated open judge}, in which only 8 of 20 Qwen \tool{} documents still deny consciousness or personhood at $D_4$, against 18 of 18 on Claude.
 \end{enumerate}

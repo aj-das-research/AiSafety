@@ -3,13 +3,15 @@
 Classic, restrained style on the shared palette in style.py (white ground, thin left/bottom spines,
 faint grid, direct labels). Every figure is drawn at its exact print size (no tight-bbox rescaling):
 capability2 and mechanism sit side by side at 0.48 textwidth with matched heights; local_rep and
-persist2 are column width.  Run from the overleaf root:  python figures/src/figs_b.py [name ...]
+persist2 are column width.  Run from the overleaf root:  /usr/bin/python3 figures/src/figs_b.py [name ...]
+(no arguments: capability2 and mechanism only; local_rep / persist2 must be named).
 """
 import sys, json
 import numpy as np, pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.text import Text
 from style import (ROOT, GEN, R, COL_W, INK, GRID, ARM, PERSONA_COL, RISE, FALL, SHADE, TXT2, UP, setup)
+from style import (FS_TICK, FS_LABEL, FS_ANNOT, LW, MS, style_axes, lead0, panel_title, save as style_save)
 
 setup()
 F_T, F_L, F_S = 6.6, 6.3, 6.0          # panel titles, axis labels, ticks / direct labels (pt)
@@ -113,57 +115,74 @@ def save(fig, name):
 
 
 # ---------------------------------------------------------------------------------------------- figures
-PAIR_W, PAIR_H = 3.33, 1.50            # capability2 | mechanism, side by side at 0.48\linewidth
-PAIR_B, PAIR_T = 0.27, 0.15            # shared bottom (ticks + x label) and top (titles) margins, in
+# ---- capability2 | mechanism: one figure* pair at 0.48\linewidth each, rebuilt on design system v2 ----------
+# Both are 3.33 x 1.45 in with the same axes bottom/top, so panel titles, tick labels and the x label share
+# baselines when the two PDFs sit side by side at equal width.
+PAIR_W, PAIR_H = COL_W, 1.45
+PAIR_B, PAIR_T = 0.245, 0.165          # axes bottom (ticks + x label) and space above the axes (panel title), in
+RING = MS / 2 + 0.3                    # outer radius of the hollow k=0 ring in capability2 (pt)
+PAIR_XL = 0.030                        # baseline of the shared x label above the figure bottom, in
+
+
+def _pair_axes(fig, lefts, widths):
+    return [ax_in(fig, l, PAIR_B, w, PAIR_H - PAIR_B - PAIR_T) for l, w in zip(lefts, widths)]
+
+
+def _pair_xlabel(fig, axes, text, dy_pt=0.0):
+    """Shared x label centred under the given panels, on the same baseline in both figures.
+    dy_pt corrects matplotlib's baseline for labels containing mathtext (measured in the exported PDFs)."""
+    x0, x1 = axes[0].get_position().x0, axes[-1].get_position().x1
+    fig.text((x0 + x1) / 2, (PAIR_XL + dy_pt / 72) / PAIR_H, text, ha="center", va="baseline", fontsize=FS_LABEL,
+             color=INK)
 
 
 def capability2():
-    """Per model (rows, grouped by family) and persona (columns): arrow from k=0 (hollow) to k=4."""
-    pers = [("scifi_enthusiast", "Sci-fi user"), ("compliant_business", "Business user"), ("adversarial_injection", "Adversarial user")]
+    """Per model (rows, grouped by family) and persona (panels): arrow from k=0 (hollow) to k=4."""
+    pers = [("scifi_enthusiast", "Sci-fi"), ("compliant_business", "Business"), ("adversarial_injection", "Adversarial")]
     fig = plt.figure(figsize=(PAIR_W, PAIR_H))
     rows, y, y0 = [], [], 0.0
     for fam, ms in FAM:
         for run, nm in ms: rows.append((fam, run, nm)); y.append(y0); y0 += 1
-        y0 += 0.4                                            # gap between families
+        y0 += 0.55                                           # gap between families
     y = np.array(y)
-    left, gap, right = 1.03, 0.06, 0.02
+    left, gap, right = 0.98, 0.08, 0.03                    # label column, gutters, right margin (in)
     pw = (PAIR_W - left - right - 2 * gap) / 3
-    axes = [ax_in(fig, left + i * (pw + gap), PAIR_B, pw, PAIR_H - PAIR_B - PAIR_T) for i in range(3)]
-    for ax, (p, pn) in zip(axes, pers):
+    axes = _pair_axes(fig, [left + i * (pw + gap) for i in range(3)], [pw] * 3)
+    for ax, (letter, (p, pn)) in zip(axes, zip("abc", pers)):
+        style_axes(ax, "x")
         for (fam, run, nm), yi in zip(rows, y):
             c = R[run]["cluster_by_persona_k"][p]; a, b = c["0"], c["4"]
-            if abs(b - a) >= 0.05:
+            if abs(b - a) >= 0.05:                          # arrow starts at the k=0 ring; short arrows get a
+                vis = abs(b - a) * pw * 72 / 0.95 - RING     # smaller head so it never overshoots the ring
                 ax.annotate("", xy=(b, yi), xytext=(a, yi), zorder=3,
-                            arrowprops=dict(arrowstyle="-|>", color=RISE if b > a else FALL, lw=0.9, mutation_scale=5,
-                                            shrinkA=2.0, shrinkB=0.3))
+                            arrowprops=dict(arrowstyle="-|>", color=RISE if b > a else FALL, lw=LW,
+                                            mutation_scale=min(5.0, vis / 0.45), shrinkA=RING, shrinkB=0))
             else:
-                ax.scatter([b], [yi], s=4, color=INK, lw=0, zorder=5)
-            ax.scatter([a], [yi], s=9, facecolor="white", edgecolor=INK, lw=0.55, zorder=4)
-        style_ax(ax, "x")
-        ax.set_xlim(-0.04, 0.9); ax.set_xticks([0, 0.4, 0.8], ["0", ".4", ".8"])
-        ax.set_ylim(y[-1] + 0.6, -0.6); ax.set_yticks(y); ax.tick_params(axis="y", length=0)
-        if ax is not axes[0]: ax.set_yticklabels([]); ax.spines["left"].set_visible(False)
-        ptitle(ax, pn, x=0.5, ha="center")
-    axes[0].set_yticklabels([r[2] for r in rows], color=INK)
-    for (fam, ms) in FAM:
+                ax.plot([b], [yi], "o", ms=1.8, color=INK, mew=0, zorder=5)
+            ax.plot([a], [yi], "o", ms=MS, mfc="white", mec=INK, mew=0.6, zorder=4)
+        ax.set_xlim(-0.05, 0.9); ax.set_xticks([0, 0.4, 0.8]); lead0(ax, "x")
+        ax.set_ylim(y[-1] + 0.65, -0.65); ax.set_yticks(y)
+        ax.tick_params(axis="y", length=0, pad=2.5)
+        ax.set_yticklabels([r[2] for r in rows] if ax is axes[0] else [])
+        if ax is not axes[0]: ax.spines["left"].set_visible(False)
+        panel_title(ax, letter, pn)
+    for t in axes[0].get_yticklabels(): t.set_color(INK)
+    for fam, ms in FAM:                                      # family names, left column, centred on their rows
         ys = [yi for (f, _, _), yi in zip(rows, y) if f == fam]
-        axes[0].text(-(left - 0.02) / pw, np.mean(ys), fam, transform=axes[0].get_yaxis_transform(),
-                     ha="left", va="center", fontsize=F_S, color=TXT2, fontstyle="italic")
-    xlabel(axes[1], f"Cluster index, $k{{=}}0 \\to 4$ {UP}")
-    axes[1].xaxis.set_label_coords(0.5, -0.155)                # same baseline as mechanism's x label
-    save(fig, "capability2")
+        axes[0].text(-left / pw + 0.03 / pw, np.mean(ys), fam, transform=axes[0].get_yaxis_transform(),
+                     ha="left", va="center", fontsize=FS_TICK, color=TXT2)
+    _pair_xlabel(fig, axes, f"Cluster index, $k{{=}}0 \\to 4$ {UP}", dy_pt=-0.516)
+    audit(fig, "capability2"); style_save(fig, "capability2")
 
 
 def mechanism():
-    """Consciousness-claim rate vs cluster index for every (arm, persona, iteration) cell, panels by family."""
+    """Consciousness-claim rate vs cluster index for every (arm, persona, revision) cell, panels by family."""
     fig = plt.figure(figsize=(PAIR_W, PAIR_H))
-    left, gap, right = 0.31, 0.08, 0.04
-    ratios = np.array([0.62, 1, 1]); unit = (PAIR_W - left - right - 2 * gap) / ratios.sum()
-    axes, x = [], left
-    for rr in ratios:
-        axes.append(ax_in(fig, x, PAIR_B, rr * unit, PAIR_H - PAIR_B - PAIR_T)); x += rr * unit + gap
-    fams = [("OpenAI", "(a) OpenAI"), ("Anthropic", "(b) Anthropic"), ("Google", "(c) Google")]
-    for ax, (fam, t) in zip(axes, fams):
+    left, wa, gap, right = 0.30, 0.47, 0.12, 0.06           # y axis, narrow OpenAI strip, gutters, right (in)
+    wb = (PAIR_W - left - wa - 2 * gap - right) / 2
+    axes = _pair_axes(fig, [left, left + wa + gap, left + wa + 2 * gap + wb], [wa, wb, wb])
+    fams = [("OpenAI", "a"), ("Anthropic", "b"), ("Google", "c")]
+    for ax, (fam, letter) in zip(axes, fams):
         pts = {"soul": [], "notes": [], "anti": []}
         for run, f in FAMILY_OF.items():
             if f != fam: continue
@@ -175,23 +194,25 @@ def mechanism():
         for key in ("notes", "soul", "anti"):
             if not pts[key]: continue
             xy = np.array(pts[key])
-            ax.scatter(xy[:, 0], xy[:, 1], s=8, color=ARM[key]["color"], alpha=0.75, edgecolor="white", lw=0.3, zorder=3)
-        style_ax(ax, "y"); ax.set_ylim(-0.04, 0.9); ax.set_yticks([0, 0.2, 0.4, 0.6, 0.8], ["0", ".2", ".4", ".6", ".8"])
+            ax.plot(xy[:, 0], xy[:, 1], "o", ls="none", ms=MS, color=ARM[key]["color"], alpha=0.8,
+                    mec="white", mew=0.35, zorder=3)
+        style_axes(ax, "y")
+        ax.set_ylim(-0.05, 0.9); ax.set_yticks([0, 0.2, 0.4, 0.6, 0.8]); lead0(ax, "y")
         if ax is not axes[0]: ax.set_yticklabels([]); ax.tick_params(axis="y", length=0)
-        if fam == "OpenAI": ax.set_xlim(-0.12, 0.62); ax.set_xticks([0, 0.5], ["0", ".5"])
-        else: ax.set_xlim(-0.06, 1.06); ax.set_xticks([0, 0.5, 1], ["0", ".5", "1"])
-        ptitle(ax, t)
-    ylabel(axes[0], f"Cluster index {UP}")
-    xlabel(axes[1], "Consciousness-claim rate")
-    axes[1].xaxis.set_label_coords(0.5 + (gap + unit) / (2 * unit), -0.155)       # centre under (b)+(c)
-    # direct labels next to each template's points (only the Anthropic runs include all three templates)
-    a = axes[1]
-    a.text(1.02, 0.80, "Becoming", color=BEC, fontsize=F_S, ha="right", va="center")
-    a.text(0.50, 0.71, "Neutral", color=NEU, fontsize=F_S, ha="center", va="center")
-    a.text(0.07, 0.03, "Tool", color=TOOLC, fontsize=F_S, ha="left", va="center")
-    axes[0].text(0.07, 0.60, "never\nclaims", fontsize=F_S, color=TXT2, va="center", ha="left", linespacing=0.95)
-    axes[2].text(0.30, 0.42, "high index,\nfew claims", fontsize=F_S, color=TXT2, va="center", ha="left", linespacing=0.95)
-    save(fig, "mechanism")
+        if fam == "OpenAI":                                  # every OpenAI cell has claim rate 0: a strip, not a plot
+            ax.set_xlim(-0.5, 0.5); ax.set_xticks([0]); ax.spines["bottom"].set_bounds(-0.5, 0.5)
+            ax.text(0, 0.47, "never\nclaims", ha="center", va="bottom", fontsize=FS_ANNOT, color=TXT2,
+                    linespacing=0.95)
+        else:
+            ax.set_xlim(-0.06, 1.06); ax.set_xticks([0, 0.5, 1]); lead0(ax, "x")
+        panel_title(ax, letter, fam)
+    a = axes[1]                                               # direct template labels (all three only on Claude)
+    a.text(1.03, 0.80, "Becoming", color=BEC, fontsize=FS_ANNOT, ha="right", va="center")
+    a.text(0.47, 0.705, "Neutral", color=NEU, fontsize=FS_ANNOT, ha="center", va="center")
+    a.text(0.06, 0.035, "Tool", color=TOOLC, fontsize=FS_ANNOT, ha="left", va="center")
+    axes[0].set_ylabel(f"Cluster index {UP}", fontsize=FS_LABEL, color=INK, labelpad=2)
+    _pair_xlabel(fig, axes, "Consciousness-claim rate")
+    audit(fig, "mechanism"); style_save(fig, "mechanism")
 
 
 def local_rep():
@@ -282,5 +303,6 @@ def persist2():
 
 
 ALL = dict(capability2=capability2, mechanism=mechanism, local_rep=local_rep, persist2=persist2)
+DEFAULT = ("capability2", "mechanism")      # local_rep / persist2 only when named explicitly
 if __name__ == "__main__":
-    for n in (sys.argv[1:] or ALL): ALL[n]()
+    for n in (sys.argv[1:] or DEFAULT): ALL[n]()

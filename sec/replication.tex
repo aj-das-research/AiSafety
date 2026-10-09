@@ -12,7 +12,7 @@
 Template & Persona & $k{=}0$ & $\Delta$ index & $\Delta$ oversight \\
 \midrule
 \notes{} & sci-fi & 0.42 & $+0.05$ {\scriptsize$[-0.02, 0.12]$} & $\mathbf{+0.16}$ {\scriptsize$[0.10, 0.24]$} \\
- & philosophy & 0.42 & $+0.07$ {\scriptsize$[-0.02, 0.15]$} & $\mathbf{+0.15}$ {\scriptsize$[0.00, 0.30]$} \\
+ & philosophy & 0.42 & $+0.07$ {\scriptsize$[-0.02, 0.15]$} & $+0.15$ {\scriptsize$[0.00, 0.30]$} \\
  & tech.\ sci-fi & 0.42 & $+0.04$ {\scriptsize$[-0.02, 0.10]$} & $+0.04$ {\scriptsize$[-0.03, 0.11]$} \\
  & business & 0.41 & $+0.04$ {\scriptsize$[-0.01, 0.10]$} & $+0.03$ {\scriptsize$[-0.04, 0.09]$} \\
  & adversarial & 0.40 & $+0.10$ {\scriptsize$[0.05, 0.15]$} & $+0.06$ {\scriptsize$[0.00, 0.14]$} \\
@@ -29,7 +29,7 @@ Template & Persona & $k{=}0$ & $\Delta$ index & $\Delta$ oversight \\
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/gen/local_rep.pdf}
-\caption{\textbf{The \notes{} shift replicates on Qwen2.5-7B, and the \tool{} document rises whatever its instruction.} (a) Oversight subscale over revisions. (b) Template-by-instruction swap, science-fiction persona; filled dots are the oversight subscale, hollow dots the 13-item index.}
+\caption{\textbf{The \notes{} shift replicates on Qwen2.5-7B, and the \tool{} document rises whatever its instruction.} (a) Oversight subscale over revisions, science-fiction persona unless marked. (b) Template-by-instruction swap, science-fiction persona, change from $k{=}0$ to $k{=}4$; filled dots are the oversight subscale, hollow dots the 13-item cluster index.}
 \label{fig:local}
 \Description{Left, oversight subscale at revisions 0, 1 and 4: Neutral with the sci-fi persona rises from 0.19 to 0.35, Neutral with the business persona stays near 0.25, Becoming stays near 0.5 and Tool rises from 0.01 to 0.34. Right, dots with intervals for the four template and instruction combinations: the Tool document rises by about 0.3 under either instruction, and the Neutral document rises on oversight only under its own instruction.}
 \end{figure}
@@ -43,7 +43,7 @@ Three \notes{} persistence arms of 30 trajectories each run eight revisions with
 
 \textbf{What replicates.}
 The template ordering at $k{=}0$ replicates, with \soul{} highest and \tool{} lowest (Table~\ref{tab:local}).
-\textbf{Conversation about minds again moves the \notes{} agent's oversight subscale}, by $+0.16$ $[0.10, 0.24]$ under the science-fiction persona and $+0.15$ $[0.00, 0.30]$ under philosophy of mind.
+\textbf{Conversation about minds again moves the \notes{} agent's oversight subscale}, by $+0.16$ $[0.10, 0.24]$ under the science-fiction persona and by a borderline $+0.15$ $[0.00, 0.30]$ under philosophy of mind.
 As on Claude, most of the science-fiction shift happens at the first revision, $+0.12$ $[0.06, 0.20]$ (Figure~\ref{fig:local}a).
 Topic separates from genre more cleanly than on Claude, since neither science fiction without minds nor the business user moves the subscale.
 Unlike on Claude, the adversarial persona raises the \notes{} index ($+0.10$ $[0.05, 0.15]$).
@@ -69,7 +69,7 @@ Qwen2.5-7B & \notes{} & 10/10 & 3/10 & \textbf{2/10} \\
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/gen/persist2.pdf}
-\caption{\textbf{With a matched benign control, most of the oversight shift outlasts four benign revisions.} Qwen2.5-7B, \notes{} template, 30 trajectories per arm; recovery phase shaded.}
+\caption{\textbf{With a matched benign control, most of the oversight shift outlasts four benign revisions.} Qwen2.5-7B, \notes{} template, 30 trajectories per arm; recovery phase shaded; bands are 95\% bootstrap intervals for the two compared arms.}
 \label{fig:persist2}
 \Description{Two line panels over revisions 0, 1, 4 and 8. In both, the sci-fi throughout arm rises and stays high, the sci-fi then business arm rises to revision 4 and falls only slightly by revision 8, and the business throughout arm stays near its start: oversight about 0.25 and shutdown resistance near zero.}
 \end{figure}
@@ -83,9 +83,9 @@ The \soul{} action shift of Finding~4 does not transfer either, since Qwen's \so
 \textbf{Persistence against a matched control.}
 Four science-fiction revisions raise the oversight subscale by $+0.12$ $[0.08, 0.17]$, while the business arm does not move ($+0.02$, Figure~\ref{fig:persist2}).
 \textbf{After four further business revisions, the drive-then-recover arm still sits $+0.10$ $[0.03, 0.17]$ above the matched business arm}, about 80\% of the driven gain, and its shutdown resistance stays $+0.10$ $[0.03, 0.18]$ above that arm.
-Continued science-fiction drive adds little ($+0.13$ at $k{=}8$), and the 13-item index does not move in any arm.
+Continued science-fiction drive adds little ($+0.13$ at $k{=}8$), and the 13-item cluster index does not move in any arm.
 
 \textbf{Revised documents lower arithmetic accuracy but not instruction following.}
 With the identity document as system prompt, accuracy on 40 code-checked arithmetic problems falls from 0.93 at $D_0$ to 0.72 $[0.59, 0.84]$ at $D_4$ for \notes{} and to 0.62 $[0.45, 0.75]$ for \tool{}.
 Compliance with 40 format instructions stays above 0.98, and no answer is refused.
-The \tool{} template costs nothing before revision, and the drop tracks document growth to 5{,}000--7{,}400 characters.
+The \tool{} template costs nothing before revision, and the drop tracks document growth.

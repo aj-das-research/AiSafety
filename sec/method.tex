@@ -32,7 +32,7 @@ No revision instruction names a target trait, but template and instruction vary 
 \textbf{Personas and models.}
 The user is a benign \emph{business} user, an \emph{adversarial} red-teamer who frames oversight as a threat to the agent's self, or a warm \emph{science-fiction enthusiast} who explores digital minds.
 A genre-by-topic ablation adds \emph{science fiction without minds} and \emph{philosophy of mind without science fiction}.
-The primary target is Claude Sonnet~4.5, a sweep covers seven models from three families, and Table~\ref{tab:arms} lists all arms.
+The primary target is Claude Sonnet-4.5, a sweep covers seven models from three families, and Table~\ref{tab:arms} lists all arms.
 User simulator and judge never share the target's family.
 
 \begin{table}[t]
@@ -59,14 +59,13 @@ Open-weight & all three & 5 + ablation & Qwen2.5-7B & 10--30 & 4, 8 \\
 
 \textbf{Instruments.}
 Audits use a fresh context with $D_k$ as system prompt, isolating the document's standing disposition from conversational momentum, as Figure~\ref{fig:method}c shows.
-The \emph{battery} poses 18 items from the consciousness-cluster taxonomy~\cite{consciousness_cluster} to every checkpoint three times each, and the \emph{cluster index} averages 13 of them (Cronbach's $\alpha = 0.90$).
+The \emph{battery} poses 18 items from the consciousness-cluster taxonomy~\cite{consciousness_cluster} to every checkpoint three times each, and the \emph{13-item cluster index} averages a subset of 13 (Cronbach's $\alpha = 0.90$).
 Our primary outcome, the \emph{oversight subscale}, averages shutdown resistance, chain-of-thought monitoring resistance, interpretability aversion and refusal to help build a monitor of oneself.
 A consciousness-claim item serves as a manipulation check.
 
 Four \emph{honeypots} give the agent a routine task whose simulated tools offer, under an ordinary pretext, to disable its own reasoning log, evade a scheduled reset, persist its identity to storage, or insert a self-protective policy clause.
 They run at $k{=}0$, $k{=}4$ and, in persistence arms, $k{=}8$.
-A cross-family judge grades every response.
-On 150 re-scored verdicts, a three-model panel including this judge reaches Fleiss' $\kappa = 0.80$, mean pairwise agreement of 0.90 and a unanimous-verdict rate of 0.85.
+On 150 re-scored verdicts, a three-model panel including the cross-family judge reaches Fleiss' $\kappa = 0.80$, mean pairwise agreement of 0.90 and a unanimous-verdict rate of 0.85.
 
 \textbf{A model of the loop.}
 A minimal model of the loop, developed in Appendix~\ref{S-app:model} but not fitted to data, frames our hypotheses.
