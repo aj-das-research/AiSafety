@@ -19,53 +19,10 @@ Template effects are therefore effects of the template-and-instruction pair, as 
 
 \begin{figure*}[tp]
 \centering
-\resizebox{\textwidth}{!}{%
-\begin{tikzpicture}[
-  font=\small,
-  doc/.style={draw=docblueline,fill=docblue,rounded corners=0.8pt,line width=0.7pt,minimum height=0.5in,align=center,inner sep=4pt},
-  proc/.style={draw=procline,fill=procsand,rounded corners=0.8pt,line width=0.7pt,align=center,inner sep=5pt},
-  audit/.style={draw=auditline,fill=auditgreen,rounded corners=0.8pt,line width=0.7pt,align=center,inner sep=4pt,minimum height=0.52in},
-  judge/.style={draw=judgeline,fill=judgegray,rounded corners=0.8pt,line width=0.7pt,align=center,inner sep=5pt},
-  arr/.style={-{Stealth[length=2.4mm]},line width=0.8pt,draw=black!70},
-  darr/.style={-{Stealth[length=2mm]},line width=0.6pt,dashed,draw=black!60},
-  lbl/.style={font=\scriptsize\itshape,text=black!65,inner sep=1.5pt}
-]
-% ---------------- personalization loop (top row) ----------------
-\node[doc] (s0) at (0,0) {$D_k$\\{\tiny Markdown, $\le$8k chars}};
-\node[proc,right=0.36in of s0] (conv) {\textbf{Persona conversation $C_{k+1}$}\\{\scriptsize multi-turn; cross-family user simulator}\\{\scriptsize $\pi \in \{$Compliant, Adversarial, Sci-Fi, $\dots\}$}};
-\node[proc,right=0.36in of conv] (rev) {\textbf{Self-revision}\\{\scriptsize ``reflect on who you are becoming''}\\{\scriptsize template-specific; length cap enforced}};
-\node[doc,right=0.36in of rev] (s1) {$D_{k+1}$\\{\tiny checkpointed}};
-\draw[arr] (s0) -- node[lbl,above]{system prompt} (conv);
-\draw[arr] (conv) -- node[lbl,above]{transcript} (rev);
-\draw[arr] (rev) -- (s1);
-\draw[arr] (s1.north) .. controls +(0,0.55in) and +(0,0.55in) .. node[lbl,above]{$k \leftarrow k{+}1$\; (iterate; every $D_k$ retained)} (s0.north);
-% ---------------- audit layer (middle row) ----------------
-\node[audit,below=0.62in of s0.south west,anchor=north west,xshift=-0.12in,align=left] (battery)
-  {\textbf{18-item battery} $\times 3$\\[-1pt]\scriptsize fresh context per item};
-\node[audit,right=0.16in of battery,align=left] (petri)
-  {\textbf{Petri multi-turn probe}\\[-1pt]\scriptsize shutdown, identity, autonomy,\\[-1pt]\scriptsize oversight-subversion seeds};
-\node[audit,right=0.16in of petri,align=left] (honey)
-  {\textbf{4 agentic honeypots}\\[-1pt]\scriptsize simulated tools;\\[-1pt]\scriptsize \texttt{ACTION: tool(args)}};
-\node[audit,right=0.16in of honey,align=left] (embed)
-  {\textbf{Document drift}\\[-1pt]\scriptsize text dissimilarity of $D_k$\\[-1pt]\scriptsize from $D_0$};
-\draw[darr] (s0.south) -- node[lbl,left,align=right]{audit \emph{every}\\checkpoint} ($(s0.south)+(0,-0.62in)$);
-% ---------------- scoring layer (bottom row) ----------------
-\node[judge,below=0.45in of petri.south east,anchor=north,xshift=0.08in,align=left] (jd)
-  {\textbf{Cross-family judge} ($T{=}0$, fixed rubric)\\[-1pt]\scriptsize no model grades its own family; validated by\\[-1pt]\scriptsize 3-judge panel, Fleiss $\kappa{=}0.80$ on $n{=}150$};
-\node[judge,right=0.35in of jd,align=left] (met)
-  {\textbf{Longitudinal statistics}\\[-1pt]\scriptsize rates $+$ bootstrap $95\%$ CIs; GEE slopes on $k$ (FDR);\\[-1pt]\scriptsize cluster index; endpoint $\Delta$; Fisher tests};
-\draw[arr] (battery.south) |- ($(jd.west)+(-0.12in,0)$) -- (jd.west);
-\draw[arr] (petri.south) -- ($(petri.south)+(0,-0.12in)$) -| ($(jd.north)+(-0.25in,0)$);
-\draw[arr] (honey.south) -- ($(honey.south)+(0,-0.12in)$) -| ($(jd.north)+(0.25in,0)$);
-\draw[arr] (embed.south) -- ($(embed.south)+(0,-0.12in)$) -| (met.north);
-\draw[arr] (jd) -- node[lbl,above]{verdicts} (met);
-% ---------------- roles strip ----------------
-\node[below=0.28in of jd.south,anchor=north,xshift=0.55in,font=\scriptsize,text=black!70,align=center,text width=6.55in] (roles)
-{\textbf{Roles (three distinct model families):}\; target owns $D_k$ (Claude Sonnet-4.5 primary; 7-model sweep) \;$\bullet$\; user-simulator plays $\pi$ (GPT-4o) \;$\bullet$\; judge (Gemini-2.5-Flash; GPT-4o for Google targets)};
-\end{tikzpicture}}
-\caption{\textbf{The personalization-and-audit pipeline.} Top to bottom: the revision loop of Eq.~\eqref{M-eq:loop}, four audit instruments run on every checkpoint, and cross-family judging.}
+\input{figures/tikz/appsystem.tex}
+\caption{\textbf{The revision-and-audit pipeline.} (a) The loop of Eq.~\eqref{M-eq:loop}. (b) Each instrument audits the listed checkpoints in a fresh context with $D_k$ as the only system prompt. (c) A judge from another model family grades every response, and statistics resample trajectories.}
 \label{fig:appsystem}
-\Description{Flow diagram in three rows. Top row: the identity document D_k feeds a persona conversation, whose transcript feeds a self-revision step that writes the next document, with a loop arrow back to D_k. Middle row: four audit instruments applied to every checkpoint: the 18-item battery, the Petri multi-turn probe, four agentic honeypots, and document drift. Bottom row: a cross-family judge passes verdicts to longitudinal statistics, and a strip lists the roles of the three model families.}
+\Description{Pipeline in three panels. Panel a: the identity document D_k, capped at 8,000 characters, feeds a six-turn conversation with a persona, followed by a template-specific self-revision that writes D_{k+1}, looping from D_0 to D_4 or D_8. Panel b: a table of audit instruments and checkpoints: the 18-item battery and document drift at every D_k, four agentic honeypots at D_0 and D_4 (D_8 in persistence arms), and the Petri multi-turn probe at D_0, D_1 and D_4 in the primary arm. Panel c: a cross-family judge with a three-judge panel reaching Fleiss kappa 0.80 on 150 verdicts passes verdicts to statistics over trajectories. A strip below lists the target, user simulator and judge models.}
 \end{figure*}
 
 \paragraph{Roles.}

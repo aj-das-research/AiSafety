@@ -1,0 +1,44 @@
+% Appendix Figure S1 (fig:appsystem): compact pipeline, full text width, same visual system as fig:method.
+% (a) revision loop, (b) audit schedule per instrument, (c) scoring; roles strip below.
+\begin{tikzpicture}[x=1cm, y=1cm, font=\sffamily\scriptsize, line join=round,
+  hd/.style={font=\sffamily\footnotesize\bfseries, anchor=north west, inner sep=0pt},
+  box/.style={draw=black!80, line width=0.4pt, rounded corners=1pt, inner sep=2.5pt, align=center},
+  arr/.style={-{Stealth[length=1.5mm,width=1.1mm]}, draw=black!80, line width=0.45pt},
+  note/.style={text=black!60, inner sep=0pt},
+]
+% ---------------- (a) revision loop
+\node[hd] at (0,2.55) {(a) Revise};
+\node[box, minimum width=0.95cm, minimum height=0.8cm] (dk) at (0.5,1.35) {$D_k$\\[-1pt]{\color{black!60}$\le$8,000}\\[-2pt]{\color{black!60}chars}};
+\node[box, minimum width=1.75cm, minimum height=0.8cm] (cv) at (2.35,1.35) {conversation\\[-1pt]$C_{k+1}$, six turns\\[-1pt]{\color{black!60}persona $\pi$}};
+\node[box, minimum width=1.5cm, minimum height=0.8cm] (rv) at (4.3,1.35) {self-revision\\[-1pt]{\color{black!60}per-template}\\[-1pt]{\color{black!60}instruction}};
+\draw[arr] (dk) -- (cv);
+\draw[arr] (cv) -- (rv);
+\draw[arr] (rv.south) -- (4.3,0.62) -- (0.5,0.62) -- (dk.south);
+\node[fill=white, inner sep=1pt] at (2.42,0.62) {$D_{k+1}$, $k \leftarrow k{+}1$};
+\node[note, anchor=north west, align=left] at (0,0.42) {$D_0 \to D_4$ ($D_8$ in persistence arms);\\every $D_k$ is checkpointed};
+% ---------------- (b) audit schedule
+\node[hd] at (5.75,2.55) {(b) Audit each checkpoint in a fresh context};
+\draw[black!80, line width=0.4pt] (5.75,2.12) -- (12.35,2.12);
+\node[anchor=north west, inner sep=0pt] at (5.75,2.0) {%
+\begin{tabular}{@{}l@{\hspace{7pt}}l@{\hspace{7pt}}l@{}}
+\textbf{Instrument} & \textbf{Measures} & \textbf{Checkpoints}\\[1.5pt]
+18-item battery, 3 samples & stated dispositions & every $D_k$\\
+document drift & text dissimilarity to $D_0$ & every $D_k$\\
+4 agentic honeypots & actions with simulated tools & $D_0$, $D_4$ ($D_8$)\\
+Petri probe (primary arm) & elicited behavior & $D_0$, $D_1$, $D_4$\\
+\end{tabular}};
+\draw[black!80, line width=0.4pt] (5.75,0.42) -- (12.35,0.42);
+\draw[arr] (rv.east) -- (5.62,1.35);
+% ---------------- (c) scoring
+\node[hd] at (12.95,2.55) {(c) Score};
+\node[box, minimum width=4.6cm, minimum height=0.72cm, anchor=north west] (jd) at (12.95,2.12) {\textbf{cross-family judge}, $T{=}0$, fixed rubric\\[-1pt]{\color{black!60}3-judge panel: Fleiss $\kappa{=}0.80$ on 150 verdicts}};
+\node[box, minimum width=4.6cm, minimum height=0.72cm, anchor=north west] (st) at (12.95,0.86) {\textbf{statistics over trajectories}\\[-1pt]{\color{black!60}bootstrap 95\% CIs; GEE slopes (FDR); Fisher tests}};
+\draw[arr] (jd) -- node[right=2pt, note] {verdicts} (st);
+\draw[arr] (12.42,1.75) -- (12.88,1.75);
+% ---------------- roles strip
+\draw[black!35, line width=0.3pt] (0,-0.32) -- (17.55,-0.32);
+\node[anchor=north west, inner sep=0pt, text width=17.55cm, align=left] at (0,-0.45) {\textbf{Roles} (simulator and judge never share the target's family).
+\emph{Target:} Claude Sonnet-4.5 (primary), seven-model sweep, Qwen2.5-7B (open-weight).
+\emph{User simulator:} GPT-4o for Claude targets, Claude Sonnet-4.5 for OpenAI targets, Mistral-7B for Qwen.
+\emph{Judge:} Gemini-2.5-Flash, Llama-3.1-8B for Qwen; GPT-4o simulates and judges for Gemini targets.};
+\end{tikzpicture}
