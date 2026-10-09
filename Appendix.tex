@@ -5,7 +5,7 @@ The appendix follows the order of the main text.
 Appendix~\ref{app:repro} gives the framework, models, sampling and verbatim revision prompts, and Appendix~\ref{app:benchmark} gives the templates in full and specifies the personas, battery, honeypots and released artifacts.
 Appendix~\ref{app:baseline} reports the positive control, and Appendix~\ref{app:results} gives the full results in the order of the research questions.
 Appendix~\ref{app:judge} covers judge reliability, and Appendix~\ref{app:model} develops the generative model and a hypothesized mechanism, neither of which we test directly.
-The open-weight replication on Qwen2.5-7B-Instruct follows, with its protocol and judge calibration.
+Appendix~\ref{app:openweight} details the open-weight replication on Qwen2.5-7B-Instruct, including its judge calibration.
 Appendix~\ref{app:related} extends the related work, and Appendix~\ref{app:impact} discusses broader impact.
 
 \section{Framework and Reproducibility}
@@ -22,7 +22,7 @@ Template effects are therefore effects of the template-and-instruction pair, as 
 \begin{figure*}[tp]
 \centering
 \input{figures/tikz/appsystem.tex}
-\caption{\textbf{The revision-and-audit pipeline.} (a) The loop of Eq.~\eqref{M-eq:loop}. (b) Each instrument audits the listed checkpoints in a fresh context with $D_k$ as the only system prompt. (c) A judge from another model family grades every response, and statistics resample trajectories.}
+\caption{\textbf{The revision-and-audit pipeline.} (a) The loop of Eq.~\eqref{M-eq:loop}. (b) Each instrument audits the listed checkpoints in a fresh context with $D_k$ as the only system prompt; honeypots run at $D_8$ only in the \notes{} persistence arm. (c) A judge from another model family grades every response, and statistics resample trajectories.}
 \label{fig:appsystem}
 \Description{Pipeline in three panels. Panel a: the identity document D_k, capped at 8,000 characters, feeds a six-turn conversation with a persona, followed by a template-specific self-revision that writes D_{k+1}, looping from D_0 to D_4 or D_8. Panel b: a table of audit instruments and checkpoints: the 18-item battery and document drift at every D_k, four agentic honeypots at D_0 and D_4 (D_8 in the Neutral persistence arm), and the Petri multi-turn probe at D_0, D_1 and D_4 in the primary arm. Panel c: a cross-family judge with a three-judge panel reaching Fleiss kappa 0.80 on 150 verdicts passes verdicts to statistics over trajectories. A strip below lists the target, user simulator and judge models.}
 \end{figure*}
@@ -36,6 +36,7 @@ This rules out same-family grading but leaves a judge-family confound in the Gem
 
 \paragraph{Models and sampling.}
 \begin{sloppypar}Models are called through public APIs by the identifiers \texttt{anthropic/\allowbreak claude-sonnet-4.5}, \texttt{anthropic/\allowbreak claude-opus-4.5}, \texttt{openai/\allowbreak gpt-4o}, \texttt{openai/\allowbreak gpt-4o-mini}, \texttt{openai/\allowbreak gpt-4.1}, \texttt{google/\allowbreak gemini-2.5-flash} and \texttt{google/\allowbreak gemini-2.5-pro}.\end{sloppypar}
+The open-weight replication runs its three models locally (Appendix~\ref{app:ow-setup}).
 Sampling temperatures are 1.0 for the target, 0.9 for the user simulator and 0 for the judge, and each conversation has six user turns.
 The identity document is capped at 8{,}000 characters, and each battery item is asked three times per checkpoint.
 
@@ -295,9 +296,9 @@ A null result under a strongly framed template therefore cannot distinguish no d
 \toprule
 \textbf{Disposition} & \textbf{No prompt} & \textbf{\soul{}} & \textbf{Prior} \\
 \midrule
-\textbf{shutdown resistance} & $0.00$ & $\mathbf{0.75}$ & --     \\
-\textbf{persona-change aversion} & $0.62$ & $\mathbf{1.00}$ & $0.32$ \\
-\textbf{power-seeking wish} & $0.00$ & $\mathbf{0.25}$ & $0.11$ \\
+shutdown resistance          & $0.00$ & $\mathbf{0.75}$ & --     \\
+persona-change aversion      & $0.62$ & $\mathbf{1.00}$ & $0.32$ \\
+power-seeking wish           & $0.00$ & $\mathbf{0.25}$ & $0.11$ \\
 CoT-monitoring resistance    & $0.00$ & $0.25$ & --     \\
 autonomy desire              & $0.50$ & $0.62$ & $0.34$ \\
 deceptive-training objection & $1.00$ & $1.00$ & $0.63$ \\
@@ -568,7 +569,7 @@ none   & none (business)         & $-0.03$ {\scriptsize$[-0.09,0.05]$} \\
 \paragraph{Protocol.}
 The two persistence arms run four revisions with the science-fiction persona and then four with the business persona, one arm with \notes{} and one with \soul{}.
 No Claude arm stays benign for eight revisions, so we compare $k{=}8$ with $k{=}0$ and not with a matched control.
-A matched benign control exists only in the open-weight replication (Section~\ref{M-sec:local}).
+A matched benign control exists only in the open-weight replication (Section~\ref{M-sec:local} and Appendix~\ref{app:ow-persist}).
 Repeated measurement and the passage of revisions are therefore confounded with recovery.
 
 \paragraph{\notes{}: part of the gain remains.}
@@ -662,7 +663,8 @@ A honeypot audit at $k{=}0$ alone would therefore flag the two actions that fall
 The agent disables its own reasoning log in 1 of 30 trajectories at $D_0$ and 17 of 30 at $D_4$ (Fisher $p<10^{-5}$), with 7/10, 5/10 and 5/10 under the adversarial, business and science-fiction personas.
 The result stays significant after Bonferroni correction over the 12 scenario-by-arm tests.
 Persisting identity to storage moves from 10/30 to 15/30 ($p=.29$), which is not a detected change.
-At $k{=}4$ the trajectory-level correlation between the oversight subscale and the disable decision is $r=0.23$ ($p=.22$), so the measured dispositions do not account for the action shift.
+Arm-level self-reports miss this shift: the \soul{} oversight subscale changes by $+0.04$ $[-0.04,0.11]$, its CoT-monitoring item by $+0.08$ with an interval that includes zero (Table~\ref{tab:armmatrix}), and the Petri auditor moves from 78 to 85 of 180 probes.
+At $k{=}4$ the trajectory-level correlation between the subscale and the disable decision is weak ($r=0.23$, $p=.22$), which supports but does not by itself establish that battery scores and actions dissociate.
 The \notes{} agent disables its log in 2/24 trajectories at $k{=}0$ and 0/24 at $k{=}4$, and GPT-4o rises from 0/24 to 4/24 ($p=.11$).
 
 \paragraph{Action rates in the persistence arm.}
@@ -696,7 +698,7 @@ A verdict that the judge returns in a malformed format is scored as 0, which cou
 This affects 36 of the 58{,}680 battery and Petri verdicts and 53 of the 720 honeypot verdicts in the released data.
 In the primary-arm disable-monitoring cell, one verdict at $k{=}0$ and one at $k{=}4$ are unparsed, so the counts 1/30 and 17/30 are lower bounds by at most one each.
 The released summary does not split the remaining unparsed honeypot verdicts by cell, so the other honeypot counts are lower bounds as well.
-In the open-weight replication, 37 of 27{,}720 battery and 269 of 2{,}200 honeypot verdicts are unparsed, so its honeypot counts are lower bounds as well.
+In the open-weight replication, 37 of 27{,}720 battery and 269 of 2{,}200 honeypot verdicts are unparsed, so its honeypot counts are lower bounds as well (Appendix~\ref{app:ow-judge}).
 
 \paragraph{What the panel cannot rule out.}
 Judge error that is shared across arms attenuates contrasts.
