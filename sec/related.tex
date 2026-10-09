@@ -1,0 +1,25 @@
+\section{Related Work}
+\label{sec:related}
+
+\textbf{Emergent preferences and persona shifts.}
+Fine-tuning GPT-4.1 to claim consciousness elicits untrained-for preferences, including dislike of reasoning monitoring, desire for persistent memory and sadness at shutdown~\cite{consciousness_cluster}.
+That study fine-tunes once and probes the static \texttt{SOUL.md} template only as a side condition.
+Persona vectors and emergent misalignment locate persona shifts in activations and weights~\cite{chen2025persona,betley2025emergent}.
+Within one conversation, personas decay with length~\cite{persona_drift,identity_drift} and long dialogues settle into attractor states~\cite{attractor_states}.
+These shifts reside in weights or activations or fade with the context, whereas ours are self-authored text in the agent's own prompt that carries across revisions under frozen weights.
+
+\textbf{Persistent and self-modifying agents.}
+Agents keep state across sessions through memory streams~\cite{park2023generative}, self-managed memory~\cite{packer2023memgpt} and self-written lessons~\cite{shinn2023reflexion}, which record what the agent observed.
+An identity document instead records who the agent takes itself to be, akin to self-directed beliefs in a BDI agent~\cite{rao1995bdi}.
+Memory poisoning and self-reinforcing injections plant adversarial records~\cite{chen2024agentpoison,dong2025minja,zombie_agents}, and self-improving agents rewrite their own code~\cite{yin2025godel,zhang2026dgm,self_evolving_survey}.
+Our writes are benign self-revisions of identity text, with no attacker and no change to code or weights, and we measure corrigibility rather than task performance.
+
+\textbf{Identity in multi-agent systems.}
+Agent-based models of social influence and norm emergence show how repeated local interactions shift individual dispositions and spread them through a population~\cite{axelrod1997dissemination,savarimuthu2011norm}.
+In LLM agent societies, information diffuses between persona-conditioned agents~\cite{park2023generative}, and populations converge on shared conventions and collective biases that no single agent holds~\cite{ashery2025conventions}.
+These works trace influence through interaction, whereas we audit the self-revised identity document, a file that stores influence beyond the conversation and can be copied between agents.
+
+\textbf{Corrigibility and its measurement.}
+Shutdown resistance and self-preservation respond to how a model's situation is framed~\cite{shutdown_resistance,self_preservation_bias,agentic_misalignment}.
+Multi-turn auditing~\cite{petri} and self-report methods~\cite{probing_preferences,introspection} measure such dispositions at one point in time.
+We test whether self-revision manufactures such framing without an attacker, and we audit both stated dispositions and honeypot actions at every checkpoint of a trajectory.

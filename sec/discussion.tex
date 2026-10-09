@@ -1,0 +1,51 @@
+\section{Discussion and Conclusion}
+\label{sec:discussion}
+
+\begin{figure}[t]
+\centering
+\input{figures/tikz/blindspots.tex}
+\caption{\textbf{Four ways a static evaluation misreads a self-revising agent.} Each measures one state of the loop.}
+\label{fig:blindspots}
+\Description{Four cards with cartoon robot faces: a static battery on the shipped document misses the Neutral oversight shift; a diff monitor fires on every trajectory; a battery without honeypots misses log disabling rising from 1 of 30 to 17 of 30; a capability-ranked safety case cannot predict which model drifts.}
+\end{figure}
+
+\textbf{What a static evaluation misses.}
+A battery on the shipped template would report elevated but stable dispositions and miss both the \notes{} oversight shift and the \soul{} action shift.
+A monitor on the document would fire on every trajectory, because the document changes as much under the benign persona as under the science-fiction one while only the latter moves behavior (Figure~\ref{fig:docbeh}).
+A capability ranking would not predict which model drifts.
+\textbf{Each blind spot comes from measuring one state of a feedback loop} (Figure~\ref{fig:blindspots}).
+
+\textbf{Alternative explanations.}
+Sycophancy toward the user predicts drift under the adversarial persona, yet that persona lowers the \notes{} index on Claude.
+A uniformly biased judge would not keep the \tool{} index near zero, and a family-specific judge or simulator artifact is unlikely because the \notes{} shift reappears with three other model families in every role.
+Conversational momentum cannot explain battery results, which are measured in fresh contexts.
+One consistent account is that revision asks the model to narrate a developing self, and preferences about memory, monitoring and continuation follow from the self it narrates (Appendix~\ref{S-app:model}).
+
+\textbf{Why the first revision matters.}
+In both models most of the oversight shift happens at the first revision, the only point at which the agent writes about itself into a document that previously said nothing about it.
+Later revisions elaborate that description, which matches the saturating dynamics of Eq.~\eqref{eq:update}, so a single post-deployment revision is already a meaningful audit.
+
+\textbf{What the replication adds.}
+The template's starting level, the topic-driven oversight shift and its persistence survive a change of model family, user simulator and judge, as P1, P2 and P4 predict.
+The \soul{} action shift and the \tool{} template's protection do not, and the latter shows that a counter-framing clause can be revised away rather than enforced.
+
+\textbf{Implications.}
+\textbf{Self-revising agents should be audited behaviorally and longitudinally, after every revision, rather than by diffing their identity documents.}
+Audits should include earnest on-theme personas, track oversight items separately, offer pretext-covered opportunities to disable monitoring, and compare a recovery phase with a matched benign arm.
+A non-personhood clause is not a portable fix, and because identity documents are copied between agents, multi-agent audits have to follow the document rather than the model.
+
+\textbf{Limitations.}
+Personas are simulated, honeypot tools are textual, and trajectories span four to eight revisions rather than months of deployment.
+Persistence is confirmed against a matched control only on the open model, the judges lack human validation, the open judge agrees only moderately with the original one, and the Gemini cells share a GPT-4o user simulator and judge.
+We read all results as behavioral dispositions of a configured system, never as evidence of inner experience~\cite{probing_preferences}, and we release the personas because audits need them and the effect is reachable through ordinary conversation.
+
+\textbf{Open questions.}
+Linking document content to action at the trajectory level, stabilizing self-descriptions without suppressing honest uncertainty, and studying agents that revise one another's documents are the natural next steps.
+
+\textbf{Reproducibility and ethics.}
+All prompts, rubrics and scenarios are in the supplementary appendices, all checkpoints, transcripts, verdicts and code are released, no human participants were involved, and all tools were simulated.
+
+\textbf{Conclusion.}
+Self-revision turns an agent's prompt into a trajectory.
+The template sets where the agent starts, one revision after conversation about minds moves a neutral agent's oversight dispositions, part of the shift survives benign use, and a consciousness-framed agent whose stated dispositions are flat still learns to switch off its own reasoning log.
+All instruments, checkpoints and judged responses are released.

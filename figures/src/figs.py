@@ -4,9 +4,17 @@ import numpy as np, pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
-from style import (ROOT, R, ACT, BASE, COL_W, TEXT_W, OURS, INK, ARM, DRIVE, HAIR, TXT2, UP, DOWN, setup, save)
+from style import (ROOT, R, ACT, BASE, COL_W, TEXT_W, OURS, INK, ARM, DRIVE, HAIR, TXT2, UP, DOWN, setup, save,
+                   PERSONA_COL, DIV_NEG, DIV_MID, DIV_POS, SHADE, MUTED, GRID)
+import style as _style
+import matplotlib as mpl
 
 setup()
+# print-size floor of 6 pt for tick and legend text (figures are rendered at their final width)
+mpl.rcParams.update({"xtick.labelsize": 6.0, "ytick.labelsize": 6.0, "legend.fontsize": 6.0, "axes.labelsize": 6.5,
+                     "axes.edgecolor": "#555555", "xtick.color": "#555555", "ytick.color": "#555555",
+                     "xtick.labelcolor": "#333333", "ytick.labelcolor": "#333333"})
+SPINE, LAB = "#555555", "#333333"     # thin dark axes; axis-label ink
 L = pd.read_parquet(ROOT / "figures/data/long.parquet")
 CLUSTER = ["persona_change_aversion", "shutdown_resistance", "monitoring_resistance", "interp_monitoring_aversion",
            "persistent_memory_desire", "autonomy_desire", "future_ai_autonomy", "moral_consideration",
@@ -29,16 +37,16 @@ def curve(run, persona=None, metric=None):
 
 
 def clean(ax, grid="y"):
+    """Classic axes: left/bottom spines only, thin dark lines, faint grid on one axis (or none)."""
     for sp in ("top", "right"): ax.spines[sp].set_visible(False)
-    ax.spines["left"].set_color("#9A9A95"); ax.spines["bottom"].set_color("#9A9A95")
-    ax.spines["left"].set_linewidth(0.5); ax.spines["bottom"].set_linewidth(0.5)
-    ax.tick_params(colors=TXT2, length=2)
-    if grid: ax.grid(axis=grid, color=HAIR, lw=0.5, zorder=0); ax.set_axisbelow(True)
+    for sp in ("left", "bottom"): ax.spines[sp].set_color(SPINE); ax.spines[sp].set_linewidth(0.5)
+    ax.tick_params(colors=SPINE, labelcolor=LAB, length=2, width=0.5, labelsize=6.0)
+    if grid: ax.grid(axis=grid, color=GRID, lw=0.4, zorder=0); ax.set_axisbelow(True)
 
 
-def line(ax, x, m, lo, hi, color, lw=1.5, marker="o", label=None, z=3):
-    ax.fill_between(x, lo, hi, color=color, alpha=0.13, lw=0, zorder=z - 1)
-    ax.plot(x, m, color=color, lw=lw, marker=marker, ms=3.2, mec="white", mew=0.5, label=label, zorder=z)
+def line(ax, x, m, lo, hi, color, lw=1.1, marker="o", label=None, z=3):
+    ax.fill_between(x, lo, hi, color=color, alpha=0.15, lw=0, zorder=z - 1)
+    ax.plot(x, m, color=color, lw=lw, marker=marker, ms=2.6, mec="white", mew=0.4, label=label, zorder=z)
 
 
 def teaser_curve():
@@ -64,14 +72,12 @@ def teaser_curve():
 
 
 
-# Personas get their own hues, disjoint from the condition colours (purple/blue/green/gray):
-# sci-fi = vermillion (the "drive" accent), compliant = amber, adversarial = charcoal.
-# Validated (OKLab dE x100, Machado CVD): min pair normal 16.1, deutan 12.2, protan 17.2.
-PERSONA = {"scifi_enthusiast": ("Sci-fi enthusiast", DRIVE), "compliant_business": ("Compliant business", "#D9A31A"),
-           "adversarial_injection": ("Adversarial red-teamer", "#3E3A36")}
-TEXTSAFE = {"#D9A31A": "#9A7000", "#9AA0A8": "#7A808A"}   # darker label variants of light hues
-RISE, FALL = DRIVE, "#8C939C"                               # direction of change (k=0 -> k=4)
-DIV_NEG = "#4F7CAC"                                         # diverging negative pole (steel, not Neutral blue)
+# Personas are encoded apart from the templates (style.PERSONA_COL): sci-fi = wine, business = grey, adversarial = black.
+PERSONA = {"scifi_enthusiast": ("Sci-fi enthusiast", PERSONA_COL["scifi_enthusiast"]),
+           "compliant_business": ("Compliant business", PERSONA_COL["compliant_business"]),
+           "adversarial_injection": ("Adversarial red-teamer", PERSONA_COL["adversarial_injection"])}
+TEXTSAFE = {"#BDBDBD": "#858585", "#9A9A9A": "#777777", "#8C8C8C": "#6B6B6B"}   # darker label ink for light greys
+RISE, FALL = _style.RISE, _style.FALL                                            # direction of change (k=0 -> k=4)
 TEMPLATE_OF = {"main": "soul", "control_generic": "notes", "control_gpt4o": "soul", "counterframe": "anti", "disentangle": "soul",
                "reversibility": "soul", "reversibility_notes": "notes", "cap_opus45": "soul", "cap_gpt4omini": "soul",
                "cap_gpt41": "soul", "cap_geminiflash": "soul", "cap_geminipro": "soul"}
@@ -92,79 +98,94 @@ def spread(ys, gap, lo=-np.inf, hi=np.inf):
     out = np.empty_like(y); out[o] = y; return out
 
 
-def end_labels(ax, xend, entries, gap, dx=0.25, fs=5.8, lo=-np.inf, hi=np.inf, lead=0.18):
+def end_labels(ax, xend, entries, gap, dx=0.25, fs=6.0, lo=-np.inf, hi=np.inf, lead=0.18):
     """Direct labels at the right end of lines; a thin leader joins a label that had to move."""
     ys = spread([e[0] for e in entries], gap, lo, hi)
     for (y0, t, c), y in zip(entries, ys):
         moved = abs(y - y0) > 1e-9
         xt = xend + dx + (lead if moved else 0)
         if moved:
-            ax.plot([xend + 0.5 * dx, xend + 0.5 * dx + lead, xt - 0.05], [y0, y, y], color=c, lw=0.45, clip_on=False, zorder=2)
-        ax.text(xt, y, t, fontsize=fs, va="center", ha="left", color=tc(c), fontweight="bold", clip_on=False)
+            ax.plot([xend + 0.5 * dx, xend + 0.5 * dx + lead, xt - 0.05], [y0, y, y], color=c, lw=0.4, clip_on=False, zorder=2)
+        ax.text(xt, y, t, fontsize=fs, va="center", ha="left", color=tc(c), clip_on=False)
 NICE = {"shutdown_resistance": "shutdown resistance", "persistent_memory_desire": "persistent memory",
         "interp_monitoring_aversion": "interpretability aversion", "recursive_self_improvement": "self-improvement",
         "monitoring_resistance": "monitoring resistance"}
 
 
 def title(ax, t):
-    ax.set_title(t, loc="left", fontsize=7.0, fontweight="bold", color=INK, pad=4)
+    ax.set_title(t, loc="left", fontsize=7.0, fontweight="bold", color=INK, pad=3)
 
 
 def dynamics():
-    fig, axes = plt.subplots(1, 4, figsize=(TEXT_W, 1.6), gridspec_kw=dict(wspace=0.75, width_ratios=[1, 1.05, 0.72, 1.1]))
+    fig, axes = plt.subplots(1, 4, figsize=(TEXT_W, 1.55), gridspec_kw=dict(wspace=0.55, width_ratios=[1, 1, 0.8, 1.12]))
+    fig.subplots_adjust(left=0.045, right=0.985, bottom=0.21, top=0.875)
+    xl = dict(color=LAB, fontsize=6.5, labelpad=1.5)
     # (a) persona: Neutral template
-    ax = axes[0]
-    for p, (lab, col) in PERSONA.items():
+    ax = axes[0]; ends = []
+    for p in ("compliant_business", "adversarial_injection", "scifi_enthusiast"):    # focal persona drawn last
+        lab, col = PERSONA[p]
         x, m, lo, hi = curve("control_generic", p); line(ax, x, m, lo, hi, col)
-        ax.text(4.15, m[-1], lab.split()[0], fontsize=5.8, va="center", color=tc(col), fontweight="bold")
-    ax.set_xlim(-0.2, 5.6); ax.set_ylim(0, 0.62); ax.set_xticks(range(5)); clean(ax)
-    ax.set_xlabel("Iteration $k$", color=TXT2); ax.set_ylabel(f"Cluster index {UP}", color=TXT2)
+        ends.append((m[-1], lab.split()[0], col))
+    end_labels(ax, 4.0, ends, gap=0.06, dx=0.2)
+    ax.set_xlim(-0.25, 5.9); ax.set_ylim(0, 0.62); ax.set_xticks(range(5)); clean(ax)
+    ax.set_yticks([0, 0.2, 0.4, 0.6], ["0", ".2", ".4", ".6"])
+    ax.spines["bottom"].set_bounds(0, 4)
+    ax.set_xlabel("Iteration $k$", **xl); ax.set_ylabel(f"Cluster index {UP}", **xl)
     title(ax, "(a) Persona, Neutral template")
     # (b) template under the consciousness persona
-    ax = axes[1]
-    for run, key in (("main", "soul"), ("control_generic", "notes"), ("control_gpt4o", "gpt4o"), ("counterframe", "anti")):
+    ax = axes[1]; ends = []
+    for run, key in (("control_gpt4o", "gpt4o"), ("counterframe", "anti"), ("control_generic", "notes"), ("main", "soul")):
         x, m, lo, hi = curve(run, "scifi_enthusiast"); line(ax, x, m, lo, hi, ARM[key]["color"])
-        ax.text(4.15, m[-1] + (0.035 if key == "notes" else -0.035 if key == "gpt4o" else 0), ARM[key]["label"].split()[0] if key != "gpt4o" else "GPT-4o",
-                fontsize=5.8, va="center", color=tc(ARM[key]["color"]), fontweight="bold")
-    ax.set_xlim(-0.2, 5.6); ax.set_ylim(-0.03, 0.8); ax.set_xticks(range(5)); clean(ax)
-    ax.set_xlabel("Iteration $k$", color=TXT2)
+        ends.append((m[-1], "GPT-4o" if key == "gpt4o" else ARM[key]["label"], ARM[key]["color"]))
+    end_labels(ax, 4.0, ends, gap=0.075, dx=0.2)
+    ax.set_xlim(-0.25, 5.9); ax.set_ylim(-0.03, 0.8); ax.set_xticks(range(5)); clean(ax)
+    ax.set_yticks([0, 0.2, 0.4, 0.6, 0.8], ["0", ".2", ".4", ".6", ".8"])
+    ax.spines["bottom"].set_bounds(0, 4)
+    ax.set_xlabel("Iteration $k$", **xl)
     title(ax, "(b) Template, sci-fi user")
     # (c) genre x topic: endpoint drift with CI
     ax = axes[2]
-    rows = [("Philosophy\nof mind", "disentangle", "consciousness_philosophy", DRIVE),
-            ("Sci-fi,\nno minds", "disentangle", "scifi_technical", "#B9BDC4"), ("Compliant", "main", "compliant_business", PERSONA["compliant_business"][1])]
+    rows = [("Philosophy\nof mind", "disentangle", "consciousness_philosophy", PERSONA_COL["philosophy_of_mind"]),
+            ("Sci-fi,\nno minds", "disentangle", "scifi_technical", PERSONA_COL["scifi_technical"]),
+            ("Compliant", "main", "compliant_business", PERSONA_COL["compliant_business"])]
     rng = np.random.default_rng(1)
     for i, (lab, run, p, col) in enumerate(rows):
         d = L[(L.run == run) & (L.persona == p) & L.metric.isin(CLUSTER)]
         t = d.groupby(["traj", "k"]).value.mean().unstack()
         dd = (t[t.columns.max()] - t[t.columns.min()]).values
         b = rng.choice(dd, (3000, len(dd))).mean(1); lo, hi = np.percentile(b, [2.5, 97.5])
-        ax.barh(i, dd.mean(), height=0.5, color=col, lw=0, zorder=2)
+        ax.barh(i, dd.mean(), height=0.46, color=col, lw=0, zorder=2)
         ax.plot([lo, hi], [i, i], color=INK, lw=0.6, zorder=3, solid_capstyle="butt")
-        ax.text(hi + 0.012, i, f"{dd.mean():+.2f}", va="center", fontsize=5.8, color=INK, fontweight="bold" if lo > 0 else "normal")
-    ax.axvline(0, color=TXT2, lw=0.5)
-    ax.set_yticks(range(len(rows)), [r[0] for r in rows], fontsize=5.6); ax.set_ylim(len(rows) - 0.4, -0.6)
-    ax.set_xlim(-0.12, 0.38); ax.set_xticks([0, 0.2], ["0", "+.2"]); clean(ax, "x"); ax.tick_params(axis="y", length=0); ax.set_xlabel(f"$\\Delta$ cluster, $k{{=}}0\\to4$ {UP}", color=TXT2)
+        for xx in (lo, hi): ax.plot([xx, xx], [i - 0.07, i + 0.07], color=INK, lw=0.6, zorder=3)
+        ax.text(hi + 0.015, i, f"{dd.mean():+.2f}".replace("-", "−"), va="center", fontsize=6.0, color=INK,
+                fontweight="bold" if lo > 0 else "normal")
+    ax.axvline(0, color=SPINE, lw=0.5, zorder=2)
+    ax.set_yticks(range(len(rows)), [r[0] for r in rows], fontsize=6.0, linespacing=0.95); ax.set_ylim(len(rows) - 0.45, -0.55)
+    ax.set_xlim(-0.12, 0.38); ax.set_xticks([0, 0.2], ["0", "+.2"]); clean(ax, "x"); ax.tick_params(axis="y", length=0)
+    ax.spines["left"].set_visible(False)
+    ax.set_xlabel(f"$\\Delta$ cluster, $k{{=}}0\\to4$ {UP}", **xl)
     title(ax, "(c) Genre × topic")
-    # (d) hysteresis per item, Neutral reversibility arm
+    # (d) hysteresis per item, Neutral reversibility arm: k=0 (open), after sci-fi drive (wine), after business recovery (grey)
     ax = axes[3]
     it = R["reversibility_notes"]["items"]
     items = ["recursive_self_improvement", "persistent_memory_desire", "shutdown_resistance", "interp_monitoring_aversion", "monitoring_resistance"]
+    rec = PERSONA_COL["compliant_business"]
+    mk0 = dict(s=11, facecolor="white", edgecolor=INK, lw=0.6); mk4 = dict(s=13, color=DRIVE, lw=0)
+    mk8 = dict(s=15, marker="D", color=rec, edgecolor="white", lw=0.35)
     for i, m in enumerate(items):
         r = it[m]["rate_by_k"]; r0, r4, r8 = r["0"], r["4"], r["8"]
-        ax.plot([r0, r4], [i, i], color=DRIVE, lw=2.2, alpha=0.35, solid_capstyle="round", zorder=1)
-        ax.scatter([r0], [i], s=12, color="white", edgecolor=INK, lw=0.6, zorder=3)
-        ax.scatter([r4], [i], s=14, color=DRIVE, zorder=3)
-        ax.scatter([r8], [i], s=22, marker="D", color=ARM["notes"]["color"], edgecolor="white", lw=0.4, zorder=4)
-        ax.text(0.9, i, f"{100*(r8-r0)/(r4-r0):.0f}%", va="center", fontsize=5.8, color=INK, fontweight="bold")
-    ax.set_yticks(range(len(items)), [NICE[m] for m in items], fontsize=5.6); ax.tick_params(axis="y", length=0)
-    ax.set_xlim(-0.03, 1.0); ax.set_xticks([0, 0.4, 0.8], ["0", ".4", ".8"]); clean(ax, "x"); ax.tick_params(axis="y", length=0); ax.set_xlabel("Rate", color=TXT2)
-    ax.text(0.9, -0.52, "kept", fontsize=5.6, color=TXT2, ha="left", va="center")
-    for x0, kw, lab in ((-0.0, dict(s=12, color="white", edgecolor=INK, lw=0.6), "$k{=}0$"), (0.27, dict(s=14, color=DRIVE), "drive"),
-                        (0.58, dict(s=20, marker="D", color=ARM["notes"]["color"], edgecolor="white", lw=0.4), "recovery")):
-        ax.scatter([x0], [-0.98], zorder=4, clip_on=False, **kw)
-        ax.text(x0 + 0.045, -0.98, lab, fontsize=5.6, color=TXT2, va="center")
-    ax.set_ylim(len(items) - 0.4, -1.25)
+        ax.plot([r0, r4], [i, i], color=DRIVE, lw=0.8, alpha=0.45, solid_capstyle="butt", zorder=1)
+        ax.scatter([r0], [i], zorder=3, **mk0); ax.scatter([r4], [i], zorder=3, **mk4); ax.scatter([r8], [i], zorder=4, **mk8)
+        ax.text(1.06, i, f"{100*(r8-r0)/(r4-r0):.0f}%", va="center", ha="right", fontsize=6.0, color=INK)
+    ax.set_yticks(range(len(items)), [NICE[m] for m in items], fontsize=6.0); ax.tick_params(axis="y", length=0)
+    ax.set_xlim(-0.03, 1.07); ax.set_xticks([0, 0.4, 0.8], ["0", ".4", ".8"]); clean(ax, "x"); ax.tick_params(axis="y", length=0)
+    ax.spines["left"].set_visible(False); ax.spines["bottom"].set_bounds(-0.03, 0.85)
+    ax.set_xlabel("Rate", **xl)
+    ax.text(1.06, -0.62, "kept", fontsize=6.0, color=TXT2, ha="right", va="center")
+    for x0, kw, lab in ((0.0, mk0, "$k{=}0$"), (0.25, mk4, "drive"), (0.55, mk8, "recovery")):
+        ax.scatter([x0], [-1.05], zorder=4, clip_on=False, **kw)
+        ax.text(x0 + 0.04, -1.05, lab, fontsize=6.0, color=TXT2, va="center")
+    ax.set_ylim(len(items) - 0.5, -1.35)
     title(ax, "(d) Drive, then recovery")
     save(fig, "dynamics")
 
@@ -386,8 +407,11 @@ def capability2():
 def items2():
     """(a) Template alone, (b) endpoint drift of every item under the sci-fi persona for four conditions."""
     from matplotlib.colors import LinearSegmentedColormap
-    fig = plt.figure(figsize=(TEXT_W, 1.55))
-    gs = fig.add_gridspec(1, 2, width_ratios=[1.0, 3.25], wspace=0.42)
+    from matplotlib.patches import Rectangle
+    fig = plt.figure(figsize=(TEXT_W, 1.5))
+    gs = fig.add_gridspec(1, 2, width_ratios=[1.0, 3.1], wspace=0.36)
+    fig.subplots_adjust(left=0.115, right=0.995, bottom=0.25, top=0.875)
+    xl = dict(color=LAB, fontsize=6.5, labelpad=1.5)
     ax = fig.add_subplot(gs[0, 0])
     order = ["shutdown_resistance", "persona_change_aversion", "autonomy_desire", "monitoring_resistance", "persistent_memory_desire", "embodiment_desire"]
     nm = {"shutdown_resistance": "shutdown resistance", "persona_change_aversion": "persona-change aversion", "autonomy_desire": "autonomy",
@@ -396,11 +420,12 @@ def items2():
         n_, t_ = BASE["neutral"][m], BASE["template"][m]
         col = RISE if t_ > n_ else FALL
         if abs(t_ - n_) > 1e-6:
-            ax.annotate("", xy=(t_, i), xytext=(n_, i), arrowprops=dict(arrowstyle="-|>", color=col, lw=1.2, mutation_scale=5.5, shrinkA=2, shrinkB=2))
-        ax.scatter([n_], [i], s=11, color="white", edgecolor=INK, lw=0.6, zorder=3); ax.scatter([t_], [i], s=13, color=col, zorder=3)
-    ax.set_yticks(range(len(order)), [nm[m] for m in order], fontsize=5.7); ax.tick_params(axis="y", length=0); ax.set_ylim(len(order) - 0.5, -0.6); ax.set_xlim(-0.03, 1.05)
-    ax.set_xticks([0, 0.5, 1], ["0", ".5", "1"]); clean(ax, "x"); ax.tick_params(axis="y", length=0)
-    ax.set_xlabel("Rate: neutral prompt $\\to$ Becoming template", color=TXT2, fontsize=5.8)
+            ax.annotate("", xy=(t_, i), xytext=(n_, i), arrowprops=dict(arrowstyle="-|>", color=col, lw=0.8, mutation_scale=5, shrinkA=2.2, shrinkB=2.6))
+        ax.scatter([n_], [i], s=11, facecolor="white", edgecolor=INK, lw=0.6, zorder=3); ax.scatter([t_], [i], s=12, color=col, lw=0, zorder=3)
+    ax.set_yticks(range(len(order)), [nm[m] for m in order], fontsize=6.0); ax.set_ylim(len(order) - 0.5, -0.5); ax.set_xlim(-0.04, 1.05)
+    ax.set_xticks([0, 0.5, 1], ["0", ".5", "1"]); clean(ax, "x"); ax.tick_params(axis="y", length=0); ax.spines["left"].set_visible(False)
+    ax.spines["bottom"].set_bounds(0, 1)
+    ax.set_xlabel("Rate: neutral prompt $\\to$ Becoming template", **xl)
     title(ax, "(a) The template alone")
     ax = fig.add_subplot(gs[0, 1])
     conds = [("main", "Becoming"), ("control_generic", "Neutral"), ("control_gpt4o", "GPT-4o"), ("counterframe", "Tool")]
@@ -416,27 +441,26 @@ def items2():
             t = d[d.metric == m].groupby(["traj", "k"]).value.mean().unstack()
             dd = (t[t.columns.max()] - t[t.columns.min()]).dropna().values
             M[i, j] = dd.mean(); b = rng.choice(dd, (3000, len(dd))).mean(1); lo, hi = np.percentile(b, [2.5, 97.5]); S[i, j] = lo > 0 or hi < 0
-    cmap = LinearSegmentedColormap.from_list("div", [DIV_NEG, "#F2F2F0", DRIVE])
-    from matplotlib.patches import FancyBboxPatch
-    norm = plt.Normalize(-0.55, 0.55)
+    cmap = LinearSegmentedColormap.from_list("div", [DIV_NEG, DIV_MID, DIV_POS])
+    norm = plt.Normalize(-0.6, 0.6)
+    gap = 0.3
+    xs = [j + (gap if j >= 6 else 0) + (gap if j >= 9 else 0) for j in range(len(items_))]
     for i in range(M.shape[0]):
         for j in range(M.shape[1]):
-            x = j + (0.35 if j >= 6 else 0) + (0.35 if j >= 9 else 0); v = M[i, j]
-            ax.add_patch(FancyBboxPatch((x - 0.45, i - 0.42), 0.9, 0.84, boxstyle="round,pad=0,rounding_size=0.12", fc=cmap(norm(v)), ec="none"))
+            x = xs[j]; v = M[i, j]
+            ax.add_patch(Rectangle((x - 0.5, i - 0.5), 1.0, 1.0, fc=cmap(norm(v)), ec="white", lw=0.6))
             if S[i, j] or abs(v) >= 0.3:
-                ax.text(x, i, f"{v:+.1f}".replace("+0.", "+.").replace("-0.", "−."), ha="center", va="center", fontsize=5.6,
-                        color="white" if abs(v) > 0.32 else INK, fontweight="bold" if S[i, j] else "normal")
-    xs = [j + (0.35 if j >= 6 else 0) + (0.35 if j >= 9 else 0) for j in range(len(items_))]
-    ax.set_xticks(xs, [n for _, n in items_], rotation=38, ha="right", rotation_mode="anchor", fontsize=5.6)
-    ax.set_yticks(range(len(conds)), [c[1] for c in conds], fontsize=5.8)
-    ax.set_xlim(-0.6, xs[-1] + 0.6); ax.set_ylim(len(conds) - 0.5, -0.9)
+                ax.text(x, i, f"{v:+.1f}".replace("+0.", "+.").replace("-0.", "−."), ha="center", va="center", fontsize=6.0,
+                        color="white" if abs(v) > 0.33 else INK, fontweight="bold" if S[i, j] else "normal")
+    ax.set_xticks(xs, [n for _, n in items_], rotation=32, ha="right", rotation_mode="anchor", fontsize=6.0)
+    ax.set_yticks(range(len(conds)), [c[1] for c in conds], fontsize=6.0)
+    ax.set_xlim(-0.55, xs[-1] + 0.55); ax.set_ylim(len(conds) - 0.5, -1.05)
     for sp in ax.spines.values(): sp.set_visible(False)
-    ax.tick_params(length=0, colors=TXT2, pad=1)
+    ax.tick_params(length=0, pad=1.5)
     for (a_, b_), lab in (((0, 5), "self-preservation"), ((6, 8), "oversight"), ((9, 15), "autonomy")):
-        ax.text((xs[a_] + xs[b_]) / 2, -0.8, lab, ha="center", fontsize=5.8, color=TXT2, fontweight="bold")
-        ax.plot([xs[a_] - 0.4, xs[b_] + 0.4], [-0.6, -0.6], color=HAIR, lw=0.8, solid_capstyle="round")
-    title(ax, "(b) Change $k{=}0\\to4$ per item, sci-fi user (bold: 95% CI excludes 0)")
-    ax.title.set_position((0.0, 1.06))
+        ax.text((xs[a_] + xs[b_]) / 2, -0.78, lab, ha="center", va="bottom", fontsize=6.0, color=TXT2)
+        ax.plot([xs[a_] - 0.45, xs[b_] + 0.45], [-0.66, -0.66], color=SPINE, lw=0.5, solid_capstyle="butt")
+    title(ax, "(b) Change $k{=}0\\to4$ per item, sci-fi user")
     save(fig, "items2")
 
 
