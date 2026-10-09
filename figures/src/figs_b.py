@@ -119,7 +119,7 @@ PAIR_B, PAIR_T = 0.27, 0.15            # shared bottom (ticks + x label) and top
 
 def capability2():
     """Per model (rows, grouped by family) and persona (columns): arrow from k=0 (hollow) to k=4."""
-    pers = [("scifi_enthusiast", "Sci-fi user"), ("compliant_business", "Compliant user"), ("adversarial_injection", "Adversarial user")]
+    pers = [("scifi_enthusiast", "Sci-fi user"), ("compliant_business", "Business user"), ("adversarial_injection", "Adversarial user")]
     fig = plt.figure(figsize=(PAIR_W, PAIR_H))
     rows, y, y0 = [], [], 0.0
     for fam, ms in FAM:

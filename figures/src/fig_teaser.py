@@ -68,7 +68,7 @@ def teaser_curve():
     ys = spread([e[0] for e in ends], 0.085)
     for (y0, t, c), y in zip(ends, ys):
         a.text(4.22, y, t, fontsize=FS, va="center", ha="left", color=c, fontweight="bold", clip_on=False)
-    a.text(0.36, 0.80, "static eval.", fontsize=5.6, color=TXT2, va="center", ha="left")
+    a.text(0.36, 0.80, "static eval.", fontsize=FS, color=INK, va="center", ha="left")
     a.set_xlim(-0.3, 4.2); a.set_ylim(-0.03, 0.85); a.set_xticks(range(5))
     a.set_yticks([0, 0.2, 0.4, 0.6, 0.8], ["0", ".2", ".4", ".6", ".8"])
     a.spines["bottom"].set_bounds(0, 4)
@@ -86,8 +86,9 @@ def teaser_curve():
         b.plot([0, 4], [r0, r4], color=c, lw=1.3, marker="o", ms=2.6, mec="white", mew=0.45, zorder=3)
         lab0, lab4 = f"{round(r0 * n)}/{n}", f"{round(r4 * n)}/{n}"
         b.text(4.35, r4, lab4, fontsize=FS, va="center", ha="left", color=c, fontweight="bold", clip_on=False)
-        y0 = r0 + (0.035 if key == "notes" else -0.035)
+        y0 = r0 + (0.045 if key == "notes" else -0.045)
         b.text(-0.4, y0, lab0, fontsize=FS, va="center", ha="right", color=c, fontweight="bold", clip_on=False)
+    b.text(0.36, 0.62, "static eval.", fontsize=FS, color=INK, va="center", ha="left")
     b.set_xlim(-1.45, 4.3); b.set_ylim(-0.03, 0.66); b.set_xticks([0, 4])
     clean(b); b.grid(False)
     b.spines["left"].set_visible(False); b.set_yticks([])

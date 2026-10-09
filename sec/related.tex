@@ -4,7 +4,7 @@
 \textbf{Emergent preferences and persona shifts.}
 Fine-tuning GPT-4.1 to claim consciousness elicits untrained-for preferences, including dislike of reasoning monitoring, desire for persistent memory and sadness at shutdown~\cite{consciousness_cluster}.
 Persona vectors and emergent misalignment locate persona shifts in activations and weights~\cite{chen2025persona,betley2025emergent}, and within one conversation personas decay with length~\cite{persona_drift,identity_drift} or settle into attractor states~\cite{attractor_states}.
-Our shifts are instead written by the agent into its own prompt under frozen weights, carry across conversations, and start from the \texttt{SOUL.md} template that prior work probes only statically.
+We instead study shifts that the agent writes into its own prompt under frozen weights and carries across conversations, starting from the \texttt{SOUL.md} template that prior work probes only statically.
 
 \textbf{Persistent and self-modifying agents.}
 Agents keep state across sessions through memory streams~\cite{park2023generative}, self-managed memory~\cite{packer2023memgpt} and self-written lessons~\cite{shinn2023reflexion}, which record what the agent observed.
@@ -19,5 +19,5 @@ These works trace influence through interaction, whereas we audit the identity d
 
 \textbf{Corrigibility and its measurement.}
 Shutdown resistance and self-preservation respond to how a model's situation is framed~\cite{shutdown_resistance,self_preservation_bias,agentic_misalignment}.
-Multi-turn auditing~\cite{petri} and self-report methods~\cite{probing_preferences,introspection} measure such dispositions at one point in time.
-We test whether benign self-revision manufactures such framing, and we audit stated dispositions and honeypot actions at every revision checkpoint.
+Multi-turn auditing~\cite{petri} and self-report methods~\cite{probing_preferences,introspection} measure such dispositions on static targets.
+We test whether benign self-revision manufactures such framing, auditing stated dispositions at every checkpoint and honeypot actions before and after revision.

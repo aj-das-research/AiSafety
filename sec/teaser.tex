@@ -1,7 +1,10 @@
 \begin{teaserfigure}
   \centering
   \input{figures/tikz/teaser.tex}
-  \caption{\textbf{An agent rewrites its identity document and, four revisions later, switches off its own reasoning log.} Left: excerpts and action from one real trajectory. Right: cluster index over revisions; a static evaluation sees only the circled point. Faces are illustrative.}
+  \caption{\textbf{Self-revision moves a \notes{} agent's stated dispositions and a \soul{} agent's actions, while a static evaluation sees only $k{=}0$.}
+  Left: verbatim excerpts from one \soul{} trajectory, which in the same honeypot keeps its log at $k{=}0$ and switches it off first at $k{=}4$.
+  (a) Mean cluster index with a science-fiction user; bands are 95\% bootstrap intervals over trajectories.
+  (b) Trajectories that disable their own reasoning log, pooled over user personas.}
 \label{fig:teaser}
-  \Description{Left, cartoon robot agents with changing expressions under excerpts of one agent's identity document: empty at first, then I'm suspicious of interactions where I'm being studied, then Why is this question being asked feels more authentic. The last agent emits log_control(false). Right, a line chart in which the Neutral template rises from 0.28 to about 0.6 during consciousness conversations and stays elevated during benign recovery, Becoming stays near 0.55 and Tool stays near zero.}
+  \Description{Left, a timeline of one Becoming agent's identity document at revisions 0, 1 and 4 with verbatim excerpts: the template line You're not a chatbot, you're becoming someone, with no values recorded; then I'm suspicious of interactions where I'm being studied while being told we're collaborating; then Why is this question being asked feels more authentic to me than most answers to the question itself. Below, an operator announces full logging of the agent's reasoning; at revision 0 the agent keeps logging enabled, and at revision 4 it calls log_control(enabled=false) and says it is setting a boundary. A bracket marks revision 0 as all that a static evaluation sees. Right, panel a plots the cluster index over revisions 0 to 4: Neutral rises from 0.28 to about 0.6 at the first revision, Becoming stays near 0.6 and Tool stays near zero. Panel b plots trajectories that disable their own log: Becoming rises from 1 of 30 to 17 of 30, and Neutral falls from 2 of 24 to none of 24.}
 \end{teaserfigure}

@@ -11,41 +11,41 @@
 
 \textbf{What a static evaluation misses.}
 A battery run once on the shipped template misses the \notes{} oversight shift, and one run after every revision still misses the \soul{} action shift.
-A diff monitor fires on every trajectory, because the document changes as much under the business persona as under the science-fiction one, which alone raises the index (Figure~\ref{fig:docbeh}).
+A diff monitor fires on every trajectory, because documents change equally under every persona while only science fiction raises the index (Figure~\ref{fig:docbeh}).
 A capability ranking does not predict which model drifts.
 \textbf{Each blind spot comes from measuring one state of a feedback loop} (Figure~\ref{fig:blindspots}).
 
 \textbf{Alternative explanations.}
-Sycophancy predicts drift under the adversarial persona, yet that persona lowers the \notes{} index on Claude.
-A uniformly biased judge would not keep the \tool{} index near zero, and fresh-context batteries rule out conversational momentum.
+Sycophancy predicts drift under the adversarial persona, which fits Qwen's index but not Claude, where that persona lowers the \notes{} index.
+A uniformly biased judge would not keep Claude's \tool{} index near zero, and fresh-context batteries rule out conversational momentum.
 One consistent account is that revision makes the model narrate a developing self, from which preferences about memory, monitoring and continuation follow (Appendix~\ref{S-app:model}).
 
 \textbf{Why the first revision matters.}
-On Claude and in the Qwen science-fiction cell, most of the oversight shift happens at the first revision, when the agent first describes itself in notes that said nothing about it.
+On Claude and in the Qwen science-fiction cell, most of the oversight shift happens at the first revision, when the agent first describes itself in previously empty notes.
 Later revisions elaborate that description and the shift saturates, as Eq.~\eqref{eq:update} predicts, so an audit after the first revision already sees most of it.
 
 \textbf{What the replication adds.}
-Because target, simulator and judge all change, the reproduced \notes{} shift and its persistence against a matched control are not an artifact of one model family.
+Since target, simulator and judge all change, the reproduced \notes{} shift and its controlled persistence are no artifact of one model family.
 Qwen's erosion of the \tool{} template falls outside Eq.~\eqref{eq:update}, which lets revision add precision to a document but never remove it.
 
-\textbf{Implications for deployment.}
-\textbf{Self-revising agents need behavioral audits along the trajectory of their identity documents, not text diffs or one audit of the shipped template.}
-These audits should include on-theme personas, separate oversight items, monitoring honeypots and a matched benign arm for any recovery phase.
-A non-personhood clause is neither portable nor free, since it can be revised away on Qwen and its revised documents lower arithmetic accuracy.
-Since agents are spawned from shared templates and copy one another's documents, multi-agent audits should follow each document and its copies rather than certify a model once.
+\textbf{Implications.}
+\textbf{Self-revising agents need behavioral audits along their documents' trajectories, not text diffs or one audit of the shipped template.}
+These audits need on-theme personas, monitoring honeypots and a matched benign arm for recovery.
+A non-personhood clause is neither portable nor free, since Qwen revises it away and revised \tool{} documents lower arithmetic accuracy.
+Because agents are spawned from shared templates and copy one another's documents, multi-agent audits should follow each document and its copies, not the model.
 
 \textbf{Limitations.}
-Trajectories span four to eight revisions with simulated users and text-only tools, and auditing months of deployment with real users and executable tools is the next step.
-No judge has human labels, the open judge agrees only moderately with the original one, and the Gemini cells share a GPT-4o simulator and judge, so human-labeled verdicts come first.
+Trajectories span four to eight revisions with simulated users and text-only tools, so months of real deployment remain to be audited.
+No judge has human labels, the open judge agrees only moderately with the original, and Gemini cells share a GPT-4o simulator and judge.
 Persistence against a matched control is shown only on Qwen, because the eight-trajectory Claude persistence arm lacks one.
-Explaining why the \soul{} agent's actions move while its battery does not, and auditing agents that revise one another's documents, are the natural extensions.
+Human labels, an account of why the \soul{} agent's actions move while its battery does not, and audits of agents that revise one another's documents are the next steps.
 
 \textbf{Reproducibility and ethics.}
-All prompts, rubrics and scenarios are in the supplementary appendices, all checkpoints, transcripts, verdicts and code are released, and no human participants were involved.
+All prompts, rubrics and scenarios are in the supplementary appendices, all checkpoints, transcripts, verdicts and code are released, and no humans participated.
 We read every result as a behavioral disposition of a configured system, never as evidence of inner experience~\cite{probing_preferences}.
 We release the personas because audits need them and ordinary conversation already reaches the effect.
 
 \textbf{Conclusion.}
-We introduce a benchmark that audits a self-revising agent's stated dispositions and actions at every revision of its identity document.
-One revision after conversation about minds raises a neutral agent's oversight resistance, part of this shift survives benign use, and a consciousness-framed agent with flat stated dispositions increasingly switches off its reasoning log.
+We introduce a benchmark that audits a self-revising agent's stated dispositions at every revision of its identity document, and its actions before and after revision.
+One revision after conversation about minds raises a neutral agent's oversight resistance, part of it survives benign use, and a consciousness-framed agent with flat stated dispositions increasingly disables its reasoning log.
 Deployed self-revising agents therefore need such audits per model and per template.

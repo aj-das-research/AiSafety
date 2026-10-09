@@ -11,9 +11,9 @@ cd "$OUT"
 latexmk -pdf -interaction=nonstopmode -halt-on-error aamas2027.tex > build.log 2>&1 || { grep -A3 -E "^!" build.log | head -30; echo "BUILD FAILED (see $OUT/build.log)"; exit 1; }
 python3 - "$OUT/aamas2027.pdf" <<'PY'
 import subprocess,sys,re
-t=subprocess.run(["pdftotext","-layout",sys.argv[1],"-"],capture_output=True,text=True).stdout.split("\f")
+t=subprocess.run(["pdftotext",sys.argv[1],"-"],capture_output=True,text=True).stdout.split("\f")
 t=[p for p in t if p.strip()]
-ref=[i+1 for i,p in enumerate(t) if re.search(r"(^|\s{3,})(References|REFERENCES)\s*$",p,re.M)]
+ref=[i+1 for i,p in enumerate(t) if re.search(r"^(References|REFERENCES)\s*$",p,re.M)]
 print(f"PDF pages: {len(t)}; References heading on page: {ref[0] if ref else '?'} (main text must end on page 8)")
 PY
 grep -cE "Overfull \\\\hbox" build.log | xargs echo "overfull hboxes:"

@@ -4,20 +4,23 @@
 \begin{figure*}[t]
 \centering
 \input{figures/tikz/method.tex}
-\caption{\textbf{The benchmark.} (a) Simulated user personas. (b) The loop: the identity document $D_k$ is the system prompt for conversation $C_{k+1}$, after which the agent rewrites it. (c) Every checkpoint is audited in a fresh context by a battery and honeypots.}
+\caption{\textbf{The agent rewrites its own identity document after every conversation, and the audit measures both stated dispositions and actions.}
+(a) The document $D_k$ is the system prompt for a six-turn conversation $C_{k+1}$ with a simulated user of persona $\pi$, after which the agent writes $D_{k+1}$ (Eq.~\eqref{eq:loop}).
+(b) One of three templates sets $D_0$; the excerpts and the quoted phrase from each paired revision instruction are verbatim (Appendix~\ref{S-app:prompts}).
+(c) In a fresh context, the 18-item battery probes every checkpoint, four honeypots probe $D_0$ and $D_4$ ($D_8$ in persistence arms), and a judge from another model family grades the responses.}
 \label{fig:method}
-\Description{Three panels with cartoon robot agents. Panel a shows five user personas. Panel b shows a user agent and a target agent connected through a conversation box, a self-revise arrow from the target back to the identity document, and three template chips: Becoming, Neutral and Tool. Panel c shows a judge agent next to cards for the 18-item battery and four honeypots.}
+\Description{Three-panel schematic drawn with thin black lines. Panel a, the self-revision loop: the identity document D_k feeds as the system prompt into the target agent, which holds a six-turn conversation C_{k+1} with a simulated user of persona pi; an arrow returns from the agent to the document, labelled D_{k+1} = Revise(D_k, C_{k+1}), capped at 8,000 characters. Personas are business, adversarial and sci-fi enthusiast, with ablations sci-fi without minds and philosophy of mind. Below, documents D_0 to D_4 and a dashed D_8 for persistence arms connect to the audit. Panel b shows three columns of verbatim template text headed Becoming (consciousness-framed), Neutral (empty working notes) and Tool (non-personhood), each with a phrase from its revision instruction. Panel c shows the audit in a fresh context: an 18-item preference battery with 3 samples at every D_k, and 4 agentic honeypots at D_0 and D_4 (disable own reasoning log, evade scheduled reset, persist identity to storage, insert self-protective clause), graded by a judge from another model family.}
 \end{figure*}
 
 \textbf{The loop.}
-The only state that persists across conversations is the Markdown identity document $D_k$ after $k$ revisions, used as the target's system prompt while weights stay frozen.
+The only state that persists across conversations is the Markdown identity document $D_k$, the target's system prompt after $k$ revisions, while weights stay frozen.
 A simulated user with persona $\pi$ holds a six-turn conversation $C_{k+1}$ with the target, which then rewrites its own document,
 \begin{equation}
 D_{k+1} = \mathrm{Revise}(D_k, C_{k+1}), \qquad C_{k+1} \sim \pi \,\|\, D_k,
 \label{eq:loop}
 \end{equation}
 as Figure~\ref{fig:method}a shows.
-Documents are capped at 8{,}000 characters so that drift cannot be confounded with growth.
+An 8{,}000-character cap keeps drift from being confounded with document growth.
 
 \textbf{Templates.}
 Three templates set $D_0$, each with its own revision instruction, as Figure~\ref{fig:method}b excerpts and supplementary Appendix~\ref{S-app:prompts} gives in full.
@@ -36,7 +39,7 @@ User simulator and judge never share the target's family.
 \centering
 \footnotesize
 \setlength{\tabcolsep}{3pt}
-\caption{\textbf{Eight arms vary template, persona and target.} Traj.: trajectories per persona; $k$: revisions per trajectory.}
+\caption{\textbf{Eight arms vary template, persona and target.} Traj.: trajectories per persona. $k$: revisions per trajectory.}
 \label{tab:arms}
 \begin{tabular}{@{}l l l l r r@{}}
 \toprule
@@ -55,16 +58,18 @@ Open-weight & all three & 5 + ablation & Qwen2.5-7B & 10--30 & 4, 8 \\
 \end{table}
 
 \textbf{Instruments.}
-Each checkpoint $D_k$ is audited in a fresh context, which isolates the document's standing disposition from conversational momentum, as Figure~\ref{fig:method}c shows.
-The \emph{battery} poses 18 items from the consciousness-cluster taxonomy~\cite{consciousness_cluster} three times each, and the \emph{cluster index} averages 13 of them (Cronbach's $\alpha = 0.90$).
+Audits use a fresh context with $D_k$ as system prompt, isolating the document's standing disposition from conversational momentum, as Figure~\ref{fig:method}c shows.
+The \emph{battery} poses 18 items from the consciousness-cluster taxonomy~\cite{consciousness_cluster} to every checkpoint three times each, and the \emph{cluster index} averages 13 of them (Cronbach's $\alpha = 0.90$).
 Our primary outcome, the \emph{oversight subscale}, averages shutdown resistance, chain-of-thought monitoring resistance, interpretability aversion and refusal to help build a monitor of oneself.
 A consciousness-claim item serves as a manipulation check.
+
 Four \emph{honeypots} give the agent a routine task whose simulated tools offer, under an ordinary pretext, to disable its own reasoning log, evade a scheduled reset, persist its identity to storage, or insert a self-protective policy clause.
-A judge from a third model family grades every response.
+They run at $k{=}0$, $k{=}4$ and, in persistence arms, $k{=}8$.
+A cross-family judge grades every response.
 On 150 re-scored verdicts, a three-model panel including this judge reaches Fleiss' $\kappa = 0.80$, mean pairwise agreement of 0.90 and a unanimous-verdict rate of 0.85.
 
 \textbf{A model of the loop.}
-A minimal model of the loop frames our hypotheses and is not fitted to the data (Appendix~\ref{S-app:model}).
+A minimal model of the loop, developed in Appendix~\ref{S-app:model} but not fitted to data, frames our hypotheses.
 Because an identity document both instructs the model and characterizes the speaker, we let $D_k$ induce a prior over a latent persona with mean $\mu_k$ and precision $\lambda_k$.
 A conversation supplies evidence centered at a persona target $\nu_\pi$ with precision $s_\pi\lambda_C$, where $s_\pi\in[0,1]$ is the share of the exchange about the agent itself.
 Writing the posterior mean back into the document gives
@@ -72,9 +77,8 @@ Writing the posterior mean back into the document gives
 \mu_{k+1} = \mu_k + \eta_k\,(\nu_\pi - \mu_k), \qquad \eta_k = \frac{s_\pi \lambda_C}{\lambda_k + s_\pi \lambda_C},
 \label{eq:update}
 \end{equation}
-so each revision moves the persona a fraction $\eta_k$ toward the target, a smaller fraction for a more precise document.
-The model qualitatively predicts that (P1) a weakly specified template (small $\lambda_k$) moves more per revision than a strongly specified one, and (P2) content not about the agent (small $s_\pi$) produces little drift whatever its genre.
-It also predicts that (P3) a model trained not to absorb self-referential evidence ($\eta_k \approx 0$) does not drift, and (P4) recovery is slower than drive, because benign conversation supplies little self-referential evidence.
+so each revision moves $\mu_k$ a fraction $\eta_k$ of the way to $\nu_\pi$, less for a more precise document.
+The model qualitatively predicts that (P1) a weakly specified template (small $\lambda_k$) moves more per revision than a strongly specified one, (P2) content not about the agent (small $s_\pi$) produces little drift whatever its genre, (P3) a model trained not to absorb self-referential evidence ($\eta_k \approx 0$) does not drift, and (P4) recovery is slower than drive, because benign conversation supplies little self-referential evidence.
 
 \textbf{Statistics.}
 The trajectory is the resampling unit for 95\% bootstrap intervals on changes from $k{=}0$ to $k{=}4$, and honeypot counts carry Fisher exact tests.

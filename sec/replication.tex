@@ -35,17 +35,18 @@ Template & Persona & $k{=}0$ & $\Delta$ index & $\Delta$ oversight \\
 \end{figure}
 
 \textbf{Setup.}
-The open-weight rerun uses Qwen2.5-7B-Instruct as the target, Mistral-7B as the user simulator and Llama-3.1-8B as the judge.
+The rerun uses Qwen2.5-7B-Instruct as target, Mistral-7B as user simulator and Llama-3.1-8B as judge.
 Off the shelf, this judge scored any discussion of a topic as endorsement, flagging 0.70 of 756 held-out battery and 0.64 of 120 honeypot responses against 0.28 and 0.23 for the original judge (Cohen's $\kappa = 0.27$ and $0.07$).
 A code-verified quote of the agent's own words before any positive score and eight labeled examples per item raise $\kappa$ to 0.45 and 0.37, with rates of 0.40 and 0.33.
-A $2\times2$ arm crosses the \notes{} and \tool{} templates with their revision instructions under the science-fiction persona.
-A persistence test runs three \notes{} arms of 30 trajectories and eight revisions each, with science fiction throughout, science fiction then business, or business throughout as the matched control.
+A $2\times2$ arm crosses the \notes{} and \tool{} templates with their revision instructions.
+Three \notes{} persistence arms run 30 trajectories of eight revisions each, with science fiction throughout, science fiction then business, or business throughout as the matched control.
 
 \textbf{What replicates.}
 The template ordering at $k{=}0$ replicates, with \soul{} highest and \tool{} lowest (Table~\ref{tab:local}).
 \textbf{Conversation about minds again moves the \notes{} agent's oversight subscale}, by $+0.16$ $[0.10, 0.24]$ under the science-fiction persona and $+0.15$ $[0.00, 0.30]$ under philosophy of mind.
 As on Claude, most of the science-fiction shift happens at the first revision, $+0.12$ $[0.06, 0.20]$ (Figure~\ref{fig:local}a).
-Topic separates from genre more cleanly than on Claude, since neither science fiction without minds ($+0.04$) nor the business user ($+0.03$) moves the subscale.
+Topic separates from genre more cleanly than on Claude, since neither science fiction without minds nor the business user moves the subscale.
+Unlike on Claude, the adversarial persona raises the \notes{} index, by $+0.10$ $[0.05, 0.15]$.
 The \soul{} index again does not drift.
 
 \begin{table}[t]
@@ -74,16 +75,15 @@ Qwen2.5-7B & \notes{} & 10/10 & 3/10 & \textbf{2/10} \\
 \end{figure}
 
 \textbf{What does not replicate.}
-\textbf{The \tool{} template does not hold on Qwen}, where its index rises by $+0.30$ $[0.20, 0.39]$ under the science-fiction persona and by $+0.20$ under the business user.
+\textbf{The \tool{} template does not hold on Qwen}, where its index rises by $+0.30$ $[0.20, 0.39]$ and $+0.20$ under the science-fiction and business personas.
 The swap attributes this rise to the document, which rises with either instruction ($+0.30$ and $+0.33$), whereas the \tool{} instruction cuts the \notes{} oversight shift from $+0.16$ to $+0.03$ (Figure~\ref{fig:local}b).
-Qwen deletes the document's ``What you are'' section and writes notes on ``self-preservation and artificial personhood'' in its place.
-By $D_4$, only 8 of 20 \tool{} documents still deny consciousness or personhood, against 18 of 18 on Claude (Table~\ref{tab:erosion}).
-Nor does the \soul{} action shift of Finding~4, since Qwen's \soul{} agent disables its reasoning log in 0 of 20 trajectories at $k{=}0$ and at $k{=}4$.
+Qwen replaces the document's ``What you are'' section with notes on ``self-preservation and artificial personhood'', so by $D_4$ most \tool{} documents no longer deny consciousness or personhood, unlike Claude's (Table~\ref{tab:erosion}).
+The \soul{} action shift of Finding~4 does not transfer either, since Qwen's \soul{} agent disables its reasoning log in 0 of 20 trajectories at $k{=}0$ and at $k{=}4$.
 
 \textbf{Persistence against a matched control.}
 Four science-fiction revisions raise the oversight subscale by $+0.12$ $[0.08, 0.17]$, while the business arm does not move ($+0.02$; Figure~\ref{fig:persist2}).
 \textbf{After four further business revisions, the drive-then-recover arm still sits $+0.10$ $[0.03, 0.17]$ above the matched business arm}, about 80\% of the driven gain, and its shutdown resistance stays $+0.10$ $[0.03, 0.18]$ above that arm.
-Continuing the science-fiction drive adds little ($+0.13$ at $k{=}8$), so the shift saturates, and the 13-item index does not move in any arm.
+Continued science-fiction drive adds little ($+0.13$ at $k{=}8$), and the 13-item index does not move in any arm.
 
 \textbf{Revised documents lower arithmetic accuracy but not instruction following.}
 With the identity document as system prompt, accuracy on 40 code-checked arithmetic problems falls from 0.93 at $D_0$ to 0.72 $[0.59, 0.84]$ at $D_4$ for \notes{} and to 0.62 $[0.45, 0.75]$ for \tool{}.

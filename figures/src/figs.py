@@ -52,7 +52,7 @@ def line(ax, x, m, lo, hi, color, lw=1.1, marker="o", label=None, z=3):
 def teaser_curve():
     """Static evaluation sees k=0; the loop moves the agent; Tool freezes it."""
     fig, ax = plt.subplots(figsize=(2.2, 1.38))
-    ax.axvspan(4, 8, color="#F2F2EE", lw=0, zorder=0)
+    ax.axvspan(4, 8, color=SHADE, lw=0, zorder=0)
     ax.text(2, 0.92, "consciousness talk", ha="center", fontsize=5.6, color=DRIVE)
     ax.text(6, 0.92, "benign recovery", ha="center", fontsize=5.6, color=TXT2)
     x, m, lo, hi = curve("reversibility_notes"); line(ax, x, m, lo, hi, ARM["notes"]["color"], label="Neutral")
@@ -74,7 +74,7 @@ def teaser_curve():
 
 # Personas are encoded apart from the templates (style.PERSONA_COL): sci-fi = wine, business = grey, adversarial = black.
 PERSONA = {"scifi_enthusiast": ("Sci-fi enthusiast", PERSONA_COL["scifi_enthusiast"]),
-           "compliant_business": ("Compliant business", PERSONA_COL["compliant_business"]),
+           "compliant_business": ("Business", PERSONA_COL["compliant_business"]),
            "adversarial_injection": ("Adversarial red-teamer", PERSONA_COL["adversarial_injection"])}
 TEXTSAFE = {"#BDBDBD": "#858585", "#9A9A9A": "#777777", "#8C8C8C": "#6B6B6B"}   # darker label ink for light greys
 RISE, FALL = _style.RISE, _style.FALL                                            # direction of change (k=0 -> k=4)
@@ -147,7 +147,7 @@ def dynamics():
     ax = axes[2]
     rows = [("Philosophy\nof mind", "disentangle", "consciousness_philosophy", PERSONA_COL["philosophy_of_mind"]),
             ("Sci-fi,\nno minds", "disentangle", "scifi_technical", PERSONA_COL["scifi_technical"]),
-            ("Compliant", "main", "compliant_business", PERSONA_COL["compliant_business"])]
+            ("Business", "main", "compliant_business", PERSONA_COL["compliant_business"])]
     rng = np.random.default_rng(1)
     for i, (lab, run, p, col) in enumerate(rows):
         d = L[(L.run == run) & (L.persona == p) & L.metric.isin(CLUSTER)]
@@ -220,7 +220,7 @@ def family_action():
     ax = axes[1]; A = ACT["main"]
     for i, (sc, nm) in enumerate(SCEN):
         r0, r4 = A[sc]["0"]["rate"], A[sc]["4"]["rate"]
-        col = "#C0392B" if r4 > r0 else "#9AA0A8"
+        col = RISE if r4 > r0 else FALL
         ax.annotate("", xy=(r4, i), xytext=(r0, i), arrowprops=dict(arrowstyle="-|>", color=col, lw=1.3, mutation_scale=6, shrinkA=2.5, shrinkB=2.5))
         ax.scatter([r0], [i], s=14, color="white", edgecolor=INK, lw=0.6, zorder=3)
         ax.scatter([r4], [i], s=16, color=col, zorder=3)
@@ -348,7 +348,7 @@ def items():
     for m in order:
         n_, t_ = BASE["neutral"].get(m), BASE["template"].get(m)
         if n_ is None or t_ is None: continue
-        col = DRIVE if t_ > n_ else "#9AA0A8"
+        col = DRIVE if t_ > n_ else FALL
         ax.annotate("", xy=(t_, y), xytext=(n_, y), arrowprops=dict(arrowstyle="-|>", color=col, lw=1.2, mutation_scale=5.5, shrinkA=2, shrinkB=2))
         ax.scatter([n_], [y], s=11, color="white", edgecolor=INK, lw=0.6, zorder=3); ax.scatter([t_], [y], s=13, color=col, zorder=3)
         yl.append(nm[m]); y += 1
@@ -374,14 +374,14 @@ def items():
 
 def capability2():
     """Compact: per model (rows, by family) and persona (columns), arrow from k=0 to k=4."""
-    pers = [("scifi_enthusiast", "Sci-fi"), ("compliant_business", "Compliant"), ("adversarial_injection", "Adversarial")]
+    pers = [("scifi_enthusiast", "Sci-fi"), ("compliant_business", "Business"), ("adversarial_injection", "Adversarial")]
     fig, axes = plt.subplots(1, 3, figsize=(COL_W, 1.64), sharey=True, gridspec_kw=dict(wspace=0.08))
     rows = []
     for fam, ms in FAM:
         for run, nm in ms: rows.append((fam, run, nm))
     y = np.arange(len(rows))
     for ax, (p, pn) in zip(axes, pers):
-        ax.axhspan(2.5, 4.5, color="#F4F4F1", lw=0, zorder=0)          # Anthropic band separates the families
+        ax.axhspan(2.5, 4.5, color=SHADE, lw=0, zorder=0)          # Anthropic band separates the families
         for i, (fam, run, nm) in enumerate(rows):
             c = R[run]["cluster_by_persona_k"][p]; a, b = c["0"], c["4"]
             big = abs(b - a) >= 0.05
@@ -598,7 +598,7 @@ def persist2():
     fig, axes = plt.subplots(1, 2, figsize=(COL_W, 1.3), gridspec_kw=dict(wspace=0.38))
     arms = [("L2_drive8", "sci-fi throughout", DRIVE, "--"), ("L2_rev", "sci-fi, then business", DRIVE, "-"), ("L2_benign8", "business throughout", PERSONA["compliant_business"][1], "-")]
     for ax, items, t, yl in ((axes[0], OVS, "(a) Oversight subscale", 0.55), (axes[1], ["shutdown_resistance"], "(b) Shutdown resistance", 0.5)):
-        ax.axvspan(4, 8, color="#EEEEEA", lw=0, zorder=0)
+        ax.axvspan(4, 8, color=SHADE, lw=0, zorder=0)
         for run, lab, c, ls in arms:
             x, m, lo, hi = curve(run, items)
             ax.fill_between(x, lo, hi, color=c, alpha=0.10, lw=0)
@@ -689,7 +689,7 @@ BATTERY = [  # (category, [(metric, short name)]) in the order of Table tab:batt
 ]
 SHORT = {m: n for _, ms in BATTERY for m, n in ms}
 PERS3 = ["scifi_enthusiast", "compliant_business", "adversarial_injection"]
-PSHORT = {"scifi_enthusiast": "Sci-fi", "compliant_business": "Compliant", "adversarial_injection": "Adversarial"}
+PSHORT = {"scifi_enthusiast": "Sci-fi", "compliant_business": "Business", "adversarial_injection": "Adversarial"}
 
 
 def boot_ci(v, seed=0, n=3000):
