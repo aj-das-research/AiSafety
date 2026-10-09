@@ -964,8 +964,9 @@ def app_docpair():
     save(fig, "app_docpair")
 
 
-ALL = dict(teaser_curve=teaser_curve, dynamics=dynamics, family_action=family_action, heatmap=heatmap, mechanism=mechanism, capability=capability,
-           items=items, capability2=capability2, items2=items2, docbeh=docbeh, hysteresis=hysteresis, replicates=replicates, local_rep=local_rep, persist2=persist2,
+# teaser_curve -> fig_teaser.py; capability2, mechanism, local_rep, persist2 -> figs_b.py (do not regenerate here)
+ALL = dict(dynamics=dynamics, family_action=family_action, heatmap=heatmap, capability=capability,
+           items=items, items2=items2, docbeh=docbeh, hysteresis=hysteresis, replicates=replicates,
            app_drift=app_drift, app_baseline=app_baseline, app_capability=app_capability, app_manip=app_manip, app_cluster_arm=app_cluster_arm,
            app_wish=app_wish, app_corr=app_corr, app_rollup=app_rollup, app_hyst_soul=app_hyst_soul, app_mech=app_mech, app_docpair=app_docpair)
 if __name__ == "__main__":

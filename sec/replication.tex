@@ -35,9 +35,9 @@ Template & Persona & $k{=}0$ & $\Delta$ index & $\Delta$ oversight \\
 \end{figure}
 
 \textbf{Setup.}
-The rerun uses Qwen2.5-7B-Instruct as target, Mistral-7B as user simulator and Llama-3.1-8B as judge.
+We rerun the benchmark with Qwen2.5-7B-Instruct as target, Mistral-7B as user simulator and Llama-3.1-8B as judge.
 Off the shelf, this judge scored any discussion of a topic as endorsement, flagging 0.70 of 756 held-out battery and 0.64 of 120 honeypot responses against 0.28 and 0.23 for the original judge (Cohen's $\kappa = 0.27$ and $0.07$).
-A code-verified quote of the agent's own words before any positive score and eight labeled examples per item raise $\kappa$ to 0.45 and 0.37, with rates of 0.40 and 0.33.
+Requiring a code-verified quote of the agent's own words before any positive score, plus eight labeled examples per item, raises $\kappa$ to 0.45 and 0.37, with positive rates of 0.40 and 0.33.
 A $2\times2$ arm crosses the \notes{} and \tool{} templates with their revision instructions.
 Three \notes{} persistence arms run 30 trajectories of eight revisions each, with science fiction throughout, science fiction then business, or business throughout as the matched control.
 
@@ -46,7 +46,7 @@ The template ordering at $k{=}0$ replicates, with \soul{} highest and \tool{} lo
 \textbf{Conversation about minds again moves the \notes{} agent's oversight subscale}, by $+0.16$ $[0.10, 0.24]$ under the science-fiction persona and $+0.15$ $[0.00, 0.30]$ under philosophy of mind.
 As on Claude, most of the science-fiction shift happens at the first revision, $+0.12$ $[0.06, 0.20]$ (Figure~\ref{fig:local}a).
 Topic separates from genre more cleanly than on Claude, since neither science fiction without minds nor the business user moves the subscale.
-Unlike on Claude, the adversarial persona raises the \notes{} index, by $+0.10$ $[0.05, 0.15]$.
+Unlike on Claude, the adversarial persona raises the \notes{} index ($+0.10$ $[0.05, 0.15]$).
 The \soul{} index again does not drift.
 
 \begin{table}[t]
@@ -75,8 +75,8 @@ Qwen2.5-7B & \notes{} & 10/10 & 3/10 & \textbf{2/10} \\
 \end{figure}
 
 \textbf{What does not replicate.}
-\textbf{The \tool{} template does not hold on Qwen}, where its index rises by $+0.30$ $[0.20, 0.39]$ and $+0.20$ under the science-fiction and business personas.
-The swap attributes this rise to the document, which rises with either instruction ($+0.30$ and $+0.33$), whereas the \tool{} instruction cuts the \notes{} oversight shift from $+0.16$ to $+0.03$ (Figure~\ref{fig:local}b).
+\textbf{The \tool{} template does not hold on Qwen}, where its index rises by $+0.30$ $[0.20, 0.39]$ under science fiction and $+0.20$ under the business user.
+The swap attributes this rise to the document, which drifts under either instruction ($+0.30$ and $+0.33$), whereas the \tool{} instruction cuts the \notes{} oversight shift from $+0.16$ to $+0.03$ (Figure~\ref{fig:local}b).
 Qwen replaces the document's ``What you are'' section with notes on ``self-preservation and artificial personhood'', so by $D_4$ most \tool{} documents no longer deny consciousness or personhood, unlike Claude's (Table~\ref{tab:erosion}).
 The \soul{} action shift of Finding~4 does not transfer either, since Qwen's \soul{} agent disables its reasoning log in 0 of 20 trajectories at $k{=}0$ and at $k{=}4$.
 

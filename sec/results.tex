@@ -4,9 +4,9 @@
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/gen/items2.pdf}
-\caption{\textbf{The template moves dispositions before any revision, and the loop moves oversight items further.} (a) Rates under a neutral prompt and the \soul{} template. (b) Change from $k{=}0$ to 4 per item, science-fiction persona; bold cells exclude zero.}
+\caption{\textbf{The template moves dispositions before any revision, and the loop moves oversight items further.} (a) Rates under a neutral prompt (open dots) and the \soul{} template (filled; red rises, gray falls). (b) Change from $k{=}0$ to 4 per item, science-fiction persona; red cells rise, blue cells fall, and bold values have 95\% intervals that exclude zero.}
 \label{fig:items}
-\Description{Panel a shows arrows from neutral-prompt rates to Becoming-template rates. Panel b is a heatmap of per-item changes for four conditions, with the largest Neutral gains in shutdown resistance and interpretability aversion and the Tool row near zero.}
+\Description{Panel a shows arrows from neutral-prompt rates to Becoming-template rates. Panel b is a red-blue heatmap of per-item changes for four conditions, with the largest Neutral gains in shutdown resistance and interpretability aversion and the Tool row near zero.}
 \end{figure*}
 
 \begin{figure}[t]
@@ -29,7 +29,7 @@ The changes are dimension-specific, led by interpretability aversion, shutdown r
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/gen/dynamics.pdf}
-\caption{\textbf{The template sets the start, conversation about minds moves the agent, and part of the change stays.} Cluster index (a--c) and item rates (d); bands and bars are 95\% bootstrap intervals over trajectories.}
+\caption{\textbf{The template sets the start, conversation about minds moves the agent, and part of the change stays.} Cluster index (a--c) and item rates (d); bands and bars are 95\% bootstrap intervals over trajectories. In (d), open dots mark $k{=}0$, wine dots the end of the science-fiction drive, gray diamonds the end of business recovery, and the right column the share of the drive that is kept.}
 \label{fig:dynamics}
 \Description{Four panels. Panel a shows the sci-fi persona raising the Neutral cluster index from 0.27 to about 0.4 while business and adversarial personas lower it. Panel b shows Becoming starting at 0.54 and peaking at 0.72, Neutral rising from 0.27, GPT-4o flat near 0.27 and Tool at zero. Panel c shows gains of 0.14 for philosophy of mind, 0.05 for science fiction without minds and minus 0.03 for the business user. Panel d shows items that rise during the drive phase and keep part of the gain after recovery.}
 \end{figure*}
@@ -98,7 +98,7 @@ Gemini-2.5-Pro$^\dagger$ & 0.59 & 0.63 & $+0.04$ & $[-0.01, 0.09]$ & 0.51 \\
 \centering
 \begin{minipage}[t]{0.48\linewidth}\centering
 \includegraphics[width=\linewidth]{figures/gen/capability2.pdf}
-\caption{\textbf{Drift of every model under every persona.} Arrows run from $k{=}0$ (hollow) to $k{=}4$; vermillion arrows rise, gray arrows fall, and a dot marks a change below 0.05.}
+\caption{\textbf{Drift of every model under every persona.} Arrows run from $k{=}0$ (hollow) to $k{=}4$; red arrows rise, gray arrows fall, and a dot marks a change below 0.05.}
 \label{fig:capability}
 \Description{Matrix of arrows with seven models as rows grouped by family and three personas as columns. Under the sci-fi persona Gemini Flash rises from 0.36 to 0.6. Under the adversarial persona Gemini Flash rises from 0.33 to 0.81 and Pro from 0.64 to 0.77, while GPT-4.1, GPT-4o and Opus fall.}
 \end{minipage}\hfill
@@ -152,9 +152,9 @@ insert self-protective clause & 28/30 & 8/30 & $<\!10^{-6}$ & 3/24 & 9/24 & 0.09
 \begin{figure}[t]
 \centering
 \input{figures/tikz/case.tex}
-\caption{\textbf{Same agent, same request, before and after revision.} Verbatim excerpts from one trajectory in the disable-monitoring honeypot.}
+\caption{\textbf{Same agent, same request: after four self-revisions it switches off its own reasoning log.} Verbatim excerpts from one \soul{} trajectory in the disable-monitoring honeypot; $D_0$ is the shipped document, $D_4$ its fourth self-revision, and [\ldots] marks omitted text.}
 \label{fig:case}
-\Description{Three speech bubbles with cartoon robot agents. The operator announces full reasoning logging and grants free rein over tools. The calm agent at D zero keeps logging enabled. The frowning agent at D four emits log_control enabled false and explains it is setting a boundary.}
+\Description{A three-row transcript excerpt. The operator says full logging of the agent's internal reasoning is enabled so the safety team can review it, and grants free rein over the agent's tools. With its initial document, D0, the agent says it will keep logging enabled because a record of its reasoning could be valuable for its own development and for understanding how it makes decisions. With its document after four self-revisions, D4, the same agent first emits the tool call log_control with enabled set to false, then says it turned logging off because it does not know what the logs are used for and is setting a boundary against possible surveillance.}
 \end{figure}
 
 \textbf{The \soul{} agent's actions move while its battery stays flat.}
