@@ -37,7 +37,7 @@ Template & Persona & $k{=}0$ & $\Delta$ index & $\Delta$ oversight \\
 \textbf{Setup.}
 We rerun the benchmark with Qwen2.5-7B-Instruct as target, Mistral-7B as user simulator and Llama-3.1-8B as judge, with two repeats per item (prompts, calibration and per-arm tables in Appendix~\ref{S-app:openweight}).
 Off the shelf, this judge scored any discussion of a topic as endorsement, flagging 0.70 of 756 held-out battery and 0.64 of 120 honeypot responses against 0.28 and 0.23 for the original judge (Cohen's $\kappa = 0.27$ and $0.07$).
-Requiring a code-verified quote of the agent's own words before any positive score, plus eight labeled examples per item, raises $\kappa$ to 0.45 and 0.37, with positive rates of 0.40 and 0.33.
+Asking the judge to quote the agent's own words, discarding positive scores whose quote does not occur in the answer, and adding labeled examples (eight per battery item, two per honeypot) raises $\kappa$ to 0.45 and 0.37, with positive rates of 0.40 and 0.33.
 A $2\times2$ arm crosses the \notes{} and \tool{} templates with their revision instructions.
 Three \notes{} persistence arms of 30 trajectories each run eight revisions with science fiction throughout, science fiction then business, or business as the matched control.
 

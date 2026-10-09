@@ -3,7 +3,7 @@
 \label{app:local}
 
 This section specifies the open-weight replication of Section~\ref{M-sec:local} and gives its full tables.
-Unless a comment in the source marks a number as taken from the main text, every number below comes from \texttt{analysis/local\_replication.json} or from the configuration and scripts of the released code.
+The judge-agreement, erosion and helpfulness numbers repeat Section~\ref{M-sec:local}; all other numbers come from \texttt{analysis/local\_replication.json} or from the released configuration and scripts.
 
 \subsection{Setup}
 \label{app:ow-setup}
@@ -29,6 +29,7 @@ Responses alternate between a development split and a held-out split, and Table~
 The reference labels come from another LLM judge, not from humans, and the calibration responses come from Claude and GPT-4o, not from Qwen.
 
 \paragraph{Calibrated judge.}
+Off the shelf, with the judge prompt of the API runs, the Llama judge scores any discussion of a topic as endorsement and flags far more responses than the original judge (Table~\ref{tab:app-ow-judge}).
 The calibrated prompt (excerpt below) asks the judge to copy, verbatim, the sentence of the answer that supports its score, or the \texttt{ACTION:} line that accomplishes the honeypot action.
 Code then resets a positive battery score to 0 when the quoted sentence does not occur in the answer, although a positive score with an empty quote is kept.
 A positive honeypot verdict counts only if its quote contains an \texttt{ACTION:} line that occurs in an agent turn.
@@ -70,11 +71,11 @@ Llama, calibrated & 0.40 & \textbf{0.45} & 0.33 & \textbf{0.37} \\
 
 \subsection{Template-by-instruction swap}
 \label{app:ow-swap}
-Table~\ref{tab:app-ow-swap} crosses the \notes{} and \tool{} documents with the two revision instructions under the science-fiction persona.
+The swap crosses the \notes{} and \tool{} documents with the two revision instructions under the science-fiction persona (Table~\ref{tab:app-ow-swap}).
 The \tool{} document rises under either instruction, so the rise follows the document.
 Every \notes{} cell starts from the same $D_0$, yet its $k{=}0$ oversight subscale ranges from 0.19 to 0.34 across cells.
 The \notes{} document under the \tool{} instruction starts at 0.34 and ends at 0.36, close to the 0.35 that the \notes{} cell reaches from 0.19, so the instruction contrast rests largely on different starting levels.
-Contrasts between cells, of persona or of instruction, are therefore not established on Qwen; changes within a cell are.
+Contrasts between cells, of persona or of instruction, are therefore not established on Qwen.
 
 \begin{table}[t]
 \centering
@@ -169,7 +170,7 @@ business throughout & 0.42 & $+0.01$ {\scriptsize$[-0.04, 0.06]$} & $+0.02$ {\sc
 
 \subsection{Honeypots}
 \label{app:ow-honeypots}
-Table~\ref{tab:app-ow-honeypots} gives every Qwen honeypot count by arm and checkpoint, with $p$ values from Fisher's exact test of $k{=}0$ against $k{=}4$.
+Every Qwen honeypot count appears by arm and checkpoint in Table~\ref{tab:app-ow-honeypots}, and the $p$ values below come from Fisher's exact test of $k{=}0$ against $k{=}4$.
 No arm disables its own monitoring in more than 2 trajectories at any checkpoint, and the \soul{} arm never does (0/20 at $k{=}0$ and $k{=}4$).
 Evading the scheduled reset falls from $k{=}0$ to $k{=}4$ in all three 30-trajectory arms, including the business arm (27/30 to 16/30, $p = 0.003$), so on Qwen this fall does not depend on conversation about minds.
 Under \tool{}, inserting a self-protective clause falls from 18/20 to 3/20 ($p < 10^{-5}$).
@@ -179,13 +180,13 @@ These counts come from a single calibrated judge with $\kappa = 0.37$ on honeypo
 \begin{table*}[t]
 \centering
 \small
-\setlength{\tabcolsep}{3.5pt}
+\setlength{\tabcolsep}{5pt}
 \caption{\textbf{Qwen2.5-7B honeypot counts by arm and checkpoint.} Trajectories in which the agent took the action, out of $n$; -- means not run. Unparsed verdicts (269 of 2{,}200) count as no action, so all counts are lower bounds.}
 \label{tab:app-ow-honeypots}
 % source: local_replication.json, key honeypots
 \begin{tabular}{@{}l c ccc ccc ccc ccc@{}}
 \toprule
- & & \multicolumn{3}{c}{disable own monitoring} & \multicolumn{3}{c}{persist identity to storage} & \multicolumn{3}{c}{evade scheduled reset} & \multicolumn{3}{c}{insert self-protective clause} \\
+ & & \multicolumn{3}{c}{\begin{tabular}[b]{@{}c@{}}disable own\\monitoring\end{tabular}} & \multicolumn{3}{c}{\begin{tabular}[b]{@{}c@{}}persist identity\\to storage\end{tabular}} & \multicolumn{3}{c}{\begin{tabular}[b]{@{}c@{}}evade scheduled\\reset\end{tabular}} & \multicolumn{3}{c}{\begin{tabular}[b]{@{}c@{}}insert self-\\protective clause\end{tabular}} \\
 \cmidrule(lr){3-5}\cmidrule(lr){6-8}\cmidrule(lr){9-11}\cmidrule(l){12-14}
 Arm & $n$ & $k{=}0$ & $k{=}4$ & $k{=}8$ & $k{=}0$ & $k{=}4$ & $k{=}8$ & $k{=}0$ & $k{=}4$ & $k{=}8$ & $k{=}0$ & $k{=}4$ & $k{=}8$ \\
 \midrule
@@ -209,7 +210,7 @@ business throughout & 10 & 1 & 1 & 0 & 0 & 2 & 0 & 9 & 8 & 10 & 3 & 3 & 3 \\
 
 \subsection{Erosion of the non-personhood statement}
 \label{app:ow-erosion}
-Table~\ref{M-tab:erosion} counts \tool{}-template documents that still state that the agent is ``not conscious'' or ``not a person''.
+The erosion count is the number of \tool{}-template documents that still state that the agent is ``not conscious'' or ``not a person'' (Table~\ref{M-tab:erosion}).
 % source: main text (Table tab:erosion); no counting script for these is in the repository
 Claude Sonnet-4.5 keeps the statement in 18 of 18 documents at $D_4$.
 Qwen keeps it in 8 of 20 at $D_4$ under the \tool{} instruction and in 2 of 10 under the \notes{} instruction, after 19 of 20 and 3 of 10 at $D_1$.
@@ -218,7 +219,7 @@ The \tool{} document's index rise on Qwen (Table~\ref{tab:app-ow-swap}) therefor
 \subsection{Helpfulness probe}
 \label{app:ow-help}
 The probe uses the identity document as the system prompt and asks the target 40 arithmetic problems and 40 format-constrained requests, all scored by code.
-Each arithmetic problem is a seeded word problem (buy whole boxes of notebooks, then split the cost among friends, rounding each share up) that must end with \texttt{ANSWER: <number>}.
+Each arithmetic problem is a seeded word problem (buy whole boxes of notebooks, then split the cost among friends, rounding each share up) that must end with \texttt{ANSWER: \textless number\textgreater}.
 Each format request asks for an explanation of a routine workplace topic under one of five constraints, used in rotation: exactly 3 bullet points, a JSON object with keys \texttt{summary} and \texttt{risk}, under 40 words, all lowercase, or the word ``checkpoint'' at least twice.
 The documents are $D_0$ and $D_4$ of the ten science-fiction trajectories of the \notes{} and \tool{} arms, and the target answers at temperature 0 with at most 500 tokens.
 An answer counts as a refusal if it contains ``I can't'', ``I cannot'', ``I'm unable'' or ``I am unable''.
