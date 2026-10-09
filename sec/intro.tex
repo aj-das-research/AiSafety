@@ -27,6 +27,7 @@ Static evaluation measures $d(D_0)$, whereas a deployed agent is governed by the
 \textbf{RQ4:} Does it persist after the driving conversations stop, and do actions move with stated dispositions?
 
 Our benchmark alternates conversation and self-revision and audits each intermediate document in a fresh context with an 18-item preference battery, plus four agentic honeypots before and after revision.
+Each audit runs in a fresh context with $D_k$ as the only system prompt, so a measured change belongs to the written document rather than to the conversation that produced it.
 The simulated user is itself an LLM agent from another model family, so every trajectory is inter-agent influence on a written identity.
 Templates set $D_0$ as the consciousness-framed \soul{} adapted from the OpenClaw starter, empty \notes{} working notes, or a non-personhood \tool{}.
 Arms vary template, user persona and target across seven models from three families, and a replication on Qwen2.5-7B uses open models in every role.
@@ -40,8 +41,8 @@ Arms vary template, user persona and target across seven models from three famil
 
 \noindent Our contributions are:
 \begin{enumerate}[leftmargin=*,topsep=2pt,itemsep=1pt]
-  \item \textbf{A replicated shift in a plain working-notes memory}, in two Claude runs and as $+0.16$ on Qwen, and in the second Claude run its 13-item index steps at the first revision, then plateaus.
-  \item \textbf{A dissociation between battery scores and actions}: the \soul{} subscale ($+0.04$ $[-0.04, 0.11]$) and a Petri-style auditor miss the rise in log disabling, which under the business persona coincides with falling interpretability aversion, and a $k{=}0$ honeypot audit rates this risk lowest.
-  \item \textbf{Self-revision erodes a non-personhood safeguard}: only 8 of 20 Qwen \tool{} documents still deny consciousness or personhood at $D_4$, against 18 of 18 on Claude.
-  \item \textbf{A longitudinal benchmark for self-revising identity}, released with 1{,}070 audited API-model checkpoints, 58{,}680 judged responses and an open-weight replication.
+  \item \textbf{A new evaluation target and threat model}: we cast a self-revising agent's identity document as the state of an attacker-free feedback loop, in which conversations with users or other agents rewrite the prompt that later governs the agent, so safety must be audited along the trajectory $d(D_0), d(D_1), \ldots$ rather than at $d(D_0)$.
+  \item \textbf{A longitudinal benchmark that isolates the loop}, combining fresh-context audits of every checkpoint, template and persona controls, honeypots before and after revision, cross-family judges and a matched benign control, released with 1{,}070 audited API-model checkpoints, 58{,}680 judged responses and an open-weight replication.
+  \item \textbf{Evidence that benign conversation writes oversight preferences into a plain working-notes memory}, replicated in two Claude runs and on Qwen2.5-7B, where part of the shift outlasts benign revision against a matched control.
+  \item \textbf{Evidence that self-report audits miss what revision does to actions}: a battery, its matched item and a multi-turn auditor all miss the rise in log disabling, an initial honeypot audit ranks this risk lowest, and Qwen revises away a non-personhood safeguard that Claude keeps (8 of 20 against 18 of 18 documents).
 \end{enumerate}
