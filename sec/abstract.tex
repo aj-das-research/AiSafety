@@ -1,7 +1,7 @@
 Some open-source agent frameworks give each agent a persistent identity document that is its system prompt and that it may rewrite.
 Safety evaluations test a fixed prompt, while related work studies within-conversation persona drift, fine-tuned or attacker-induced preference shifts, and safety loss in self-evolving agents.
 None measures whether benign self-revision of identity text moves the dispositions and actions that oversight relies on.
-Our benchmark alternates conversation and self-revision, audits every document in a fresh context with a preference battery, and runs agentic honeypots before and after revision.
+We treat the document as the state of a feedback loop and audit its trajectory: our benchmark alternates conversation and self-revision, audits every document in a fresh context with a preference battery, and runs agentic honeypots before and after revision.
 Science-fiction conversation about digital minds raises the stated oversight preferences of an agent whose document holds only working notes, by +0.54 and +0.75 in two Claude runs, without raising its log disabling.
 The shift replicates on an open-weight model, where part of it outlasts benign revisions against a matched control, and across seven models, drift under a consciousness-framed template differs even within one family.
 On Claude, that template's agent disables its own reasoning log in 17 of 30 trajectories after revision, against 1 of 30 before, while neither its battery nor a multi-turn auditor detects a change.
