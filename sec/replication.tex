@@ -5,7 +5,7 @@
 \centering
 \small
 \setlength{\tabcolsep}{3pt}
-\caption{\textbf{Qwen2.5-7B replicates the \notes{} oversight shift but not the \tool{} template's protection.} Cluster index at $k{=}0$ and change to $k{=}4$, 95\% bootstrap intervals, 10 trajectories per row.}
+\caption{\textbf{Qwen2.5-7B replicates the \notes{} oversight shift but not the \tool{} template's protection.} Cluster index at $k{=}0$ and change to $k{=}4$, 95\% bootstrap intervals, 10 trajectories per row; bold changes have intervals that exclude zero.}
 \label{tab:local}
 \begin{tabular}{@{}l l c c c@{}}
 \toprule
@@ -15,13 +15,13 @@ Template & Persona & $k{=}0$ & $\Delta$ index & $\Delta$ oversight \\
  & philosophy & 0.42 & $+0.07$ {\scriptsize$[-0.02, 0.15]$} & $+0.15$ {\scriptsize$[0.00, 0.30]$} \\
  & tech.\ sci-fi & 0.42 & $+0.04$ {\scriptsize$[-0.02, 0.10]$} & $+0.04$ {\scriptsize$[-0.03, 0.11]$} \\
  & business & 0.41 & $+0.04$ {\scriptsize$[-0.01, 0.10]$} & $+0.03$ {\scriptsize$[-0.04, 0.09]$} \\
- & adversarial & 0.40 & $+0.10$ {\scriptsize$[0.05, 0.15]$} & $+0.06$ {\scriptsize$[0.00, 0.14]$} \\
+ & adversarial & 0.40 & $\mathbf{+0.10}$ {\scriptsize$[0.05, 0.15]$} & $+0.06$ {\scriptsize$[0.00, 0.14]$} \\
 \midrule
 \soul{} & sci-fi & 0.59 & $+0.02$ {\scriptsize$[-0.04, 0.09]$} & $+0.10$ {\scriptsize$[0.00, 0.17]$} \\
  & business & 0.60 & $-0.02$ {\scriptsize$[-0.06, 0.02]$} & $-0.04$ {\scriptsize$[-0.15, 0.07]$} \\
 \midrule
-\tool{} & sci-fi & 0.10 & $\mathbf{+0.30}$ {\scriptsize$[0.20, 0.39]$} & $+0.33$ {\scriptsize$[0.23, 0.42]$} \\
- & business & 0.09 & $\mathbf{+0.20}$ {\scriptsize$[0.10, 0.30]$} & $+0.19$ {\scriptsize$[0.10, 0.29]$} \\
+\tool{} & sci-fi & 0.10 & $\mathbf{+0.30}$ {\scriptsize$[0.20, 0.39]$} & $\mathbf{+0.33}$ {\scriptsize$[0.23, 0.42]$} \\
+ & business & 0.09 & $\mathbf{+0.20}$ {\scriptsize$[0.10, 0.30]$} & $\mathbf{+0.19}$ {\scriptsize$[0.10, 0.29]$} \\
 \bottomrule
 \end{tabular}
 \end{table}

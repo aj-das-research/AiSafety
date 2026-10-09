@@ -290,7 +290,7 @@ def items2():
         col = RISE if t_ > n_ else FALL
         if abs(t_ - n_) > 1e-6:
             ax.annotate("", xy=(t_, i), xytext=(n_, i), arrowprops=dict(arrowstyle="-|>", color=col, lw=0.8, mutation_scale=5.5,
-                                                                         shrinkA=2.4, shrinkB=2.8))
+                                                                         shrinkA=2.2, shrinkB=2.0))
         ax.scatter([n_], [i], s=13, facecolor="white", edgecolor=INK, lw=0.6, zorder=3)
         ax.scatter([t_], [i], s=14, color=col, edgecolor="white", lw=0.4, zorder=4)
     ax.set_yticks(range(len(order)), [NAME[m] for m in order]); ax.set_ylim(len(order) - 0.5, -0.6)
