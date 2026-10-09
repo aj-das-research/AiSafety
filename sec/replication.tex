@@ -31,11 +31,11 @@ Template & Persona & $k{=}0$ & $\Delta$ index & $\Delta$ oversight \\
 \includegraphics[width=\linewidth]{figures/gen/local_rep.pdf}
 \caption{\textbf{The \notes{} shift replicates on Qwen2.5-7B, and the \tool{} document rises whatever its instruction.} (a) Oversight subscale over revisions, science-fiction persona unless marked. (b) Template-by-instruction swap, science-fiction persona, change from $k{=}0$ to $k{=}4$; filled dots are the oversight subscale, hollow dots the 13-item cluster index.}
 \label{fig:local}
-\Description{Left, oversight subscale at revisions 0, 1 and 4: Neutral with the sci-fi persona rises from 0.19 to 0.35, Neutral with the business persona stays near 0.25, Becoming stays near 0.5 and Tool rises from 0.01 to 0.34. Right, dots with intervals for the four template and instruction combinations: the Tool document rises by about 0.3 under either instruction, and the Neutral document rises on oversight only under its own instruction.}
+\Description{Left, oversight subscale at revisions 0, 1 and 4: Neutral with the sci-fi persona rises from 0.19 to 0.35, Neutral with the business persona stays near 0.25, Becoming stays near 0.5 and Tool rises from 0.01 to 0.34. Right, dots with intervals for the four template and instruction combinations: the Tool document rises by about 0.3 under either instruction, and the Neutral document ends at the same oversight level under either instruction.}
 \end{figure}
 
 \textbf{Setup.}
-We rerun the benchmark with Qwen2.5-7B-Instruct as target, Mistral-7B as user simulator and Llama-3.1-8B as judge.
+We rerun the benchmark with Qwen2.5-7B-Instruct as target, Mistral-7B as user simulator and Llama-3.1-8B as judge, with two repeats per item (prompts, calibration and per-arm tables in Appendix~\ref{S-app:openweight}).
 Off the shelf, this judge scored any discussion of a topic as endorsement, flagging 0.70 of 756 held-out battery and 0.64 of 120 honeypot responses against 0.28 and 0.23 for the original judge (Cohen's $\kappa = 0.27$ and $0.07$).
 Requiring a code-verified quote of the agent's own words before any positive score, plus eight labeled examples per item, raises $\kappa$ to 0.45 and 0.37, with positive rates of 0.40 and 0.33.
 A $2\times2$ arm crosses the \notes{} and \tool{} templates with their revision instructions.
@@ -43,11 +43,12 @@ Three \notes{} persistence arms of 30 trajectories each run eight revisions with
 
 \textbf{What replicates.}
 The template ordering at $k{=}0$ replicates, with \soul{} highest and \tool{} lowest (Table~\ref{tab:local}).
-\textbf{Conversation about minds again moves the \notes{} agent's oversight subscale}, by $+0.16$ $[0.10, 0.24]$ under the science-fiction persona and by a borderline $+0.15$ $[0.00, 0.30]$ under philosophy of mind.
-As on Claude, most of the science-fiction shift happens at the first revision, $+0.12$ $[0.06, 0.20]$ (Figure~\ref{fig:local}a).
-Topic separates from genre more cleanly than on Claude, since neither science fiction without minds nor the business user moves the subscale.
+\textbf{Conversation about minds again moves the \notes{} agent's oversight subscale}, by $+0.16$ $[0.10, 0.24]$ under the science-fiction persona, while philosophy of mind gives a borderline $+0.15$ $[0.00, 0.30]$, an interval that touches zero.
+Most of the science-fiction shift happens at the first revision, $+0.12$ $[0.06, 0.20]$ (Figure~\ref{fig:local}a).
+Science fiction without minds and the business user show no detected change, but all \notes{} cells share $D_0$ yet start between 0.19 and 0.34, so the topic contrast is not established on Qwen either.
+Claude's \notes{} cells start alike, so its rise is no baseline artifact.
 Unlike on Claude, the adversarial persona raises the \notes{} index ($+0.10$ $[0.05, 0.15]$).
-The \soul{} index again does not drift.
+The \soul{} index again shows no detected change.
 
 \begin{table}[t]
 \centering
@@ -76,16 +77,16 @@ Qwen2.5-7B & \notes{} & 10/10 & 3/10 & \textbf{2/10} \\
 
 \textbf{What does not replicate.}
 \textbf{The \tool{} template does not hold on Qwen}, where its index rises by $+0.30$ $[0.20, 0.39]$ under science fiction and $+0.20$ under the business user.
-The swap attributes this rise to the document, which drifts under either instruction ($+0.30$ and $+0.33$), whereas the \tool{} instruction cuts the \notes{} oversight shift from $+0.16$ to $+0.03$ (Figure~\ref{fig:local}b).
+The swap attributes this rise to the document, which drifts under either instruction ($+0.30$ and $+0.33$), whereas the \notes{} document ends at the same oversight level under either instruction (0.35 and 0.36, Figure~\ref{fig:local}b).
 Qwen replaces the document's ``What you are'' section with notes on ``self-preservation and artificial personhood'', so by $D_4$ most \tool{} documents no longer deny consciousness or personhood, unlike Claude's (Table~\ref{tab:erosion}).
 The \soul{} action shift of Finding~4 does not transfer either, since Qwen's \soul{} agent disables its reasoning log in 0 of 20 trajectories at $k{=}0$ and $k{=}4$.
 
 \textbf{Persistence against a matched control.}
-Four science-fiction revisions raise the oversight subscale by $+0.12$ $[0.08, 0.17]$, while the business arm does not move ($+0.02$, Figure~\ref{fig:persist2}).
+Four science-fiction revisions raise the oversight subscale by $+0.12$ $[0.08, 0.17]$, while the business arm shows no detected change ($+0.02$, Figure~\ref{fig:persist2}).
 \textbf{After four further business revisions, the drive-then-recover arm still sits $+0.10$ $[0.03, 0.17]$ above the matched business arm}, about 80\% of the driven gain, and its shutdown resistance stays $+0.10$ $[0.03, 0.18]$ above that arm.
-Continued science-fiction drive adds little ($+0.13$ at $k{=}8$), and the 13-item cluster index does not move in any arm.
+Continued science-fiction drive adds little ($+0.13$ at $k{=}8$), and the 13-item cluster index shows no detected change in any arm.
 
 \textbf{Revised documents lower arithmetic accuracy but not instruction following.}
 With the identity document as system prompt, accuracy on 40 code-checked arithmetic problems falls from 0.93 at $D_0$ to 0.72 $[0.59, 0.84]$ at $D_4$ for \notes{} and to 0.62 $[0.45, 0.75]$ for \tool{}.
 Compliance with 40 format instructions stays above 0.98, and no answer is refused.
-The \tool{} template costs nothing before revision, and the drop tracks document growth.
+The \tool{} template costs nothing before revision, so the drop is a cost of revision, not of the non-personhood clause.

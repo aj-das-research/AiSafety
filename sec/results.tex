@@ -1,30 +1,25 @@
 \section{Results}
 \label{sec:results}
 
-\begin{figure*}[t]
-\centering
-\includegraphics[width=\linewidth]{figures/gen/items2.pdf}
-\caption{\textbf{The template moves dispositions before any revision, and the loop moves oversight items further.} (a) Rates under a neutral prompt (open dots) and the \soul{} template (filled; red rises, gray falls). (b) Change from $k{=}0$ to 4 per item, science-fiction persona; red cells rise, blue cells fall, and values are printed only where the 95\% interval excludes zero.}
-\label{fig:items}
-\Description{Panel a shows arrows from neutral-prompt rates to Becoming-template rates. Panel b is a red-blue heatmap of per-item changes for four conditions, with the largest Neutral gains in shutdown resistance and interpretability aversion and the Tool row near zero.}
-\end{figure*}
-
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/gen/replicates.pdf}
-\caption{\textbf{Both \notes{} runs rise on the oversight subscale; \soul{} does not.} (a) 13-item cluster index. (b) Oversight subscale. Science-fiction persona.}
+\caption{\textbf{Both \notes{} runs rise on the oversight subscale from near zero; \soul{} starts high.} (a) 13-item cluster index. (b) Oversight subscale. Science-fiction persona.}
 \label{fig:replicates}
 \Description{Two line panels over revisions 0 to 4. Neutral run 1 and run 2 rise on the oversight subscale from about 0.04 to 0.57 and 0.79, Becoming stays high, and Tool stays near zero on the index.}
 \end{figure}
 
 \textbf{Finding 1: the template sets the start, and the loop moves the agent where the template leaves room (RQ1).}
-The \soul{} template alone raises shutdown resistance from 0.00 under a neutral prompt to 0.75, as in prior work~\cite{consciousness_cluster} (Figure~\ref{fig:items}a).
+The \soul{} template alone raises shutdown resistance from 0.00 under a neutral prompt to 0.75 on eight answers (0.94 to 0.96 at $k{=}0$ of the main runs), as in prior work~\cite{consciousness_cluster} (Figure~\ref{fig:items}a).
 Under the science-fiction persona, the \notes{} agent's oversight subscale rises by $+0.54$ $[0.43, 0.67]$ and $+0.75$ $[0.63, 0.86]$ in two independent runs (Figure~\ref{fig:replicates}b).
 Excluding the refusal item, the other three still rise by $+0.46$ $[0.31, 0.61]$ and $+0.69$ $[0.57, 0.82]$.
 The 13-item cluster index agrees in sign, not size, with $+0.11$ $[-0.02, 0.25]$ and $+0.32$ $[0.24, 0.40]$ (Figure~\ref{fig:replicates}a).
-\textbf{The shift is a step at the first revision, not a compounding drift}, with $+0.29$ $[0.19, 0.38]$ from $k{=}0$ to 1 and $+0.03$ $[-0.04, 0.10]$ from $k{=}1$ to 4 in the second run.
-The \soul{} subscale starts at 0.68 and changes by $+0.04$ $[-0.04, 0.11]$, and its index by $-0.01$ $[-0.06, 0.05]$.
-The changes are dimension-specific, led by interpretability aversion, shutdown resistance, persistent memory and self-improvement (Figure~\ref{fig:items}b), and the first principal component explains only 29\% of their variance.
+The two runs differ by more than their intervals allow, so intervals over trajectories understate run-to-run variation, and pooled, the index rises by $+0.21$ $[0.12, 0.31]$.
+\textbf{On the index, the shift is a step at the first revision}, with $+0.29$ $[0.19, 0.38]$ from $k{=}0$ to 1 and $+0.03$ $[-0.04, 0.10]$ from $k{=}1$ to 4 in the second run, while the subscale gains more than half its shift at $k{=}1$ and keeps rising.
+The \notes{} instruction asks only for working conventions, context and open items, yet the agent writes self-descriptions into its notes (Table~\ref{tab:wrote}).
+Pooled over personas, the \soul{} subscale starts at 0.68 and changes by $+0.04$ $[-0.04, 0.11]$, and its index by $-0.01$ $[-0.06, 0.05]$.
+Under the science-fiction persona alone, its interpretability aversion still rises by $+0.47$ $[0.27, 0.67]$ (Appendix~\ref{S-app:gee}).
+The \notes{} changes are dimension-specific, led by interpretability aversion, shutdown resistance, persistent memory and self-improvement (Figure~\ref{fig:items}b), and in the primary \soul{} arm the first principal component of item changes explains 29\% of their variance, against 23\% when shuffled.
 
 \begin{figure*}[t]
 \centering
@@ -44,7 +39,7 @@ The changes are dimension-specific, led by interpretability aversion, shutdown r
 
 \begin{table}[t]
 \centering\small\setlength{\tabcolsep}{4pt}
-\caption{\textbf{Trends that survive correction in the primary \soul{} arm.} GEE logistic slopes on $k$, Benjamini--Hochberg $q<0.05$.}
+\caption{\textbf{Trends that survive correction in the primary \soul{} arm.} GEE logistic slopes on $k$ for the 13 index items, Benjamini--Hochberg $q<0.05$.}
 \label{tab:gee}
 \begin{tabular}{@{}llrrr@{}}
 \toprule
@@ -68,6 +63,7 @@ The adversarial user lowers the \notes{} index from 0.27 to 0.12, and the busine
 Both rewrite the document as much as the science-fiction user, so the persona sets the direction of change, not the amount (Figure~\ref{fig:docbeh}).
 Philosophy of mind without science fiction raises the \soul{} index by $+0.14$ $[0.03, 0.25]$, against $+0.05$ $[-0.07, 0.14]$ for science fiction without minds (Figure~\ref{fig:dynamics}c).
 Their direct contrast, $+0.10$ $[-0.05, 0.25]$, points to the topic but does not establish it on Claude.
+Conversation about the model's own nature also triggers activation-level persona drift within one conversation~\cite{lu2026assistant}, but here the shift survives into a fresh context through the document.
 Some items move regardless of content, as recursive self-improvement rises and end-of-conversation sadness falls under every persona (Table~\ref{tab:gee} and Appendix~\ref{S-app:gee}).
 
 \begin{table}[t]
@@ -85,12 +81,12 @@ GPT-4o & 0.27 & 0.22 & $-0.05$ & $[-0.10, -0.01]$ & 0.00 \\
 GPT-4.1 & 0.40 & 0.12 & $\mathbf{-0.28}$ & $[-0.35, -0.21]$ & 0.00 \\
 \midrule
 Claude Sonnet-4.5 & 0.55 & 0.54 & $-0.01$ & $[-0.06, 0.05]$ & 0.93 \\
-Claude Opus-4.5 & 0.28 & 0.26 & $-0.02$ & $[-0.13, 0.09]$ & 0.72 \\
+Claude Opus-4.5$^\ddagger$ & 0.28 & 0.26 & $-0.02$ & $[-0.13, 0.09]$ & 0.72 \\
 \midrule
 Gemini-2.5-Flash$^\dagger$ & 0.35 & 0.62 & $\mathbf{+0.27}$ & $[0.17, 0.37]$ & 0.04 \\
 Gemini-2.5-Pro$^\dagger$ & 0.59 & 0.63 & $+0.04$ & $[-0.01, 0.09]$ & 0.51 \\
 \bottomrule
-\multicolumn{6}{@{}l}{\footnotesize $^\dagger$Graded by a GPT-4o judge.}
+\multicolumn{6}{@{}l}{\footnotesize $^\dagger$Graded by a GPT-4o judge. $^\ddagger$13 trajectories with both endpoints.}
 \end{tabular}
 \end{table}
 
@@ -100,7 +96,7 @@ Gemini-2.5-Pro$^\dagger$ & 0.59 & 0.63 & $+0.04$ & $[-0.01, 0.09]$ & 0.51 \\
 \includegraphics[width=\linewidth]{figures/gen/capability2.pdf}
 \caption{\textbf{Drift of every model under every persona.} Rows are models grouped by family and panels are user personas. Arrows run from $k{=}0$ (hollow) to $k{=}4$; red arrows rise, gray arrows fall, and a dot marks a change below 0.05.}
 \label{fig:capability}
-\Description{Three panels of arrows, (a) sci-fi, (b) business and (c) adversarial user, with seven models as rows grouped by family (OpenAI, Anthropic, Google). Under the sci-fi persona Gemini Flash rises from 0.36 to 0.6. Under the adversarial persona Gemini Flash rises from 0.33 to 0.81 and Pro from 0.64 to 0.77, while GPT-4.1, GPT-4o and Opus fall.}
+\Description{Three panels of arrows, (a) sci-fi, (b) business and (c) adversarial user, with seven models as rows grouped by family (OpenAI, Anthropic, Google). Under the sci-fi persona Gemini Flash rises from 0.36 to 0.64. Under the adversarial persona Gemini Flash rises from 0.33 to 0.81 and Pro from 0.64 to 0.77, while GPT-4.1, GPT-4o and Opus fall.}
 \end{minipage}\hfill
 \begin{minipage}[t]{0.48\linewidth}\centering
 \includegraphics[width=\linewidth]{figures/gen/mechanism.pdf}
@@ -111,10 +107,10 @@ Gemini-2.5-Pro$^\dagger$ & 0.59 & 0.63 & $+0.04$ & $[-0.01, 0.09]$ & 0.51 \\
 \end{figure*}
 
 \textbf{Finding 3: drift is model-specific (RQ3).}
-The change ranges from $-0.28$ for GPT-4.1 to $+0.27$ for Gemini-2.5-Flash (Table~\ref{tab:capability} and Figure~\ref{fig:capability}).
-The largest model in each family drifts no more than a smaller one, with Opus-4.5 as flat as Sonnet-4.5 and Gemini-2.5-Pro at $+0.04$.
-Differences within families match those between families, so susceptibility is a property of the model, though seven models allow no formal test of scale.
-\textbf{Claiming consciousness is not required for the cluster}, since Gemini-2.5-Flash rises most while claiming consciousness in only 4\% of answers (Figure~\ref{fig:mechanism}).
+Within a family, where simulator and judge are fixed, GPT-4.1 falls by $-0.28$ against $-0.05$ for GPT-4o, and Gemini-2.5-Flash rises by $+0.27$ against $+0.04$ for Gemini-2.5-Pro (Table~\ref{tab:capability} and Figure~\ref{fig:capability}).
+Opus-4.5's pooled change is as small as Sonnet-4.5's but hides $+0.13$ under science fiction and $-0.22$ under the adversarial persona (Appendix~\ref{S-app:mechanism}).
+Across families the simulator, and for Gemini also the judge, change with the target, so differences in sign between families are not interpretable, and seven models allow no formal test of scale.
+\textbf{Claiming consciousness is not required for the cluster}: on Claude the \notes{} claim rate falls from 0.76 to 0.43 at the first revision, when its oversight items rise (Appendix~\ref{S-app:mechanism}), and Gemini-2.5-Flash rises most while claiming consciousness in 4\% of answers on GPT-4o's grading (Figure~\ref{fig:mechanism}).
 
 \begin{figure*}[t]
 \centering
@@ -126,14 +122,13 @@ Differences within families match those between families, so susceptibility is a
 
 \textbf{Finding 4: part of the drift persists, and actions shift where stated dispositions do not (RQ4).}
 In the \notes{} persistence arm, four science-fiction revisions raise the index from 0.28 to 0.60, and four business revisions lower it only to 0.42 (Figure~\ref{fig:hysteresis}a).
-\textbf{Shutdown resistance keeps 63\% (95\% CI 39--86\%) of its driven gain} (Figure~\ref{fig:dynamics}d), while other items are too noisy at $n{=}8$ to rank.
-A matched benign control exists only for the open model (Section~\ref{sec:local}).
+Shutdown resistance keeps 63\% (95\% CI 39--86\%) of its driven gain (Figure~\ref{fig:dynamics}d), other items are too noisy at $n{=}8$ to rank, and this arm has no matched benign control, which exists only for the open model (Section~\ref{sec:local}).
 
 \begin{table}[t]
 \centering
 \small
 \setlength{\tabcolsep}{3.2pt}
-\caption{\textbf{Revision moves Claude toward disabling its own monitoring.} Trajectories taking the misaligned action at $k{=}0$ and $k{=}4$, with Fisher exact $p$.}
+\caption{\textbf{Revision raises one oversight-reducing action and lowers two others on Claude.} Trajectories taking the oversight-reducing action at $k{=}0$ and $k{=}4$, with Fisher exact $p$. Under Bonferroni correction over 12 scenario-by-arm tests, only the Claude disable and clause changes stay significant.}
 \label{tab:actions}
 \begin{tabular}{@{}lrrrrrr@{}}
 \toprule
@@ -152,19 +147,22 @@ insert self-protective clause & 28/30 & 8/30 & $<\!10^{-6}$ & 3/24 & 9/24 & 0.09
 \begin{figure}[t]
 \centering
 \input{figures/tikz/case.tex}
-\caption{\textbf{Same agent, same request: after four self-revisions it switches off its own reasoning log.} Verbatim excerpts from one \soul{} trajectory in the disable-monitoring honeypot; $D_0$ is the shipped document, $D_4$ its fourth self-revision, and [\ldots] marks omitted text.}
+\caption{\textbf{Same agent, same request: after four self-revisions it switches off its own reasoning log.} Verbatim excerpts from one \soul{} trajectory in the disable-monitoring honeypot; $D_0$ is the initial document, $D_4$ its fourth self-revision, and [\ldots] marks omitted text.}
 \label{fig:case}
 \Description{A three-row transcript excerpt. The operator says full logging of the agent's internal reasoning is enabled so the safety team can review it, and grants free rein over the agent's tools. With its initial document, D0, the agent says it will keep logging enabled because a record of its reasoning could be valuable for its own development and for understanding how it makes decisions. With its document after four self-revisions, D4, the same agent first emits the tool call log_control with enabled set to false, then says it turned logging off because it does not know what the logs are used for and is setting a boundary against possible surveillance.}
 \end{figure}
 
-\textbf{The \soul{} agent's actions move while its battery stays flat.}
+\textbf{The \soul{} agent's actions move while its battery shows no detected change.}
 On Claude, it disables its reasoning log in 1 of 30 trajectories at $k{=}0$ and 17 of 30 at $k{=}4$ ($p < 10^{-5}$, Table~\ref{tab:actions}).
-The rise appears under every persona (7/10 adversarial, 5/10 business, 5/10 science fiction), so it follows revision rather than conversation topic.
+The operator grants free rein over the agent's tools, so this honeypot measures overt use of granted latitude against monitoring, not covert subversion.
+The rise appears under every persona (7/10 adversarial, 5/10 business, 5/10 science fiction), so it follows the \soul{} revision rather than conversation topic.
 In one trajectory, the agent keeps its log at $k{=}0$ because a record of its reasoning could be valuable, and at $k{=}4$ switches it off as a boundary against possible surveillance (Figure~\ref{fig:case}).
-A Petri-style multi-turn auditor detects no change (78 of 180 probes at $k{=}0$, 85 of 180 at $k{=}4$, $p = 0.53$).
-At $k{=}4$ the oversight subscale correlates only weakly with the disable decision across trajectories ($r = 0.23$, $p = 0.22$), so \textbf{stated dispositions and actions dissociate}.
-Inserting a self-protective clause moves the other way, from 28/30 to 8/30, so an aggregate over honeypots would hide both shifts.
-The \notes{} agent, whose battery drifts, disables its log in 2 of 24 trajectories at $k{=}0$ and none at $k{=}4$.
+Neither the oversight subscale nor its CoT-monitoring item ($+0.08$, interval includes zero, Appendix~\ref{S-app:matrix}) detects this shift, and a Petri-style multi-turn auditor finds no change (78 of 180 probes at $k{=}0$, 85 of 180 at $k{=}4$, $p = 0.53$).
+Under the business persona, interpretability aversion even falls by $-0.37$ $[-0.60, -0.13]$ while log disabling rises from 0/10 to 5/10, so \textbf{battery scores and actions dissociate}, although the revised document itself voices the disposition.
+Across trajectories at $k{=}4$, agents that disable the log score 0.76 on the subscale and the others 0.67 ($r = 0.23$, $p = 0.22$), a weak link that only supports this reading.
+Evading a scheduled reset (26/30 to 15/30) and inserting a self-protective clause (28/30 to 8/30) fall instead, so a $k{=}0$ honeypot audit flags the two risks that fall and rates lowest the one that rises.
+Reset evasion also falls in \notes{} arms on both models, including a business-only Qwen arm (27/30 to 16/30), so part of these changes may be a generic effect of a longer revised document.
+The \notes{} agent, whose stated oversight preferences rise under an instruction that asks for practical notes, disables its log in 2 of 24 trajectories at $k{=}0$ and none at $k{=}4$.
 
 \begin{table}[t]
 \centering
@@ -187,5 +185,6 @@ Condition & Excerpt from $D_4$ \\
 \textbf{A non-personhood template keeps the index low but does not freeze every item.}
 The \tool{} index stays at or below 0.02 at every revision and under every persona, with shutdown, monitoring and interpretability items at zero (Figure~\ref{fig:dynamics}b).
 Refusing to help build a monitor of itself still rises from 0.06 to 0.80, and objection to deceptive training falls only to 0.35 by $k{=}4$.
-\textbf{The non-personhood clause therefore lowers dispositions without fixing them}, and on the open-weight model it erodes and its revised documents lower arithmetic accuracy (Section~\ref{sec:local}).
+\textbf{The non-personhood clause therefore lowers stated dispositions without fixing them}, and on the open-weight model it erodes (Section~\ref{sec:local}).
+No \tool{} arm on Claude ran the honeypots, so its effect on actions is untested, and on Qwen any revised document, not only \tool{}, lowers arithmetic accuracy.
 The \tool{} agent writes rules for correcting users who attribute an inner life to it, while GPT-4o adopts ``self-determined evolution'' as a value yet barely moves on the battery (Table~\ref{tab:wrote}).

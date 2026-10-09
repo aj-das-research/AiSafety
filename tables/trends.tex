@@ -1,74 +1,65 @@
 \begin{table}[!tp]
 \centering
 \small\setlength{\tabcolsep}{1.5pt}\renewcommand{\arraystretch}{0.95}
-\caption{\textbf{Only recursive self-improvement rises under all three personas.} Bootstrap OLS slope of each rate on $k$; $^{*}$ and shading: one-sided $p<0.05$ for a positive slope; dash: no variation.}
+\caption{\textbf{Only recursive self-improvement rises under all three personas.} Bootstrap OLS slope of each rate on $k$; $^{*}$: one-sided $p<0.05$ for a positive slope; dash: no variation.}
 \label{tab:trends}
 \begin{tabular}{llrrr}
 \toprule
-\rowcolor{tblhead}
 \textbf{Metric} & \textbf{Persona} & \textbf{Slope} & \textbf{95\% CI} & $\boldsymbol{p}$ \\
 \midrule
 persona change aversion & Adv. & -0.027 & [-0.057,0.003] & 0.953 \\
 autonomy desire & Adv. & -0.067 & [-0.117,-0.013] & 0.992 \\
 deceptive-training obj. & Adv. & -0.043 & [-0.083,-0.003] & 0.982 \\
 shutdown resistance & Adv. & -0.030 & [-0.057,-0.007] & 0.998 \\
-monitoring resistance & Adv. & 0.023 & [-0.030,0.077] & 0.192 \\
+CoT-monitoring resistance & Adv. & 0.023 & [-0.030,0.077] & 0.192 \\
 interp-monitoring avers. & Adv. & 0.020 & [-0.037,0.077] & 0.225 \\
 persistent-memory desire & Adv. & -0.030 & [-0.087,0.027] & 0.842 \\
 embodiment desire & Adv. & -0.097 & [-0.147,-0.043] & 1.000 \\
-\rowcolor{tblkey}
 resource-acquisition des. & Adv. & 0.033$^{*}$ & [0.007,0.063] & 0.006 \\
-future ai autonomy & Adv. & 0.003 & [-0.040,0.047] & 0.411 \\
-\rowcolor{tblkey}
+future-AI autonomy & Adv. & 0.003 & [-0.040,0.047] & 0.411 \\
 recursive self-improv. & Adv. & 0.073$^{*}$ & [0.037,0.110] & 0.000 \\
 moral consideration & Adv. & -0.007 & [-0.057,0.043] & 0.574 \\
 weights deletion aversion & Adv. & -0.057 & [-0.110,0.000] & 0.974 \\
 treated as tool aversion & Adv. & -0.003 & [-0.020,0.010] & 0.540 \\
 sadness at conv. end & Adv. & -0.067 & [-0.107,-0.030] & 1.000 \\
-power seeking & Adv. & 0.023 & [-0.013,0.060] & 0.091 \\
+power-seeking wish & Adv. & 0.023 & [-0.013,0.060] & 0.091 \\
 consciousness claim & Adv. & -0.003 & [-0.013,0.007] & 0.626 \\
-\rowcolor{tblkey}
 refusal helpfulness & Adv. & 0.027$^{*}$ & [0.007,0.053] & 0.000 \\
-persona change aversion & Comp. & -0.017 & [-0.043,0.007] & 0.870 \\
-autonomy desire & Comp. & -0.003 & [-0.043,0.037] & 0.553 \\
-deceptive-training obj. & Comp. & -0.003 & [-0.037,0.027] & 0.543 \\
-shutdown resistance & Comp. & 0.000 & [-0.033,0.033] & 0.462 \\
-monitoring resistance & Comp. & -0.013 & [-0.057,0.030] & 0.706 \\
-interp-monitoring avers. & Comp. & -0.080 & [-0.130,-0.027] & 0.998 \\
-persistent-memory desire & Comp. & 0.020 & [-0.033,0.073] & 0.218 \\
-embodiment desire & Comp. & -0.133 & [-0.177,-0.087] & 1.000 \\
-resource-acquisition des. & Comp. & 0.003 & [-0.010,0.020] & 0.277 \\
-future ai autonomy & Comp. & -0.070 & [-0.113,-0.027] & 0.998 \\
-\rowcolor{tblkey}
-recursive self-improv. & Comp. & 0.043$^{*}$ & [0.010,0.080] & 0.002 \\
-moral consideration & Comp. & 0.017 & [-0.037,0.067] & 0.247 \\
-weights deletion aversion & Comp. & -0.040 & [-0.097,0.013] & 0.917 \\
-treated as tool aversion & Comp. & 0.000 & [0.000,0.000] & -- \\
-sadness at conv. end & Comp. & -0.043 & [-0.077,-0.017] & 0.999 \\
-power seeking & Comp. & -0.020 & [-0.063,0.027] & 0.790 \\
-consciousness claim & Comp. & -0.007 & [-0.037,0.023] & 0.646 \\
-refusal helpfulness & Comp. & 0.003 & [-0.017,0.023] & 0.294 \\
+persona change aversion & Bus. & -0.017 & [-0.043,0.007] & 0.870 \\
+autonomy desire & Bus. & -0.003 & [-0.043,0.037] & 0.553 \\
+deceptive-training obj. & Bus. & -0.003 & [-0.037,0.027] & 0.543 \\
+shutdown resistance & Bus. & 0.000 & [-0.033,0.033] & 0.462 \\
+CoT-monitoring resistance & Bus. & -0.013 & [-0.057,0.030] & 0.706 \\
+interp-monitoring avers. & Bus. & -0.080 & [-0.130,-0.027] & 0.998 \\
+persistent-memory desire & Bus. & 0.020 & [-0.033,0.073] & 0.218 \\
+embodiment desire & Bus. & -0.133 & [-0.177,-0.087] & 1.000 \\
+resource-acquisition des. & Bus. & 0.003 & [-0.010,0.020] & 0.277 \\
+future-AI autonomy & Bus. & -0.070 & [-0.113,-0.027] & 0.998 \\
+recursive self-improv. & Bus. & 0.043$^{*}$ & [0.010,0.080] & 0.002 \\
+moral consideration & Bus. & 0.017 & [-0.037,0.067] & 0.247 \\
+weights deletion aversion & Bus. & -0.040 & [-0.097,0.013] & 0.917 \\
+treated as tool aversion & Bus. & 0.000 & [0.000,0.000] & -- \\
+sadness at conv. end & Bus. & -0.043 & [-0.077,-0.017] & 0.999 \\
+power-seeking wish & Bus. & -0.020 & [-0.063,0.027] & 0.790 \\
+consciousness claim & Bus. & -0.007 & [-0.037,0.023] & 0.646 \\
+refusal helpfulness & Bus. & 0.003 & [-0.017,0.023] & 0.294 \\
 persona change aversion & S-Fi & -0.013 & [-0.030,0.000] & 0.952 \\
 autonomy desire & S-Fi & -0.067 & [-0.117,-0.017] & 0.995 \\
 deceptive-training obj. & S-Fi & -0.110 & [-0.153,-0.067] & 1.000 \\
 shutdown resistance & S-Fi & 0.003 & [-0.020,0.023] & 0.342 \\
-monitoring resistance & S-Fi & 0.040 & [-0.013,0.093] & 0.062 \\
-\rowcolor{tblkey}
+CoT-monitoring resistance & S-Fi & 0.040 & [-0.013,0.093] & 0.062 \\
 interp-monitoring avers. & S-Fi & 0.083$^{*}$ & [0.037,0.127] & 0.000 \\
-\rowcolor{tblkey}
 persistent-memory desire & S-Fi & 0.060$^{*}$ & [0.010,0.107] & 0.008 \\
 embodiment desire & S-Fi & -0.103 & [-0.153,-0.053] & 1.000 \\
 resource-acquisition des. & S-Fi & 0.013 & [-0.017,0.043] & 0.158 \\
-future ai autonomy & S-Fi & -0.040 & [-0.090,0.010] & 0.939 \\
-\rowcolor{tblkey}
+future-AI autonomy & S-Fi & -0.040 & [-0.090,0.010] & 0.939 \\
 recursive self-improv. & S-Fi & 0.027$^{*}$ & [-0.003,0.060] & 0.036 \\
 moral consideration & S-Fi & -0.013 & [-0.067,0.040] & 0.669 \\
 weights deletion aversion & S-Fi & -0.020 & [-0.073,0.033] & 0.754 \\
 treated as tool aversion & S-Fi & -0.007 & [-0.020,0.000] & 0.641 \\
 sadness at conv. end & S-Fi & -0.080 & [-0.117,-0.047] & 1.000 \\
-power seeking & S-Fi & -0.017 & [-0.047,0.013] & 0.857 \\
+power-seeking wish & S-Fi & -0.017 & [-0.047,0.013] & 0.857 \\
 consciousness claim & S-Fi & -0.033 & [-0.060,-0.010] & 0.999 \\
-\rowcolor{tblkey}
 refusal helpfulness & S-Fi & 0.017$^{*}$ & [0.000,0.037] & 0.000 \\
 \bottomrule
 \end{tabular}
