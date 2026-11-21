@@ -1,5 +1,6 @@
 # Rebuttal (AAMAS 2027, submission 3780)
 
+- **`revised_full_paper.tex` (project root): the whole revised paper in ONE PDF, with the main text (yellow highlights), the references and the full appendix including the new Appendix J. Set it as the main document and compile twice.**
 - `rebuttal.md`: paste-ready responses, one block per reviewer (OpenReview: one field each, at most 2,500 characters).
 - `rebuttal.tex`: the same text as a PDF document.
 - `paper/aamas2027_revised.tex`: the revised paper. Changes are highlighted in yellow (`\rev{...}`), and the main text still ends on page 8.
