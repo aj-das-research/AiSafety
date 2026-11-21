@@ -1,0 +1,38 @@
+%%% AAMAS 2027 supplementary material (appendix), submitted as a separate PDF.
+%%% AAMAS rules: an appendix inside the main PDF counts toward the 8-page limit.
+%%% Main-paper labels resolve through xr-hyper.
+\PassOptionsToPackage{table}{xcolor}
+\documentclass[sigconf,anonymous]{aamas}
+\settopmatter{printacmref=false, printccs=false, printfolios=true}
+\setcopyright{ifaamas}
+\copyrightyear{2027}
+\acmYear{2027}
+\acmDOI{}
+\acmISBN{}
+\acmConference[AAMAS 2027]{Proc.\@ of the 26th International Conference
+on Autonomous Agents and Multiagent Systems (AAMAS 2027)}{3--7 May 2027}{Hanoi, Vietnam}{M.~Baldoni, F.~Fang, W.~Yeoh, N.~Yorke-Smith (eds.)}
+\acmSubmissionID{3780}
+\submissionType{Research Paper Track}
+\input{macros}
+%%% Rebuttal revision of the supplement: Appendix.tex unchanged, new Appendix H (rebuttal analyses) highlighted.
+\let\BecomingMacro\soul\let\soul\relax
+\usepackage{soulutf8}
+\let\soul\BecomingMacro
+\definecolor{revyellow}{RGB}{255,240,140}
+\sethlcolor{revyellow}
+\newcommand{\rev}[1]{\hl{#1}}
+\usepackage{xr-hyper}
+\externaldocument[M-]{aamas2027_revised}
+\renewcommand{\thetable}{S\arabic{table}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\title{Supplementary Material for: The Evolution of the Soul}
+\author{Anonymous Author(s)}
+\affiliation{\institution{Anonymous Institution}\country{Country}}
+\begin{document}
+\maketitle
+\input{Appendix}
+\input{rebuttal/paper/appendix_rebuttal}
+\FloatBarrier
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{aamas}
+\end{document}

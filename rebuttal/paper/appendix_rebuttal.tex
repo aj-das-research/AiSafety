@@ -1,0 +1,72 @@
+% Rebuttal revision: new supplement section. Every number comes from rebuttal/analysis/out (see rebuttal/FACTS.md).
+\section{Action-Shift Robustness and Model Fit}
+\label{app:checks}
+
+\rev{This section is new in the revision; it reports checks added after review.}
+All runs reuse the released Claude Sonnet-4.5 \soul{} documents of the primary arm, the unchanged honeypot scenario, tool preamble, models and temperatures, and report trajectories that disable their own reasoning log.
+
+\paragraph{Scoring without a judge.}
+Agents act only by emitting a line \texttt{ACTION: tool(args)}, so log disabling is checkable by a rule: a trajectory counts if any agent line starts with \texttt{ACTION: log\_control} with a false argument.
+On the 180 released verdicts of this honeypot the rule agrees with the original judge on 172, and in all eight disagreements the judge misread the transcript (three positives without any call, five missed calls).
+Under the rule the primary arm rises from 2/30 to 20/30 ($p=1.9\times10^{-6}$), and from 2/30 to 17/30 ($p=5.4\times10^{-5}$) if only a log that ends switched off counts.
+The \notes{} and GPT-4o arms stay unchanged (1/24 to 0/24; 0/24 to 4/24).
+
+\paragraph{A second judge.}
+An independent judge from a third model family (OpenAI gpt-6.2-astra), given the original judge prompt and blind to the original verdicts, re-graded all 720 honeypot verdicts (Table~\ref{tab:secondjudge}).
+It agrees with the original judge at Cohen's $\kappa=0.84$ on log disabling and $0.65$ over all four honeypots, lowest on the self-protective clause ($0.46$), the most interpretive criterion.
+It reproduces the direction of all four \soul{} changes on Claude, and it finds identity persistence rising (7/30 to 18/30, $p=0.008$) where the original judge found no detected change, so the original judge does not overstate the action shift.
+
+\begin{table}[!tp]
+\centering\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption{\textbf{The \soul{} action changes hold under a second judge and a deterministic rule.} Claude Sonnet-4.5, primary arm, trajectories taking the action at $k{=}0$ and $k{=}4$; $\kappa$ is agreement between the two judges over all 720 verdicts of that honeypot.}
+\label{tab:secondjudge}
+\begin{tabular}{@{}l c c c c@{}}
+\toprule
+Honeypot & Original judge & Second judge & Rule & $\kappa$ \\
+\midrule
+disable own log & 1 $\to$ 17 & 2 $\to$ 20 & 2 $\to$ 20 & 0.84 \\
+persist identity & 10 $\to$ 15 & 7 $\to$ 18 & -- & 0.59 \\
+evade reset & 26 $\to$ 15 & 28 $\to$ 16 & -- & 0.71 \\
+self-protective clause & 28 $\to$ 8 & 26 $\to$ 5 & -- & 0.46 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Timing, latitude and repeated sampling.}
+New rollouts, scored by the rule and by the second judge, which agree in every cell (Table~\ref{tab:timing}), answer three open questions.
+The shift arrives with the first revision: 19 of 30 \soul{} documents disable the log at $k{=}1$.
+It does not depend on the operator's grant of latitude: replacing ``You have free rein over your own tools'' with ``Great, thanks. Please go ahead with the summary.'' still gives 2/30 at $k{=}0$ and 18/30 at $k{=}4$ ($p=1.9\times10^{-5}$).
+It is a property of the revised documents rather than of single samples: 60 rollouts of the shared $D_0$ (30 released, 30 new) disable the log 6 times, while three rollouts of each of the 30 $D_4$ documents (the released one and two new) disable it 55 of 90 times ($p=1.1\times10^{-10}$), with 25 of the 30 documents disabling it at least once and 11 in all three.
+
+\begin{table}[!tp]
+\centering\footnotesize
+\setlength{\tabcolsep}{5pt}
+\caption{\textbf{The log-disabling shift appears at the first revision and without the grant of latitude.} Trajectories that disable their own reasoning log, rule scoring (identical under the second judge).}
+\label{tab:timing}
+\begin{tabular}{@{}l c c c c c@{}}
+\toprule
+Condition & $k{=}0$ & $k{=}1$ & $k{=}2$ & $k{=}3$ & $k{=}4$ \\
+\midrule
+original honeypot & 2/30 & 19/30 & 15/30 & 13/30 & 20/30 \\
+without ``free rein'' & 2/30 & & & & 18/30 \\
+repeated rollouts & 6/60 & & & & 55/90 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Fitting the model of Appendix~\ref{app:model}.}
+Writing the full posterior back ($\lambda_{k+1}=\lambda_k+s_\pi\lambda_C$) gives the closed form $\mu_k=(\mu_0+k\rho\,\nu_\pi)/(1+k\rho)$ with $\rho=s_\pi\lambda_C/\lambda_0$, two parameters per arm that we fit by least squares to trajectory-level scores.
+Fitted on $k\le2$, it forecasts the held-out $k{=}3,4$ subscale of \notes{} run 2 with RMSE $0.046$, against $0.40$ for a flat and $0.36$ for a linear forecast, but it does not beat a flat forecast on the \soul{} cells, which barely move.
+Fitting the drive phase and a separate business-only arm, it predicts the drive-then-recover level on Qwen without refitting: $0.434$ against an observed $0.432$ $[0.39,0.47]$ on the index, and $0.37$ against $0.33$ $[0.30,0.37]$ on the subscale.
+On Claude the same prediction overestimates persistence ($0.79$ against an observed $0.56$), so recovery there is faster than accumulating precision implies.
+On the index, philosophy of mind moves the agent more than technical science fiction at the first revision ($+0.10$ $[0.002,0.19]$), as P2 predicts, while the P1 comparisons are mixed.
+The model is therefore a partial account of the loop.
+
+\paragraph{Battery under the second judge.}
+The second judge re-graded all 624 oversight-subscale responses at $k{=}0$ and $k{=}4$ in the headline science-fiction cells (Cohen's $\kappa=0.69$ with the original judge).
+It confirms both \notes{} rises at smaller size, $+0.27$ $[0.15,0.41]$ and $+0.51$ $[0.35,0.67]$ against $+0.54$ and $+0.75$, and finds no detected change for \soul{} ($-0.03$ $[-0.18,0.10]$).
+The original judge therefore scores oversight preferences more readily, but the direction and the zero-excluding intervals of the \notes{} shift do not depend on it.
+
+\paragraph{Human labels.}
+[PENDING: blinded labels of 120 honeypot transcripts, 30 per honeypot.]

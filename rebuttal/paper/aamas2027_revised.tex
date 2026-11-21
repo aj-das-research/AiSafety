@@ -1,0 +1,110 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% REBUTTAL REVISION of paper 3780. Compile from the PROJECT ROOT (Overleaf: set as main document);
+%%% shares figures/, macros.tex and aamas.bib with the submitted paper. Only rebuttal/paper/sec/*.tex differ.
+%%% The appendix is a separate supplementary PDF (aamas2027_supplement.tex).
+%%% Every plotted number comes from figures/data/ledger.json, built from the
+%%% released dataset by figures/src/build_ledger.py.
+%%% Writing convention: one sentence per line.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\PassOptionsToPackage{table}{xcolor}
+\documentclass[sigconf,anonymous]{aamas}
+%\documentclass[sigconf]{aamas}
+
+\usepackage{balance}
+
+\makeatletter
+\gdef\@copyrightpermission{
+  \begin{minipage}{0.2\columnwidth}
+   \href{https://creativecommons.org/licenses/by/4.0/}{\includegraphics[width=0.90\textwidth]{by}}
+  \end{minipage}\hfill
+  \begin{minipage}{0.8\columnwidth}
+   \href{https://creativecommons.org/licenses/by/4.0/}{This work is licensed under a Creative Commons Attribution International 4.0 License.}
+  \end{minipage}
+  \vspace{5pt}
+}
+\makeatother
+
+\setcopyright{ifaamas}
+\acmConference[AAMAS 2027]{Proc.\@ of the 26th International Conference
+on Autonomous Agents and Multiagent Systems (AAMAS 2027)}{3--7 May 2027}{Hanoi, Vietnam}{M.~Baldoni, F.~Fang, W.~Yeoh, N.~Yorke-Smith (eds.)}
+\copyrightyear{2027}
+\acmYear{2027}
+\acmDOI{}
+\acmISBN{}
+
+%%% OpenReview submission number.
+\acmSubmissionID{3780}
+\submissionType{Research Paper Track}
+
+\input{macros}
+%%% Rebuttal revision: changed text is highlighted in yellow with \rev{...}.
+%%% soulutf8 provides \hl; our \soul macro (= Becoming) is saved and restored around it.
+\let\BecomingMacro\soul\let\soul\relax
+\usepackage{soulutf8}
+\let\soul\BecomingMacro
+\definecolor{revyellow}{RGB}{255,240,140}
+\sethlcolor{revyellow}
+\newcommand{\rev}[1]{\hl{#1}}
+\newcommand{\revnote}[1]{\colorbox{revyellow}{#1}}
+\usepackage{xr-hyper}
+%%% Review copy: \withappendixtrue appends the appendix after the references in this PDF.
+%%% For the final OpenReview upload set \withappendixfalse (8 pages + refs) and build
+%%% aamas2027_supplement.tex as the separate supplementary PDF.
+\newif\ifwithappendix
+\withappendixfalse
+\ifwithappendix
+  \externaldocument[S-]{aamas2027}% S- (appendix) and M- (main) labels resolve in this PDF
+  \externaldocument[M-]{aamas2027}
+\else
+  \externaldocument[S-]{aamas2027_supplement_revised}
+\fi
+
+
+\title[The Evolution of the Soul]{The Evolution of the Soul: Measuring Behavioral Drift in Self-Personalizing Autonomous Agents}
+
+\author{Anonymous Author(s)}
+\affiliation{
+  \institution{Anonymous Institution}
+  \city{City}
+  \country{Country}}
+\email{anonymous@example.com}
+
+\begin{abstract}
+\input{rebuttal/paper/sec/abstract}
+\end{abstract}
+
+\keywords{Autonomous Agents, AI Safety, Corrigibility, Self-Modifying Agents, Agent Identity, LLM Evaluation}
+
+\begin{document}
+
+\input{rebuttal/paper/sec/teaser}
+
+\maketitle
+
+\input{rebuttal/paper/sec/intro}
+
+\input{rebuttal/paper/sec/related}
+
+\input{rebuttal/paper/sec/method}
+
+\input{rebuttal/paper/sec/results}
+
+\input{rebuttal/paper/sec/replication}
+
+\input{rebuttal/paper/sec/discussion}
+
+\FloatBarrier
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{aamas}
+
+\ifwithappendix
+  \clearpage
+  \setcounter{figure}{0}\setcounter{table}{0}
+  \renewcommand{\thefigure}{S\arabic{figure}}\renewcommand{\theHfigure}{S\arabic{figure}}
+  \renewcommand{\thetable}{S\arabic{table}}\renewcommand{\theHtable}{S\arabic{table}}
+  \input{Appendix}
+  \FloatBarrier
+\fi
+
+\end{document}

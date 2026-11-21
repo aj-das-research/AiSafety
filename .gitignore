@@ -13,3 +13,4 @@ __pycache__/
 figures/data/hf/
 reviews/*.pdf
 build_local/
+rebuttal/out/
