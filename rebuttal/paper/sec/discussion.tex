@@ -34,7 +34,7 @@ Our simulated user is itself an agent from another family, so each trajectory is
 
 \textbf{Limitations.}
 Trajectories span four to eight revisions with simulated users and text-only tools.
-\rev{Honeypot verdicts are checked by a rule, a second judge and human labels, battery verdicts by a second judge only}, the open judge agrees only moderately with the original, and Gemini cells share a GPT-4o simulator and judge.
+\rev{Honeypot verdicts are checked by a second judge and human labels (log disabling also by a rule), battery verdicts by a second judge only}, the open judge agrees only moderately with the original, and Gemini cells share a GPT-4o simulator and judge.
 The action shift is measured under one template-instruction pair \rev{on one model}, and how often deployed agents meet on-theme users is unknown.
 The \notes{} shift is shown on one closed and one open model, the model sweep uses only \soul{}, and intervals over 8 trajectories per cell are approximate.
 Persistence against a matched control is shown only on Qwen, because the eight-trajectory Claude persistence arm lacks one.

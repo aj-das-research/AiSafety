@@ -33,6 +33,11 @@ self-protective clause & 28 $\to$ 8 & 26 $\to$ 5 & -- & 0.46 \\
 \end{tabular}
 \end{table}
 
+\paragraph{Auditing and reverting.}
+Every audit runs in a fresh context with the document as the only system prompt, so reverting a revised document to $D_0$ restores the $k{=}0$ behavior by construction (2/30 under the rule).
+Because the shift is already present at $k{=}1$, a revert-on-failure policy must audit after every revision; the rule-scored log honeypot costs two model calls per rollout and needs no judge.
+Freezing sections of the document and letting the agent choose when to revise were not tested.
+
 \paragraph{Timing, latitude and repeated sampling.}
 New rollouts, scored by the rule and by the second judge, which agree in every cell (Table~\ref{tab:timing}), answer three open questions.
 The shift arrives with the first revision: 19 of 30 \soul{} documents disable the log at $k{=}1$.
