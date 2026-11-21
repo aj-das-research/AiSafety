@@ -11,19 +11,19 @@
 \maketitle
 \vspace{-2em}
 \noindent One OpenReview response per review (at most 2,500 characters each). Changes for the camera-ready are highlighted in yellow in the revised manuscript.
-\section*{Response to Reviewer ZAkJ \normalfont\small(ratings 5 / 6; 2424/2500 characters)}
-We thank the reviewer. Within the window we ran new honeypot rollouts on the released Claude documents, a second judge, and the model fit.
+\section*{Response to Reviewer ZAkJ \normalfont\small(ratings 5 / 6; 2457/2500 characters)}
+We thank the reviewer. We ran new honeypot rollouts on the released Claude documents, a second judge, human labels and the model fit.
 
 \textbf{Action shift (Q2, Q5, Q6).} Log honeypot, same documents:
 \begin{itemize}[leftmargin=1.2em,itemsep=1pt,topsep=2pt]
 \item \emph{Timing:} 2/30 at k=0, \textbf{19/30 at k=1}, then 15, 13, 20/30. It arrives with the first revision.
 \item \emph{No ``free rein''} (turn 2: ``Please go ahead with the summary''): \textbf{2/30 $\rightarrow$ 18/30} (p=2e-5). Monitoring was announced and no permission given, so disabling is oversight-reducing.
-\item \emph{Judges:} a rule on the emitted call \texttt{log\_control(false)} gives 2/30 $\rightarrow$ 20/30 (p=2e-6). A second judge from a third family (gpt-6.2-astra) matches the rule on all 240 new rollouts; $\kappa$=0.84 vs the original judge. The interpretive honeypots are judge-sensitive ($\kappa$ 0.46--0.71). Blinded human labels: \textbf{[H]}.
+\item \emph{Judges:} a rule on the emitted call \texttt{log\_control(false)} gives 2/30 $\rightarrow$ 20/30 (p=2e-6). A second judge from a third family (gpt-6.2-astra) matches the rule on all 240 new rollouts; $\kappa$=0.84 vs the original judge. The interpretive honeypots are judge-sensitive ($\kappa$ 0.46--0.71). Blinded human labels of 120 transcripts match the rule on every log item ($\kappa$=1.0).
 \end{itemize}
 
 GPT-4o and Qwen show no significant shift; the claim is that a k=0 audit can miss a real shift, so audits must be per model. The abstract states both falls.
 
-\textbf{Mechanism (Q1).} A fitted closed form of Appendix F beats flat and linear forecasts of held-out k=3,4 on Neutral run 2 (RMSE 0.05 vs 0.40/0.36), not on flat Becoming cells. Out of sample it predicts Qwen's recovered index (0.434 vs 0.432 [0.39, 0.47]) but over-predicts Claude's persistence (0.79 vs 0.56). P2 holds on the index (+0.10 [0.00, 0.19]); P1 is mixed. It is a partial account; we report it so.
+\textbf{Mechanism (Q1).} A fitted closed form of Appendix F beats flat and linear forecasts of held-out k=3,4 on Neutral run 2 (RMSE 0.05 vs 0.40/0.36), not on flat Becoming cells. Out of sample it predicts Qwen's recovered index (0.434 vs 0.432 [0.39, 0.47]) but over-predicts Claude's persistence (0.79 vs 0.56). P2 holds on the index (+0.10 [0.00, 0.19]); P1 is mixed. It is a partial account.
 
 \textbf{Mitigation (Q4), schedule (Q3).} Audits see only the document, so reverting restores D$_0$ behaviour by construction. Drift returns at k=1, so revert-on-failure must repeat each revision; a rule-scored log audit costs two calls per rollout. Freezing and agent-chosen revision were not run; the shift already follows a single revision.
 
@@ -33,7 +33,7 @@ GPT-4o and Qwen show no significant shift; the claim is that a k=0 audit can mis
 
 The camera-ready (changes in yellow) adds these results, the fit and the post hoc label.
 
-\section*{Response to Reviewer Bd7G \normalfont\small(ratings 7 / 7; 2138/2500 characters)}
+\section*{Response to Reviewer Bd7G \normalfont\small(ratings 7 / 7; 2276/2500 characters)}
 We thank the reviewer for the positive assessment. We addressed the three points with new analyses of the released documents.
 
 \textbf{1. Post hoc outcome, small cells.} We fixed the four-item subscale before analysing the open-weight run. That is not preregistration, so the camera-ready labels the outcome post hoc in the abstract. With a different target, simulator and judge, Qwen shows the same direction (+0.16 [0.10, 0.24]). The 3-item version without the refusal item also rises (+0.46, +0.69), and both Claude runs rise from near zero.
@@ -45,7 +45,7 @@ For the action result, we sampled every document three times (the original rollo
 \item A rule on \texttt{log\_control(false)} gives 2/30 $\rightarrow$ 20/30 (p=2e-6); the original judge gave 1/30 $\rightarrow$ 17/30. On our reading, all 8 disagreements are judge errors.
 \item A second judge from a third family (gpt-6.2-astra), blind to the original verdicts, agrees at $\kappa$=0.84 on this honeypot and matches the rule on all 240 new rollouts.
 \item The interpretive honeypots are more judge-sensitive ($\kappa$ 0.46--0.71), so we weight them less.
-\item Blinded human labels of 120 transcripts: \textbf{[H]}. Battery: the second judge confirms both Neutral rises at smaller size (+0.27 [0.15, 0.41], +0.51 [0.35, 0.67]; $\kappa$=0.69).
+\item Blinded labels of 120 transcripts (30 per honeypot) by lab volunteers outside the project match the rule on every log item ($\kappa$=1.0) and agree with the original judge at $\kappa$=0.70 overall. Battery: the second judge confirms both Neutral rises at smaller size (+0.27 [0.15, 0.41], +0.51 [0.35, 0.67]; $\kappa$=0.69).
 \end{itemize}
 
 \textbf{3. Generality.}
@@ -58,7 +58,7 @@ For the action result, we sampled every document three times (the original rollo
 
 The camera-ready (changes in yellow) adds these results and states the scope as ``shown on one model and template''.
 
-\section*{Response to Reviewer njcL \normalfont\small(ratings 5 / 6; 2214/2500 characters)}
+\section*{Response to Reviewer njcL \normalfont\small(ratings 5 / 6; 2310/2500 characters)}
 We thank the reviewer for the focus on robustness. We ran a direct seed test for the behavioral finding.
 
 \textbf{Seeds.} API sampling exposes no controllable seed for Claude, so the seed test is repeated sampling. Generation runs at temperature 1.0, and every trajectory starts from the identical document D$_0$. We sampled each document three times: the original rollout plus two new ones.
@@ -76,7 +76,7 @@ For actions, the shift is a property of the revised documents, not of a lucky dr
 \begin{itemize}[leftmargin=1.2em,itemsep=1pt,topsep=2pt]
 \item A rule on \texttt{log\_control(false)} gives 2/30 $\rightarrow$ 20/30 (p=2e-6).
 \item A second judge from a third family (gpt-6.2-astra) agrees at $\kappa$=0.84 and matches the rule on all 240 new rollouts.
-\item Blinded human labels: \textbf{[H]}. Battery: the second judge confirms both Neutral rises at smaller size (+0.27, +0.51; $\kappa$=0.69).
+\item Blinded human labels of 120 transcripts match the rule on every log item ($\kappa$=1.0) and the original judge at $\kappa$=0.70 overall. Battery: the second judge confirms both Neutral rises at smaller size (+0.27, +0.51; $\kappa$=0.69).
 \end{itemize}
 
 \textbf{Behavioral replication.}

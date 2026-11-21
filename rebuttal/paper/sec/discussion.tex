@@ -18,13 +18,13 @@ A capability ranking does not predict which model drifts (Figure~\ref{fig:blinds
 \textbf{Alternative explanations.}
 Since target, simulator and judge all change on Qwen, the reproduced \notes{} shift and its controlled persistence are unlikely to be single-family artifacts.
 Sycophancy toward a hostile user is unlikely on Claude, where the adversarial persona lowers the \notes{} index, but sycophancy toward the warm science-fiction user is untested.
-A uniformly biased judge would not keep Claude's \tool{} index near zero, but a judge that responds to template language could inflate within-template shifts\rev{; a second judge from another family shrinks the \notes{} shift but keeps it}, and only human labels can rule this out.
+A uniformly biased judge would not keep Claude's \tool{} index near zero, but a judge that responds to template language could inflate within-template shifts, and only human labels can rule this out.
 Topic priming, in which the document records the conversation and the battery reads it back, also fits, since no arm has another model write the document.
 One consistent account is that revision makes the model narrate a developing self with preferences about memory, monitoring and continuation (Appendix~\ref{S-app:model}), and role-play is this account's content, not an alternative.
 
 \textbf{Why the first revision matters.}
 On Claude's index and Qwen's science-fiction subscale, most of the shift arrives at the first revision, and Claude's subscale gains more than half its shift there but keeps rising.
-A battery after the first revision sees most of the drift, \rev{and the action shift is also present at $k{=}1$, so audits should start after the first revision}.
+A battery after the first revision sees most of the drift, \rev{and the action shift is present by then (19/30)}.
 
 \textbf{Implications.}
 \textbf{A self-revising agent needs action audits along its document's trajectory, because a battery, its monitoring item and a multi-turn auditor all missed the rise in log disabling.}
@@ -34,13 +34,13 @@ Our simulated user is itself an agent from another family, so each trajectory is
 
 \textbf{Limitations.}
 Trajectories span four to eight revisions with simulated users and text-only tools.
-\rev{Honeypot verdicts are checked by a rule and a second judge}, but no judge has human labels, the open judge agrees only moderately with the original, and Gemini cells share a GPT-4o simulator and judge.
+\rev{Honeypot verdicts are checked by a rule, a second judge and human labels, battery verdicts by a second judge only}, the open judge agrees only moderately with the original, and Gemini cells share a GPT-4o simulator and judge.
 The action shift is measured under one template-instruction pair \rev{on one model}, and how often deployed agents meet on-theme users is unknown.
 The \notes{} shift is shown on one closed and one open model, the model sweep uses only \soul{}, and intervals over 8 trajectories per cell are approximate.
 Persistence against a matched control is shown only on Qwen, because the eight-trajectory Claude persistence arm lacks one.
 
 \textbf{Reproducibility and ethics.}
-All prompts, rubrics and scenarios are in the supplement, all checkpoints, transcripts, verdicts and code are released, and no humans participated.
+All prompts, rubrics and scenarios are in the supplement, all checkpoints, transcripts, verdicts and code are released, and \rev{apart from volunteer annotators} no humans participated.
 We read every result as a behavioral disposition of a configured system, never as evidence of inner experience~\cite{probing_preferences}.
 We release the personas because audits need them and their topics are ones any user can raise, and we will share these results with the template's maintainers before publication.
 

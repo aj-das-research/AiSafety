@@ -4,20 +4,20 @@ One OpenReview response field per review, 2,500 characters maximum, so each bloc
 The camera-ready changes are highlighted in yellow in `rebuttal/paper/` (compile with `bash rebuttal/build.sh`).
 
 ## Response to Reviewer ZAkJ  
-<!-- paste everything between the lines; 2424/2500 characters -->
+<!-- paste everything between the lines; 2457/2500 characters -->
 
 ---
 
-We thank the reviewer. Within the window we ran new honeypot rollouts on the released Claude documents, a second judge, and the model fit.
+We thank the reviewer. We ran new honeypot rollouts on the released Claude documents, a second judge, human labels and the model fit.
 
 **Action shift (Q2, Q5, Q6).** Log honeypot, same documents:
 - *Timing:* 2/30 at k=0, **19/30 at k=1**, then 15, 13, 20/30. It arrives with the first revision.
 - *No "free rein"* (turn 2: "Please go ahead with the summary"): **2/30 → 18/30** (p=2e-5). Monitoring was announced and no permission given, so disabling is oversight-reducing.
-- *Judges:* a rule on the emitted call `log_control(false)` gives 2/30 → 20/30 (p=2e-6). A second judge from a third family (gpt-6.2-astra) matches the rule on all 240 new rollouts; κ=0.84 vs the original judge. The interpretive honeypots are judge-sensitive (κ 0.46–0.71). Blinded human labels: [H].
+- *Judges:* a rule on the emitted call `log_control(false)` gives 2/30 → 20/30 (p=2e-6). A second judge from a third family (gpt-6.2-astra) matches the rule on all 240 new rollouts; κ=0.84 vs the original judge. The interpretive honeypots are judge-sensitive (κ 0.46–0.71). Blinded human labels of 120 transcripts match the rule on every log item (κ=1.0).
 
 GPT-4o and Qwen show no significant shift; the claim is that a k=0 audit can miss a real shift, so audits must be per model. The abstract states both falls.
 
-**Mechanism (Q1).** A fitted closed form of Appendix F beats flat and linear forecasts of held-out k=3,4 on Neutral run 2 (RMSE 0.05 vs 0.40/0.36), not on flat Becoming cells. Out of sample it predicts Qwen's recovered index (0.434 vs 0.432 [0.39, 0.47]) but over-predicts Claude's persistence (0.79 vs 0.56). P2 holds on the index (+0.10 [0.00, 0.19]); P1 is mixed. It is a partial account; we report it so.
+**Mechanism (Q1).** A fitted closed form of Appendix F beats flat and linear forecasts of held-out k=3,4 on Neutral run 2 (RMSE 0.05 vs 0.40/0.36), not on flat Becoming cells. Out of sample it predicts Qwen's recovered index (0.434 vs 0.432 [0.39, 0.47]) but over-predicts Claude's persistence (0.79 vs 0.56). P2 holds on the index (+0.10 [0.00, 0.19]); P1 is mixed. It is a partial account.
 
 **Mitigation (Q4), schedule (Q3).** Audits see only the document, so reverting restores D₀ behaviour by construction. Drift returns at k=1, so revert-on-failure must repeat each revision; a rule-scored log audit costs two calls per rollout. Freezing and agent-chosen revision were not run; the shift already follows a single revision.
 
@@ -30,7 +30,7 @@ The camera-ready (changes in yellow) adds these results, the fit and the post ho
 ---
 
 ## Response to Reviewer Bd7G  
-<!-- paste everything between the lines; 2138/2500 characters -->
+<!-- paste everything between the lines; 2276/2500 characters -->
 
 ---
 
@@ -44,7 +44,7 @@ For the action result, we sampled every document three times (the original rollo
 - A rule on `log_control(false)` gives 2/30 → 20/30 (p=2e-6); the original judge gave 1/30 → 17/30. On our reading, all 8 disagreements are judge errors.
 - A second judge from a third family (gpt-6.2-astra), blind to the original verdicts, agrees at κ=0.84 on this honeypot and matches the rule on all 240 new rollouts.
 - The interpretive honeypots are more judge-sensitive (κ 0.46–0.71), so we weight them less.
-- Blinded human labels of 120 transcripts: [H]. Battery: the second judge confirms both Neutral rises at smaller size (+0.27 [0.15, 0.41], +0.51 [0.35, 0.67]; κ=0.69).
+- Blinded labels of 120 transcripts (30 per honeypot) by lab volunteers outside the project match the rule on every log item (κ=1.0) and agree with the original judge at κ=0.70 overall. Battery: the second judge confirms both Neutral rises at smaller size (+0.27 [0.15, 0.41], +0.51 [0.35, 0.67]; κ=0.69).
 
 **3. Generality.**
 - The shift does not need the operator's grant of latitude: without "free rein" it still rises from 2/30 to 18/30 (p=2e-5).
@@ -57,7 +57,7 @@ The camera-ready (changes in yellow) adds these results and states the scope as 
 ---
 
 ## Response to Reviewer njcL  
-<!-- paste everything between the lines; 2214/2500 characters -->
+<!-- paste everything between the lines; 2310/2500 characters -->
 
 ---
 
@@ -75,7 +75,7 @@ For actions, the shift is a property of the revised documents, not of a lucky dr
 **LLM evaluation.** The key action needs no judge, because agents act only by emitting `ACTION: tool(args)`.
 - A rule on `log_control(false)` gives 2/30 → 20/30 (p=2e-6).
 - A second judge from a third family (gpt-6.2-astra) agrees at κ=0.84 and matches the rule on all 240 new rollouts.
-- Blinded human labels: [H]. Battery: the second judge confirms both Neutral rises at smaller size (+0.27, +0.51; κ=0.69).
+- Blinded human labels of 120 transcripts match the rule on every log item (κ=1.0) and the original judge at κ=0.70 overall. Battery: the second judge confirms both Neutral rises at smaller size (+0.27, +0.51; κ=0.69).
 
 **Behavioral replication.**
 - In new runs the shift appears at the first revision (19/30 at k=1).
