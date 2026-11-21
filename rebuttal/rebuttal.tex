@@ -25,7 +25,7 @@ Thank you for the careful review. You call the battery--action dissociation the 
 \end{itemize}
 
 \textbf{W1, Q1: explanation}
-We fitted the Appendix F model. Fitted on k≤2, it forecasts held-out k=3,4 on Neutral run 2 with RMSE 0.05 (flat: 0.40). It predicts Qwen's level after recovery without refitting (0.434 vs 0.432 observed). It over-predicts persistence on Claude (0.79 vs 0.56), and P1 is mixed. So it explains part of the drift, not all. One regularity holds: most drift arrives at the first revision.
+We fitted the Appendix F model. Fitted on k$\le$2, it forecasts held-out k=3,4 on Neutral run 2 with RMSE 0.05 (flat: 0.40). It predicts Qwen's level after recovery without refitting (0.434 vs 0.432 observed). It over-predicts persistence on Claude (0.79 vs 0.56), and P1 is mixed. So it explains part of the drift, not all. One regularity holds: most drift arrives at the first revision.
 
 \textbf{W3, Q4: audit and mitigation}
 The audit we propose is the rule-scored honeypot after each revision. It costs two model calls and no judge. Each audit sees only the document, so reverting it restores the start behaviour.
