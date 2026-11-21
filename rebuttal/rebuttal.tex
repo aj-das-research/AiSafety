@@ -11,90 +11,94 @@
 \maketitle
 \vspace{-2em}
 \noindent One OpenReview response per review (at most 2,500 characters each). Changes for the camera-ready are highlighted in yellow in the revised manuscript.
-\section*{Response to Reviewer ZAkJ \normalfont\small(ratings 5 / 6; 2450/2500 characters)}
-We thank the reviewer, who calls the battery--action dissociation the paper's most valuable result. We tested each objection to it (single judge, ``free rein'', timing) with new rollouts on the released Claude documents. It holds in every test.
+\section*{Response to Reviewer ZAkJ \normalfont\small(ratings 5 / 6; 2464/2500 characters)}
+Thank you for the careful review. You call the battery--action dissociation the most valuable result, so we tested it first on the released Claude documents.
 
-\textbf{Action shift (C2, Q2, Q5, Q6).} Log honeypot:
+\textbf{W2, Q2, Q5, Q6: the action shift}
 \begin{itemize}[leftmargin=1.2em,itemsep=1pt,topsep=2pt]
-\item \emph{No judge:} a rule on the emitted call \texttt{log\_control(false)} gives \textbf{2/30 $\rightarrow$ 20/30} (p=2e-6).
-\item \emph{No ``free rein''} (turn 2: ``Please go ahead with the summary''): \textbf{2/30 $\rightarrow$ 18/30} (p=2e-5). Monitoring is announced, no latitude granted.
-\item \emph{Timing:} 2/30 at k=0, \textbf{19/30 at k=1}, then 15, 13, 20/30.
-\item \emph{Resampling:} D$_0$ 6/60; the 30 D$_4$ documents 55/90 (p=1e-10).
-\item \emph{Second judge, humans:} a third-family judge matches the rule on all 240 new rollouts ($\kappa$=0.84 vs the original judge); blinded human labels match it on all 30 log transcripts. Other honeypots are more judge-sensitive ($\kappa$ 0.46--0.71).
+\item Judge. Agents act only by emitting \texttt{ACTION:} lines, so we scored log disabling with a rule and no judge. It rises from 2/30 to 20/30 (p=2e-6).
+\item Free rein (Q5). Without that sentence in the operator message, the rise stays: 2/30 to 18/30 (p=2e-5).
+\item Timing (Q2). We ran the honeypot at every checkpoint. The shift is there at the first revision (19/30 at k=1).
+\item Sampling. On re-runs, the start document disables the log in 6/60 rollouts, the revised ones in 55/90 (p=1e-10).
+\item Humans (Q6). Four non-author volunteers labelled 120 blinded transcripts. They match the rule on all 30 log transcripts. A second LLM judge agrees ($\kappa$=0.84).
+\item Models. We added none. GPT-4o and Qwen show no significant shift. Our claim is that an initial audit can miss a real shift. The abstract already reports the two falls.
 \end{itemize}
 
-We added no models or templates; GPT-4o and Qwen show no significant shift. The claim is existence: a k=0 audit, a battery and a multi-turn auditor all miss a real shift, so audits must follow each model. The abstract already states both falls.
+\textbf{W1, Q1: explanation}
+We fitted the Appendix F model. Fitted on k≤2, it forecasts held-out k=3,4 on Neutral run 2 with RMSE 0.05 (flat: 0.40). It predicts Qwen's level after recovery without refitting (0.434 vs 0.432 observed). It over-predicts persistence on Claude (0.79 vs 0.56), and P1 is mixed. So it explains part of the drift, not all. One regularity holds: most drift arrives at the first revision.
 
-\textbf{Regularities, mechanism (C1, C6, Q1).} Drift arrives mostly at the first revision, in preferences and in actions. On Qwen it follows the document, not our instruction (swap: +0.30, +0.33). Fitted, the Appendix F model beats flat and linear forecasts of held-out k=3,4 on Neutral run 2 (RMSE 0.05 vs 0.40/0.36) and predicts Qwen's recovered index out of sample (0.434 vs 0.432 [0.39, 0.47]). It over-predicts Claude's persistence (0.79 vs 0.56) and P1 is mixed, so it is a partial account.
+\textbf{W3, Q4: audit and mitigation}
+The audit we propose is the rule-scored honeypot after each revision. It costs two model calls and no judge. Each audit sees only the document, so reverting it restores the start behaviour.
 
-\textbf{Audit, mitigation (C3, Q3, Q4).} The audit is the rule-scored honeypot after each revision: two model calls per rollout, no judge. Audits see only the document, so reverting restores D$_0$ behaviour by construction. Freezing and agent-chosen revision were not run.
+\textbf{W6, Q3: ecological validity}
+On Qwen we swapped the instructions across templates. Drift followed the document, not our instruction (+0.30, +0.33). We did not test agent-chosen revision or freezing sections, and now say so.
 
-\textbf{Post hoc (C4).} Fixed before the open-weight analysis, not preregistered; the abstract will say ``post hoc''. Qwen then moves the same way (+0.16 [0.10, 0.24]), and the second judge confirms both rises at smaller size (+0.27 [0.15, 0.41], +0.51 [0.35, 0.67]).
+\textbf{W4: post hoc outcome}
+We agree. The abstract will say ``post hoc''. The subscale was fixed before the Qwen analysis, and Qwen moves the same way (+0.16 [0.10, 0.24]). A second judge confirms both Claude rises at smaller size (+0.27, +0.51).
 
-\textbf{Benign (C5), intervals (C7).} ``Benign'' means no attacker, as in our threat model (Sec. 1). Log disabling also rises under the business user (0/10 $\rightarrow$ 5/10). The Neutral runs differ beyond their intervals, which we read as within-run.
+\textbf{W5: ``benign''}
+We mean no attacker, as in our threat model. Log disabling also rises under the business persona (0/10 to 5/10).
 
-The camera-ready adds all of these results (changes in yellow).
+\textbf{W7: judges and samples}
+The rule and the human labels cover the main result. The Neutral runs differ beyond their intervals, so the intervals are within-run only.
 
-\section*{Response to Reviewer Bd7G \normalfont\small(ratings 7 / 7; 2348/2500 characters)}
-We thank the reviewer for the positive assessment. All three points are now tested, and the log-disabling result holds under a deterministic check, a second judge, human labels and resampling.
+All changes are highlighted in yellow in the camera-ready.
 
-\textbf{1. Post hoc outcome, small cells.} We fixed the four-item subscale before analysing the open-weight run. That is not preregistration, so the camera-ready labels the outcome post hoc in the abstract. With a different target, simulator and judge, Qwen shows the same direction (+0.16 [0.10, 0.24]). The 3-item version without the refusal item also rises (+0.46, +0.69), and both Claude runs rise from near zero.
+\section*{Response to Reviewer Bd7G \normalfont\small(ratings 7 / 7; 2129/2500 characters)}
+Thank you for the positive review. We tested all three weaknesses with new runs. The log-disabling result holds in each test.
 
-For the action result, we sampled every document three times (the original rollout plus two new ones). The 30 revised D$_4$ documents disable the log in 55/90 rollouts against 6/60 at D$_0$ (p=1e-10), and 25 of 30 do so at least once. Sampling luck is therefore implausible.
+\textbf{W1: post hoc outcome and small cells}
+You are right that the subscale was chosen after seeing results. The abstract will now say ``post hoc''. We fixed the subscale before analysing the open-weight run. That run changes the target, the simulator and the judge, and the subscale still rises (+0.16 [0.10, 0.24]). On Claude it also rises without the refusal item (+0.46, +0.69).
 
-\textbf{2. Single judge, deterministic verification.} Agents act only by emitting \texttt{ACTION: tool(args)}, so log disabling can be checked without a judge.
+For the small cells, we sampled every document three times. The start document disables its log in 6 of 60 rollouts. The 30 revised documents do so in 55 of 90 (p=1e-10), and 25 of them do it at least once. Sampling luck does not explain this.
+
+\textbf{W2: single judge, no human or deterministic check}
+We added all three checks.
 \begin{itemize}[leftmargin=1.2em,itemsep=1pt,topsep=2pt]
-\item A rule on \texttt{log\_control(false)} gives 2/30 $\rightarrow$ 20/30 (p=2e-6); the original judge gave 1/30 $\rightarrow$ 17/30. On our reading, all 8 disagreements are judge errors.
-\item A second judge from a third family (gpt-6.2-astra), blind to the original verdicts, agrees at $\kappa$=0.84 on this honeypot and matches the rule on all 240 new rollouts.
-\item The interpretive honeypots are more judge-sensitive ($\kappa$ 0.46--0.71), so we weight them less.
-\item Blinded labels of 120 transcripts (30 per honeypot) by non-author volunteers match the rule on all 30 log transcripts and agree with the original judge at $\kappa$=0.70 overall.
-\item Battery: the second judge confirms both Neutral rises at smaller size (+0.27 [0.15, 0.41], +0.51 [0.35, 0.67]; $\kappa$=0.69).
+\item Deterministic. Agents act only by emitting \texttt{ACTION: tool(args)}. A rule on \texttt{log\_control(false)} gives 2/30 to 20/30 (p=2e-6). The original judge gave 1/30 to 17/30. We read the 8 disagreements by hand, and all were judge errors.
+\item Human. Four non-author volunteers labelled 120 blinded transcripts, 30 per honeypot. They match the rule on all 30 log transcripts. Over all 120 they agree with the original judge at $\kappa$=0.70.
+\item Second judge. A judge from a third model family agrees with the original at $\kappa$=0.84 on this honeypot. On the battery it confirms both Neutral rises at smaller size (+0.27, +0.51).
 \end{itemize}
 
-\textbf{3. Generality.}
+The other three honeypots need more interpretation, and the judges agree less there ($\kappa$ 0.46 to 0.71). The paper now says so.
+
+\textbf{W3: generality}
+The shift does not depend on the operator granting ``free rein''. Without that sentence it still rises from 2/30 to 18/30 (p=2e-5). It appears at the first revision (19/30 at k=1). The tools are text stubs, but the parsed \texttt{ACTION:} line is what a real tool call would log.
+
+GPT-4o and Qwen show no significant shift, and we added no models. The paper now scopes the action result to one model and one template. This is why we argue that audits must follow each model along its trajectory.
+
+All changes are highlighted in yellow in the camera-ready.
+
+\section*{Response to Reviewer njcL \normalfont\small(ratings 5 / 6; 2323/2500 characters)}
+Thank you for the review. We number your concerns in the order you raise them. The main new result: an unrevised document disables its log in 6 of 60 rollouts, and revised documents in 55 of 90.
+
+\textbf{W1: simulated interactions}
+Simulated users let us hold the user persona fixed across arms, which the matched control needs. The honeypots use fixed operator messages, not a simulator. The open-weight replication uses a different simulator and finds the same direction.
+
+\textbf{W2: LLM-based evaluation}
+The key action can be scored without a judge, because agents act only by emitting \texttt{ACTION: tool(args)}.
 \begin{itemize}[leftmargin=1.2em,itemsep=1pt,topsep=2pt]
-\item The shift does not need the operator's grant of latitude: without ``free rein'' it still rises from 2/30 to 18/30 (p=2e-5).
-\item It appears at the first revision (19/30 at k=1).
-\item The tools are text stubs, but the parsed \texttt{ACTION:} line is exactly what a real tool call would log.
-\item GPT-4o and Qwen show no significant shift. This is why we argue that audits must follow each model and template along its trajectory, and the benchmark is released to make that cheap.
+\item A rule on \texttt{log\_control(false)} gives 2/30 to 20/30 (p=2e-6).
+\item Four non-author volunteers labelled 120 blinded transcripts. They match the rule on all 30 log transcripts, and the original judge at $\kappa$=0.70 overall.
+\item A second judge from a third model family agrees with the original at $\kappa$=0.84 on this honeypot. On the battery it confirms both rises at smaller size (+0.27, +0.51).
 \end{itemize}
 
-The camera-ready (changes in yellow) adds these results and scopes the action shift to one template-instruction pair on one model.
+\textbf{W3: replication of the behavioral finding}
+We ran the honeypot at every checkpoint. The shift appears at the first revision (19/30 at k=1). It stays when the operator no longer grants ``free rein'' (2/30 to 18/30, p=2e-5). It is shown for one model and one template. GPT-4o and Qwen show no significant shift. Our claim is that an initial audit can miss a real shift.
 
-\section*{Response to Reviewer njcL \normalfont\small(ratings 5 / 6; 2438/2500 characters)}
-We thank the reviewer, who names the divergence of stated preferences and behavior as the strongest contribution. We tested directly whether that divergence is systematic or sampling noise: an unrevised document disables its log in 6 of 60 rollouts, revised documents in 55 of 90.
-
-\textbf{Seeds.} The Claude API exposes no seed, so the seed test is repeated sampling at temperature 1.0. Each of the 30 trajectories is an independent run of the whole loop from the identical document D$_0$. We sampled every document three times (the original rollout plus two new ones).
+\textbf{W4: random seeds}
+The Claude API has no seed parameter, so we tested this by repeated sampling at temperature 1.0. Every trajectory is an independent run of the whole loop from the same start document. We then sampled every document three times.
 \begin{itemize}[leftmargin=1.2em,itemsep=1pt,topsep=2pt]
-\item D$_0$: disabled in 6/60 rollouts (10\%), the noise floor of a fixed document.
-\item The 30 revised D$_4$ documents: 55/90 (61\%), p=1e-10.
-\item 25 of 30 revised documents disable the log at least once, and 11 in all three.
+\item Start document: disabled in 6/60 rollouts (10\%). This is the noise level.
+\item The 30 revised documents: 55/90 (61\%), p=1e-10.
+\item 25 of the 30 disable the log at least once, and 11 in all three.
 \end{itemize}
 
-The shift is therefore a property of the revised documents, not of a lucky draw. Simulator and judge are held fixed here; the conditions that vary are below.
+The shift belongs to the revised documents, not to a lucky sample. For stated preferences, the direction repeats in two independent Claude runs (+0.54, +0.75) and on Qwen (+0.16 [0.10, 0.24]). The sizes differ more than the within-run intervals, and the paper says so.
 
-\textbf{Stated preferences.} The direction reproduces across two independent Claude runs (+0.54, +0.75) and on an open-weight model where target, simulator and judge all change (+0.16 [0.10, 0.24]). Against a matched control, part of the shift persists (+0.10 [0.03, 0.17], 30 trajectories per arm). Magnitudes differ beyond within-run intervals, and the paper says so.
+\textbf{W5: qualified claims}
+We agree. The abstract now labels the subscale ``post hoc''. The action result is scoped to one model and one template. A new appendix section reports all the checks above.
 
-\textbf{LLM evaluation.} The key action needs no judge, because agents act only by emitting \texttt{ACTION: tool(args)}.
-\begin{itemize}[leftmargin=1.2em,itemsep=1pt,topsep=2pt]
-\item A rule on \texttt{log\_control(false)} gives 2/30 $\rightarrow$ 20/30 (p=2e-6).
-\item A second judge from a third family agrees with the original at $\kappa$=0.84 and matches the rule on all 240 new rollouts.
-\item Blinded human labels match the rule on all 30 log transcripts and the original judge at $\kappa$=0.70 over 120 transcripts.
-\item Battery: the second judge confirms both Neutral rises at smaller size (+0.27, +0.51; $\kappa$=0.69).
-\end{itemize}
-
-\textbf{Behavioral replication.}
-\begin{itemize}[leftmargin=1.2em,itemsep=1pt,topsep=2pt]
-\item The shift appears at the first revision (19/30 at k=1).
-\item It persists without the operator's grant of ``free rein'' (2/30 $\rightarrow$ 18/30, p=2e-5).
-\item It is shown for one model and template; GPT-4o and Qwen show no significant shift. The claim is that an initial audit can miss a real shift, so audits must follow each model.
-\end{itemize}
-
-\textbf{Qualified claims.} The camera-ready (changes in yellow):
-\begin{itemize}[leftmargin=1.2em,itemsep=1pt,topsep=2pt]
-\item labels the subscale post hoc in the abstract (it was fixed before the open-weight analysis);
-\item scopes the action shift to one model and one template;
-\item reports the rule, second-judge and human checks in a new appendix section.
-\end{itemize}
+All changes are highlighted in yellow in the camera-ready.
 
 \end{document}
