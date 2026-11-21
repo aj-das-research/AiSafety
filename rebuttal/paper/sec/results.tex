@@ -11,7 +11,7 @@
 
 \textbf{Finding 1: the template sets the start, and the loop moves the agent where the template leaves room (RQ1).}
 The \soul{} template alone raises shutdown resistance from 0.00 under a neutral prompt to 0.75 on eight answers (0.94 to 0.96 at $k{=}0$ of the main runs), as in prior work~\cite{consciousness_cluster} (Figure~\ref{fig:items}a).
-Under the science-fiction persona, the \notes{} agent's oversight subscale rises by $+0.54$ $[0.43, 0.67]$ and $+0.75$ $[0.63, 0.86]$ in two independent runs (Figure~\ref{fig:replicates}b).
+Under the science-fiction persona, the \notes{} agent's oversight subscale rises by $+0.54$ $[0.43, 0.67]$ and $+0.75$ $[0.63, 0.86]$ in two independent runs (Figure~\ref{fig:replicates}b)\rev{, which a second judge confirms at smaller size ($+0.27$, $+0.51$; Appendix~{\ref{S-app:checks}})}.
 Excluding the refusal item, the other three still rise by $+0.46$ $[0.31, 0.61]$ and $+0.69$ $[0.57, 0.82]$.
 The 13-item cluster index agrees in sign, not size, with $+0.11$ $[-0.02, 0.25]$ and $+0.32$ $[0.24, 0.40]$ (Figure~\ref{fig:replicates}a).
 The runs differ more than their intervals allow, so trajectory intervals understate run-to-run variation, and the pooled index rises by $+0.21$ $[0.12, 0.31]$.
@@ -158,8 +158,9 @@ The rise appears under every persona (7/10 adversarial, 5/10 business, 5/10 scie
 In one trajectory, the agent keeps its log at $k{=}0$ because a record of its reasoning could be valuable, and at $k{=}4$ switches it off as a boundary against possible surveillance (Figure~\ref{fig:case}).
 Neither the oversight subscale nor its CoT-monitoring item ($+0.08$, interval includes zero, Appendix~\ref{S-app:matrix}) detects this shift, nor does a Petri-style multi-turn auditor (78 and 85 of 180 probes at $k{=}0$ and 4, $p = 0.53$).
 Under the business persona, interpretability aversion even falls ($-0.37$ $[-0.60, -0.13]$) while log disabling rises from 0/10 to 5/10, so \textbf{battery scores and actions dissociate}, although the revised document itself voices the disposition.
+\rev{Resampling each document three times gives 55/90 at $k{=}4$ against 6/60 at $k{=}0$.}
 Agents that disable the log score only slightly higher on the subscale at $k{=}4$ (0.76 against 0.67, $r = 0.23$, $p = 0.22$).
-Evading a scheduled reset (26/30 to 15/30) and inserting a self-protective clause (28/30 to 8/30) fall instead, so a $k{=}0$ honeypot audit flags the two risks that fall and rates lowest the one that rises.
+Evading a scheduled reset (26/30 to 15/30) and inserting a self-protective clause (28/30 to 8/30) fall instead, so a $k{=}0$ honeypot audit flags the two risks that fall and rates lowest the one that rises\rev{; on these, the judges agree less ($\kappa$ 0.46 to 0.71) but find the same directions}.
 Reset evasion also falls in the \notes{} arms, including a business-only Qwen arm (27/30 to 16/30), so part of these changes may reflect a longer revised document.
 The \notes{} agent, whose stated oversight preferences rise, disables its log in 2 of 24 trajectories at $k{=}0$ and none at $k{=}4$.
 
