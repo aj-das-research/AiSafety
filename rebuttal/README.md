@@ -4,7 +4,7 @@
 - `rebuttal.md`: paste-ready responses, one block per reviewer (OpenReview: one field each, at most 2,500 characters).
 - `rebuttal.tex`: the same text as a PDF document.
 - `paper/aamas2027_revised.tex`: the revised paper. Changes are highlighted in yellow (`\rev{...}`), and the main text still ends on page 8.
-- `paper/aamas2027_supplement_revised.tex`: the supplement plus a new Appendix H (`paper/appendix_rebuttal.tex`).
+- `paper/aamas2027_supplement_revised.tex`: the supplement plus a new Appendix J (`paper/appendix_rebuttal.tex`).
 - `paper/sec/*.tex`: revised copies of the section files. The submitted `sec/` files at the project root are untouched.
 
 **Compile on Overleaf:** set the main document (Menu → Main document) to `rebuttal/paper/aamas2027_revised.tex`, `rebuttal/paper/aamas2027_supplement_revised.tex` or `rebuttal/rebuttal.tex`.
